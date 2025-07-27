@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Admin User for authentication
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String   // Store hashed passwords
+  name      String?
+  role      String   @default("admin") // e.g., "admin", "editor"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Product Categories
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  products  Product[] // Relation to Product model
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Product Brands
+model Brand {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  products  Product[] // Relation to Product model
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Product Item
+model Product {
+  id            Int       @id @default(autoincrement())
+  name          String
+  shortName     String
+  description   String
+  
+  categoryId    Int
+  category      Category  @relation(fields: [categoryId], references: [id], onDelete: Restrict) // Prevent deletion of category if products exist
+  
+  brandId       Int
+  brand         Brand     @relation(fields: [brandId], references: [id], onDelete: Restrict) // Prevent deletion of brand if products exist
+  
+  images        Image[]   // Relation to Image model (one main, three optional sub-images)
+  
+  availableSizes String[] @default([]) // e.g., ["20 x 1/2'", "25 x 1/2'"]
+  voltages       String[] @default([]) // e.g., ["10W", "20W"]
+  colors         String[] @default([]) // e.g., ["D/L - W/W", "D/L - BLUE"]
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// Product Images
+model Image {
+  id        Int      @id @default(autoincrement())
+  url       String
+  isMain    Boolean  @default(false) // True for the main image, false for sub-images
+  
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade) // Delete images if product is deleted
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Contact Form Submissions
+model ContactFormSubmission {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String?  // Optional email
+  phoneNo   String
+  message   String
+  createdAt DateTime @default(now())
+}
