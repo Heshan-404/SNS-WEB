@@ -1,50 +1,70 @@
-import prisma from '../lib/prisma';
 import { CategoryDto, CreateCategoryDto, UpdateCategoryDto } from '../types/category';
 
 export class CategoryService {
+  private baseUrl: string;
+
+  constructor(baseUrl: string = '') {
+    this.baseUrl = baseUrl;
+  }
+
   async createCategory(data: CreateCategoryDto): Promise<CategoryDto> {
-    const category = await prisma.category.create({
-      data: { name: data.name },
-    });
-    return category;
+    // Mock data
+    console.log("Mocking createCategory with data:", data);
+    const newCategory: CategoryDto = {
+      id: Math.floor(Math.random() * 1000) + 100,
+      name: data.name,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    return newCategory;
   }
 
   async getCategories(): Promise<CategoryDto[]> {
-    const categories = await prisma.category.findMany({
-      orderBy: { name: 'asc' },
-    });
-    return categories;
+    // Mock data
+    return [
+      { id: 1, name: "Category X", createdAt: new Date(), updatedAt: new Date() },
+      { id: 2, name: "Category Y", createdAt: new Date(), updatedAt: new Date() },
+      { id: 3, name: "Category Z", createdAt: new Date(), updatedAt: new Date() },
+    ];
   }
 
   async getCategoryById(id: number): Promise<CategoryDto | null> {
-    const category = await prisma.category.findUnique({
-      where: { id },
-    });
-    return category;
+    // Mock data
+    const mockCategories: CategoryDto[] = [
+      { id: 1, name: "Category X", createdAt: new Date(), updatedAt: new Date() },
+      { id: 2, name: "Category Y", createdAt: new Date(), updatedAt: new Date() },
+      { id: 3, name: "Category Z", createdAt: new Date(), updatedAt: new Date() },
+    ];
+    return mockCategories.find(cat => cat.id === id) || null;
   }
 
   async updateCategory(id: number, data: UpdateCategoryDto): Promise<CategoryDto | null> {
-    const category = await prisma.category.update({
-      where: { id },
-      data: { name: data.name },
-    });
-    return category;
+    // Mock data
+    console.log(`Mocking updateCategory for ID ${id} with data:`, data);
+    const existingCategory = await this.getCategoryById(id);
+    if (!existingCategory) {
+      return null;
+    }
+    const updatedCategory: CategoryDto = {
+      ...existingCategory,
+      name: data.name || existingCategory.name,
+      updatedAt: new Date(),
+    };
+    return updatedCategory;
   }
 
   async deleteCategory(id: number): Promise<CategoryDto | null> {
-    // Check if the category is used by any products
-    const productsCount = await prisma.product.count({
-      where: { categoryId: id },
-    });
-
-    if (productsCount > 0) {
+    // Mock data
+    console.log(`Mocking deleteCategory for ID ${id}`);
+    const existingCategory = await this.getCategoryById(id);
+    if (!existingCategory) {
+      return null;
+    }
+    // Simulate deletion restriction
+    if (id === 1) { // Example: Category X is used by products
       throw new Error('Cannot delete category: It is currently used by products.');
     }
-
-    const category = await prisma.category.delete({
-      where: { id },
-    });
-    return category;
+    return existingCategory;
   }
 }
 

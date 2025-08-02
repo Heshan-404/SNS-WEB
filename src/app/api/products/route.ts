@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { productService } from '../../../services/productService';
+import prisma from '../../../lib/prisma';
 import { UploadedImageDto } from '../../../types/image';
 import { CreateProductDto } from '@/types/product';
 import { authMiddleware } from '../../../lib/authMiddleware';
@@ -15,8 +15,29 @@ export async function GET(request: Request) {
     const categoryIds = categoryIdsParam ? categoryIdsParam.split(',').map(id => parseInt(id.trim(), 10)).filter(id => !isNaN(id)) : undefined;
     const brandIds = brandIdsParam ? brandIdsParam.split(',').map(id => parseInt(id.trim(), 10)).filter(id => !isNaN(id)) : undefined;
 
-    const products = await productService.getProducts(page, limit, categoryIds, brandIds);
-    return NextResponse.json(products);
+    const products = await prisma.product.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+      where: {
+        ...(categoryIds && categoryIds.length > 0 && { categoryId: { in: categoryIds } }),
+        ...(brandIds && brandIds.length > 0 && { brandId: { in: brandIds } }),
+      },
+      include: { category: true, brand: true, images: true },
+    });
+
+    const total = await prisma.product.count({
+      where: {
+        ...(categoryIds && categoryIds.length > 0 && { categoryId: { in: categoryIds } }),
+        ...(brandIds && brandIds.length > 0 && { brandId: { in: brandIds } }),
+      },
+    });
+
+    const productsWithMainImage = products.map(product => ({
+      ...product,
+      mainImageUrl: product.images.find(image => image.isMain)?.url || null,
+    }));
+
+    return NextResponse.json({ products: productsWithMainImage, total, page, limit });
   } catch (error: any) {
     console.error('Error fetching products:', error);
     return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 });
@@ -36,7 +57,15 @@ async function postHandler(request: Request) {
       return NextResponse.json({ error: 'At least one main image is required' }, { status: 400 });
     }
 
-    const product = await productService.createProduct(data);
+    const product = await prisma.product.create({
+      data: {
+        ...data,
+        images: {
+          create: data.images.map(img => ({ url: img.url, isMain: img.isMain })),
+        },
+      },
+      include: { category: true, brand: true, images: true },
+    });
     return NextResponse.json(product, { status: 201 });
   } catch (error: any) {
     console.error('Error creating product:', error);

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 
 import Link from "next/link";
-import { Link as ScrollLink } from 'react-scroll';
+
 import Image from 'next/image';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBars, faTimes} from "@fortawesome/free-solid-svg-icons";
@@ -63,50 +63,34 @@ const Header = () => {
 
                 {/* Navigation Links - Centered (Desktop) */}
                 <nav className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 space-x-6">
-                    <ScrollLink
-                        to="hero"
-                        smooth={true}
-                        duration={500}
+                    <Link
+                        href="/"
                         className="text-gray-600 hover:text-blue-600 transition-colors duration-200 py-2 whitespace-nowrap cursor-pointer"
                     >
                         Home
-                    </ScrollLink>
-                    <ScrollLink
-                        to="products"
-                        smooth={true}
-                        duration={500}
+                    </Link>
+                    <Link
+                        href="/products?page=1"
                         className="text-gray-600 hover:text-blue-600 transition-colors duration-200 py-2 whitespace-nowrap cursor-pointer"
                     >
                         Products
-                    </ScrollLink>
-                    <ScrollLink
-                        to="about"
-                        smooth={true}
-                        duration={500}
+                    </Link>
+                    <Link
+                        href="/#about"
                         className="text-gray-600 hover:text-blue-600 transition-colors duration-200 py-2 whitespace-nowrap cursor-pointer"
                     >
                         About Us
-                    </ScrollLink>
-                    <ScrollLink
-                        to="contact"
-                        smooth={true}
-                        duration={500}
+                    </Link>
+                    <Link
+                        href="/#contact"
                         className="text-gray-600 hover:text-blue-600 transition-colors duration-200 py-2 whitespace-nowrap cursor-pointer"
                     >
                         Contact Us
-                    </ScrollLink>
-                    <ScrollLink
-                        to="map"
-                        smooth={true}
-                        duration={500}
-                        className="text-gray-600 hover:text-blue-600 transition-colors duration-200 py-2 whitespace-nowrap cursor-pointer"
-                    >
-                        Map
-                    </ScrollLink>
+                    </Link>
                 </nav>
 
                 {/* Contact Info - Single Blue Container (Desktop) */}
-                <div className="md:flex hidden items-center space-x-4 bg-blue-600 px-4 py-2 rounded-full">
+                <div className="md:flex hidden items-center space-x-4 bg-[#1285E8] px-4 py-2 rounded-full">
                     <a
                         href="tel:+0720400659"
                         className="text-white text-sm leading-none"
@@ -150,56 +134,38 @@ const Header = () => {
 
                     {/* Navigation Links */}
                     <nav className="space-y-4 px-4 ps-10 pt-5">
-                        <ScrollLink
-                            to="hero"
-                            smooth={true}
-                            duration={500}
+                        <Link
+                            href="/"
                             className="flex items-center py-2 text-gray-800 hover:text-blue-600 pr-2 cursor-pointer"
                             onClick={() => setIsMenuOpen(false)}
                         >
                             <Image src="/images/props/navHome.png" alt="Home" width={20} height={20} className="mr-5" />
                             Home
-                        </ScrollLink>
-                        <ScrollLink
-                            to="products"
-                            smooth={true}
-                            duration={500}
+                        </Link>
+                        <Link
+                            href="/products?page=1"
                             className="flex items-center py-2 text-gray-800 hover:text-blue-600 pr-2 cursor-pointer"
                             onClick={() => setIsMenuOpen(false)}
                         >
                             <Image src="/images/props/navProducts.png" alt="Products" width={20} height={20} className="mr-5" />
                             Products
-                        </ScrollLink>
-                        <ScrollLink
-                            to="about"
-                            smooth={true}
-                            duration={500}
+                        </Link>
+                        <Link
+                            href="/#about"
                             className="flex items-center py-2 text-gray-800 hover:text-blue-600 pr-2 cursor-pointer"
                             onClick={() => setIsMenuOpen(false)}
                         >
                             <Image src="/images/props/navAboutUs.png" alt="About Us" width={20} height={20} className="mr-5" />
                             About Us
-                        </ScrollLink>
-                        <ScrollLink
-                            to="contact"
-                            smooth={true}
-                            duration={500}
+                        </Link>
+                        <Link
+                            href="/#contact"
                             className="flex items-center py-2 text-gray-800 hover:text-blue-600 pr-2 cursor-pointer"
                             onClick={() => setIsMenuOpen(false)}
                         >
                             <Image src="/images/props/navContact.png" alt="Contact Us" width={20} height={20} className="mr-5" />
                             Contact Us
-                        </ScrollLink>
-                        <ScrollLink
-                            to="map"
-                            smooth={true}
-                            duration={500}
-                            className="flex items-center py-2 text-gray-800 hover:text-blue-600 pr-2 cursor-pointer"
-                            onClick={() => setIsMenuOpen(false)}
-                        >
-                            <Image src="/images/props/navMap.png" alt="Map" width={20} height={20} className="mr-5" />
-                            Map
-                        </ScrollLink>
+                        </Link>
                     </nav>
 
                     {/* Contact Info */}

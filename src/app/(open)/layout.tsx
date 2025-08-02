@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "../globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://yourwebsite.com'), // Replace with your actual website URL
   title: "SNS Pipes & Fittings - Quality Pipes for Every Project",
   description: "Discover high-quality pipes and fittings for all your projects. We offer a wide range of products including PPR, brass fittings, and more. Contact us today!",
   keywords: "pipes, fittings, PPR, brass fittings, plumbing, hardware, construction, pipe supplier, pipe shop",
@@ -38,9 +39,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="">
         <Header />
-        <main>{children}</main>
+        <main className="pt-16">{children}</main>
         <Footer />
       </body>
     </html>

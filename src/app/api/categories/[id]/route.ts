@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { categoryService } from '../../../../services/categoryService';
+import prisma from '../../../../lib/prisma';
 import { UpdateCategoryDto } from '@/types/category';
 import { authMiddleware } from '../../../../lib/authMiddleware';
 
@@ -10,7 +10,9 @@ export async function GET(request: Request, context: any) {
     if (isNaN(id)) {
       return NextResponse.json({ error: 'Invalid category ID' }, { status: 400 });
     }
-    const category = await categoryService.getCategoryById(id);
+    const category = await prisma.category.findUnique({
+      where: { id },
+    });
     if (!category) {
       return NextResponse.json({ error: 'Category not found' }, { status: 404 });
     }
@@ -32,7 +34,10 @@ async function putHandler(request: Request, context: any) {
     if (!data.name) {
       return NextResponse.json({ error: 'Category name is required' }, { status: 400 });
     }
-    const updatedCategory = await categoryService.updateCategory(id, data);
+    const updatedCategory = await prisma.category.update({
+      where: { id },
+      data: { name: data.name },
+    });
     if (!updatedCategory) {
       return NextResponse.json({ error: 'Category not found' }, { status: 404 });
     }
@@ -53,7 +58,17 @@ async function deleteHandler(request: Request, context: any) {
     if (isNaN(id)) {
       return NextResponse.json({ error: 'Invalid category ID' }, { status: 400 });
     }
-    const deletedCategory = await categoryService.deleteCategory(id);
+    const productsCount = await prisma.product.count({
+      where: { categoryId: id },
+    });
+
+    if (productsCount > 0) {
+      return NextResponse.json({ error: 'Cannot delete category: It is currently used by products.' }, { status: 409 });
+    }
+
+    const deletedCategory = await prisma.category.delete({
+      where: { id },
+    });
     if (!deletedCategory) {
       return NextResponse.json({ error: 'Category not found' }, { status: 404 });
     }

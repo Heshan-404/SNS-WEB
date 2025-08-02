@@ -17,24 +17,24 @@ export class AuthService {
     return user;
   }
 
-  async login(credentials: LoginUserDto): Promise<AuthResponseDto | null> {
+  async login(credentials: LoginUserDto): Promise<{ success: boolean; message: string; user?: AuthResponseDto }> {
     const user = await prisma.user.findUnique({
       where: { email: credentials.email },
     });
 
     if (!user) {
-      return null; // User not found
+      return { success: false, message: "Invalid credentials." };
     }
 
     const isPasswordValid = await comparePassword(credentials.password, user.password);
 
     if (!isPasswordValid) {
-      return null; // Invalid password
+      return { success: false, message: "Invalid credentials." };
     }
 
     // Return user data without the password hash
     const { password, ...userWithoutPassword } = user;
-    return userWithoutPassword;
+    return { success: true, message: "Login successful!", user: userWithoutPassword };
   }
 }
 

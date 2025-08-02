@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
-import { brandService } from '../../../services/brandService';
+import prisma from '../../../lib/prisma';
 import { CreateBrandDto } from '@/types/brand';
 import { authMiddleware } from '../../../lib/authMiddleware';
 
 export async function GET() {
   try {
-    const brands = await brandService.getBrands();
+    const brands = await prisma.brand.findMany({
+      orderBy: { name: 'asc' },
+    });
     return NextResponse.json(brands);
   } catch (error: any) {
     console.error('Error fetching brands:', error);
@@ -19,7 +21,9 @@ async function postHandler(request: Request) {
     if (!data.name) {
       return NextResponse.json({ error: 'Brand name is required' }, { status: 400 });
     }
-    const brand = await brandService.createBrand(data);
+    const brand = await prisma.brand.create({
+      data: { name: data.name },
+    });
     return NextResponse.json(brand, { status: 201 });
   } catch (error: any) {
     if (error.code === 'P2002' && error.meta?.target?.includes('name')) {

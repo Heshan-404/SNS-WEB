@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { brandService } from '../../../../services/brandService';
+import prisma from '../../../../lib/prisma';
 import { UpdateBrandDto } from '@/types/brand';
 import { authMiddleware } from '../../../../lib/authMiddleware';
 
@@ -10,7 +10,9 @@ export async function GET(request: Request, context: any) {
     if (isNaN(id)) {
       return NextResponse.json({ error: 'Invalid brand ID' }, { status: 400 });
     }
-    const brand = await brandService.getBrandById(id);
+    const brand = await prisma.brand.findUnique({
+      where: { id },
+    });
     if (!brand) {
       return NextResponse.json({ error: 'Brand not found' }, { status: 404 });
     }
@@ -32,7 +34,10 @@ async function putHandler(request: Request, context: any) {
     if (!data.name) {
       return NextResponse.json({ error: 'Brand name is required' }, { status: 400 });
     }
-    const updatedBrand = await brandService.updateBrand(id, data);
+    const updatedBrand = await prisma.brand.update({
+      where: { id },
+      data: { name: data.name },
+    });
     if (!updatedBrand) {
       return NextResponse.json({ error: 'Brand not found' }, { status: 404 });
     }
@@ -53,7 +58,17 @@ async function deleteHandler(request: Request, context: any) {
     if (isNaN(id)) {
       return NextResponse.json({ error: 'Invalid brand ID' }, { status: 400 });
     }
-    const deletedBrand = await brandService.deleteBrand(id);
+    const productsCount = await prisma.product.count({
+      where: { brandId: id },
+    });
+
+    if (productsCount > 0) {
+      return NextResponse.json({ error: 'Cannot delete brand: It is currently used by products.' }, { status: 409 });
+    }
+
+    const deletedBrand = await prisma.brand.delete({
+      where: { id },
+    });
     if (!deletedBrand) {
       return NextResponse.json({ error: 'Brand not found' }, { status: 404 });
     }

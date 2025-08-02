@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { productService } from '../../../../services/productService';
+import prisma from '../../../../lib/prisma';
 import { UploadedImageDto } from '../../../../types/image';
 import { UpdateProductDto } from '@/types/product';
 import { authMiddleware } from '../../../../lib/authMiddleware';
@@ -11,7 +11,10 @@ export async function GET(request: Request, context: any) {
     if (isNaN(id)) {
       return NextResponse.json({ error: 'Invalid product ID' }, { status: 400 });
     }
-    const product = await productService.getProductById(id);
+    const product = await prisma.product.findUnique({
+      where: { id },
+      include: { category: true, brand: true, images: true },
+    });
     if (!product) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
@@ -38,7 +41,31 @@ async function putHandler(request: Request, context: any) {
       }
     }
 
-    const updatedProduct = await productService.updateProduct(id, data);
+    const { images, categoryId, brandId, ...productData } = data;
+
+    const updateData: any = {
+      ...productData,
+    };
+
+    if (categoryId !== undefined) {
+      updateData.categoryId = categoryId;
+    }
+    if (brandId !== undefined) {
+      updateData.brandId = brandId;
+    }
+
+    if (images !== undefined) {
+      updateData.images = {
+        deleteMany: {},
+        create: images.map(img => ({ url: img.url, isMain: img.isMain })),
+      };
+    }
+
+    const updatedProduct = await prisma.product.update({
+      where: { id },
+      data: updateData,
+      include: { category: true, brand: true, images: true },
+    });
     if (!updatedProduct) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
@@ -60,7 +87,10 @@ async function deleteHandler(request: Request, context: any) {
     if (isNaN(id)) {
       return NextResponse.json({ error: 'Invalid product ID' }, { status: 400 });
     }
-    const deletedProduct = await productService.deleteProduct(id);
+    const deletedProduct = await prisma.product.delete({
+      where: { id },
+      include: { category: true, brand: true, images: true },
+    });
     if (!deletedProduct) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }

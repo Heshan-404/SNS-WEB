@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
-import { categoryService } from '../../../services/categoryService';
+import prisma from '../../../lib/prisma';
 import { CreateCategoryDto } from '@/types/category';
 import { authMiddleware } from '../../../lib/authMiddleware';
 
 export async function GET() {
   try {
-    const categories = await categoryService.getCategories();
+    const categories = await prisma.category.findMany({
+      orderBy: { name: 'asc' },
+    });
     return NextResponse.json(categories);
   } catch (error: any) {
     console.error('Error fetching categories:', error);
@@ -19,7 +21,9 @@ async function postHandler(request: Request) {
     if (!data.name) {
       return NextResponse.json({ error: 'Category name is required' }, { status: 400 });
     }
-    const category = await categoryService.createCategory(data);
+    const category = await prisma.category.create({
+      data: { name: data.name },
+    });
     return NextResponse.json(category, { status: 201 });
   } catch (error: any) {
     if (error.code === 'P2002' && error.meta?.target?.includes('name')) {

@@ -1,50 +1,70 @@
-import prisma from '../lib/prisma';
+
 import { BrandDto, CreateBrandDto, UpdateBrandDto } from '../types/brand';
 
 export class BrandService {
+  private baseUrl: string;
+
+  constructor(baseUrl: string = '') {
+    this.baseUrl = baseUrl;
+  }
   async createBrand(data: CreateBrandDto): Promise<BrandDto> {
-    const brand = await prisma.brand.create({
-      data: { name: data.name },
-    });
-    return brand;
+    // Mock data
+    console.log("Mocking createBrand with data:", data);
+    const newBrand: BrandDto = {
+      id: Math.floor(Math.random() * 1000) + 100,
+      name: data.name,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    return newBrand;
   }
 
   async getBrands(): Promise<BrandDto[]> {
-    const brands = await prisma.brand.findMany({
-      orderBy: { name: 'asc' },
-    });
-    return brands;
+    // Mock data
+    return [
+      { id: 1, name: "Brand A", createdAt: new Date(), updatedAt: new Date() },
+      { id: 2, name: "Brand B", createdAt: new Date(), updatedAt: new Date() },
+      { id: 3, name: "Brand C", createdAt: new Date(), updatedAt: new Date() },
+    ];
   }
 
   async getBrandById(id: number): Promise<BrandDto | null> {
-    const brand = await prisma.brand.findUnique({
-      where: { id },
-    });
-    return brand;
+    // Mock data
+    const mockBrands: BrandDto[] = [
+      { id: 1, name: "Brand A", createdAt: new Date(), updatedAt: new Date() },
+      { id: 2, name: "Brand B", createdAt: new Date(), updatedAt: new Date() },
+      { id: 3, name: "Brand C", createdAt: new Date(), updatedAt: new Date() },
+    ];
+    return mockBrands.find(brand => brand.id === id) || null;
   }
 
   async updateBrand(id: number, data: UpdateBrandDto): Promise<BrandDto | null> {
-    const brand = await prisma.brand.update({
-      where: { id },
-      data: { name: data.name },
-    });
-    return brand;
+    // Mock data
+    console.log(`Mocking updateBrand for ID ${id} with data:`, data);
+    const existingBrand = await this.getBrandById(id);
+    if (!existingBrand) {
+      return null;
+    }
+    const updatedBrand: BrandDto = {
+      ...existingBrand,
+      name: data.name || existingBrand.name,
+      updatedAt: new Date(),
+    };
+    return updatedBrand;
   }
 
   async deleteBrand(id: number): Promise<BrandDto | null> {
-    // Check if the brand is used by any products
-    const productsCount = await prisma.product.count({
-      where: { brandId: id },
-    });
-
-    if (productsCount > 0) {
+    // Mock data
+    console.log(`Mocking deleteBrand for ID ${id}`);
+    const existingBrand = await this.getBrandById(id);
+    if (!existingBrand) {
+      return null;
+    }
+    // Simulate deletion restriction
+    if (id === 1) { // Example: Brand A is used by products
       throw new Error('Cannot delete brand: It is currently used by products.');
     }
-
-    const brand = await prisma.brand.delete({
-      where: { id },
-    });
-    return brand;
+    return existingBrand;
   }
 }
 

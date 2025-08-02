@@ -25,7 +25,7 @@ const ContactUsSection = () => {
               <label htmlFor="message" className="block text-gray-700 text-sm font-bold mb-2">Message</label>
               <textarea id="message" name="message" rows={5} className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Your Message"></textarea>
             </div>
-            <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 w-full rounded-lg focus:outline-none focus:shadow-outline h-10 md:h-12 flex items-center justify-center">
+            <button type="submit" className="bg-[#1285E8] hover:bg-[#0f6bbd] text-white font-bold py-3 px-6 w-full rounded-lg focus:outline-none focus:shadow-outline h-10 md:h-12 flex items-center justify-center">
               Send Message
             </button>
           </form>

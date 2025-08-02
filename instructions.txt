@@ -1,0 +1,81 @@
+this project about a commercial web app for a hardware item shop actullay a pipe selling cener website 
+
+so there are products and each have these fields
+
+ - product name 
+ - product short name
+ - desctription 
+ - category
+ - brand
+ - one required image and 3 optional sub images
+ - then some products may have available sizes [20 x 1/2' , 25 x 1/2' , 25 x 3/4' , 32 x 1']
+ - then some products may be have votages [10W , 20W , 30W , 50W , 100W]
+ - then some products may be have colors [D/L - W/W , D/L - BLUE]
+ - use should be able to add these colors voltages sizes as tags just strings
+ - also should be able to edit this created products if wanted like change brand, change name, chagne category, change product change description and change colors or voltages , sizes , images
+ 
+but categories and brands should be already registered and then only can select these when creating a new product 
+so when creating a category and brand user just have to enter the Cateogry name or brand name
+so
+ - should be able to create new categories
+ - should be able to create new brands
+ - should be able to rename brands and categoirs if needed and also delete if not that brand or category !!!not used in any product !!!
+
+then there should be a authentication system to login to admin dashboard to manage these things
+
+
+
+ok then in user perspective these things should be able to fetch to frontend 
+
+- list all brands and categories to filter in filter menu
+- fetch all products in pagination wise
+- fetch products by categories or by brands or by cateogries & brands
+- when showing products it just will show only main image and short name and brand and category in showcase menus
+- but in view perticualy page need to fetch all data of that product 
+   all 4 images if have 
+   product name , brand , category , descrpiton , available sizes if have , voltages if have , colros if have
+
+and there is a form in landing page to contact user with shop so its need an another api that will send email to shop owner there will take these details from the form
+
+ - Name
+ - Email (optional)
+ - Phone No
+ - Message
+
+
+ user will select multiple categories and multiple brands in same time so api should be able to get all products in taht brands and   │
+│    categoris may be user will just select more categories and may be more barnds or will both more catgoreis and brands   
+
+---
+API Endpoints:
+
+Authentication:
+- POST /api/auth/login: User login
+- POST /api/auth/register: User registration
+
+Brands:
+- GET /api/brands: Get all brands
+- GET /api/brands/[id]: Get brand by ID
+- POST /api/brands: Create a new brand
+- PUT /api/brands/[id]: Update a brand by ID
+- DELETE /api/brands/[id]: Delete a brand by ID
+
+Categories:
+- GET /api/categories: Get all categories
+- GET /api/categories/[id]: Get category by ID
+- POST /api/categories: Create a new category
+- PUT /api/categories/[id]: Update a category by ID
+- DELETE /api/categories/[id]: Delete a category by ID
+
+Products:
+- GET /api/products: Get all products (with pagination, filtering by category/brand)
+- GET /api/products/[id]: Get product by ID
+- POST /api/products: Create a new product
+- PUT /api/products/[id]: Update a product by ID
+- DELETE /api/products/[id]: Delete a product by ID
+
+Contact:
+- POST /api/contact: Send contact form email
+
+Upload:
+- POST /api/upload: Upload images

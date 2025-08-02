@@ -41,6 +41,7 @@ const FeaturedProductsSection = () => {
         {featuredProducts.map((product) => (
           <ProductCard
             key={product.id}
+            productId={product.id}
             imageUrl={product.imageUrl}
             title={product.title}
             brand={product.brand}
@@ -49,7 +50,7 @@ const FeaturedProductsSection = () => {
         ))}
       </div>
       <div className="text-center mt-12">
-        <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 w-full md:w-auto md:max-w-[200px] rounded-lg text-lg transition duration-300 ease-in-out shadow-lg h-10 md:h-12 md:mx-auto flex items-center justify-center">
+        <button className="bg-[#1285E8] hover:bg-[#0f6bbd] text-white font-bold py-3 px-8 w-full md:w-auto md:max-w-[200px] rounded-lg text-lg transition duration-300 ease-in-out shadow-lg h-10 md:h-12 md:mx-auto flex items-center justify-center">
           Explore More
         </button>
       </div>
