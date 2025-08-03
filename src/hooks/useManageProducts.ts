@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
-import { ProductListDto } from "@/types/product";
-import { productService } from "@/services/productService";
+import { useState, useEffect, useCallback } from 'react';
+import { ProductListDto } from '@/types/product';
+import { productService } from '@/services/productService';
 
 export const useManageProducts = (searchTerm?: string, categoryId?: number, brandId?: number) => {
   const [products, setProducts] = useState<ProductListDto[]>([]);
@@ -11,10 +11,20 @@ export const useManageProducts = (searchTerm?: string, categoryId?: number, bran
     setLoading(true);
     setError(null);
     try {
-      const fetchedProducts = await productService.getProducts(1, 10, categoryId ? [categoryId] : undefined, brandId ? [brandId] : undefined, searchTerm);
+      const fetchedProducts = await productService.getProducts(
+        1,
+        10,
+        categoryId ? [categoryId] : undefined,
+        brandId ? [brandId] : undefined,
+        searchTerm,
+      );
       setProducts(fetchedProducts.products);
-    } catch (err: any) {
-      setError(err.message || "Failed to fetch products.");
+    } catch (err: unknown) {
+      let errorMessage = 'Failed to fetch products.';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -25,12 +35,16 @@ export const useManageProducts = (searchTerm?: string, categoryId?: number, bran
   }, [fetchProducts]);
 
   const handleDeleteProduct = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this product?")) return;
+    if (!confirm('Are you sure you want to delete this product?')) return;
     try {
       await productService.deleteProduct(id);
       fetchProducts();
-    } catch (err: any) {
-      alert(err.message || "Failed to delete product.");
+    } catch (err: unknown) {
+      let errorMessage = 'Failed to delete product.';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      alert(errorMessage);
     }
   };
 

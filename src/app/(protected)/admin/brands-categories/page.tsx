@@ -1,153 +1,50 @@
-"use client";
+'use client';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useState, useEffect, useCallback } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { brandService } from "@/services/brandService";
-import { categoryService } from "@/services/categoryService";
-import { BrandDto } from "@/types/brand";
-import { CategoryDto } from "@/types/category";
-
-const useBrands = () => {
-  const [brands, setBrands] = useState<BrandDto[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchBrands = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const fetchedBrands = await brandService.getBrands();
-      setBrands(fetchedBrands);
-    } catch (err: any) {
-      setError(err.message || "Failed to fetch brands.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchBrands();
-  }, [fetchBrands]);
-
-  return { brands, loading, error, fetchBrands };
-};
-
-const useCategories = () => {
-  const [categories, setCategories] = useState<CategoryDto[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchCategories = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const fetchedCategories = await categoryService.getCategories();
-      setCategories(fetchedCategories);
-    } catch (err: any) {
-      setError(err.message || "Failed to fetch categories.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
-
-  return { categories, loading, error, fetchCategories };
-};
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { useManageBrandsCategoriesPage } from '@/hooks/useManageBrandsCategoriesPage';
 
 export default function ManageBrandsCategoriesPage() {
-  const { brands, loading: brandsLoading, error: brandsError, fetchBrands } = useBrands();
-  const { categories, loading: categoriesLoading, error: categoriesError, fetchCategories } = useCategories();
+  const {
+    brands,
+    brandsLoading,
+    brandsError,
+    newBrandName,
+    setNewBrandName,
+    editingBrand,
+    setEditingBrand,
+    editBrandName,
+    setEditBrandName,
+    handleAddBrand,
+    handleEditBrand,
+    handleUpdateBrand,
+    handleDeleteBrand,
 
-  const [newBrandName, setNewBrandName] = useState("");
-  const [newCategoryName, setNewCategoryName] = useState("");
-  const [editingBrand, setEditingBrand] = useState<BrandDto | null>(null);
-  const [editingCategory, setEditingCategory] = useState<CategoryDto | null>(null);
-  const [editBrandName, setEditBrandName] = useState("");
-  const [editCategoryName, setEditCategoryName] = useState("");
-
-  const handleAddBrand = async () => {
-    if (!newBrandName.trim()) return;
-    try {
-      await brandService.createBrand({ name: newBrandName });
-      setNewBrandName("");
-      fetchBrands();
-    } catch (err: any) {
-      alert(err.message || "Failed to add brand.");
-    }
-  };
-
-  const handleAddCategory = async () => {
-    if (!newCategoryName.trim()) return;
-    try {
-      await categoryService.createCategory({ name: newCategoryName });
-      setNewCategoryName("");
-      fetchCategories();
-    } catch (err: any) {
-      alert(err.message || "Failed to add category.");
-    }
-  };
-
-  const handleEditBrand = (brand: BrandDto) => {
-    setEditingBrand(brand);
-    setEditBrandName(brand.name);
-  };
-
-  const handleUpdateBrand = async () => {
-    if (!editingBrand || !editBrandName.trim()) return;
-    try {
-      await brandService.updateBrand(editingBrand.id, { name: editBrandName });
-      setEditingBrand(null);
-      setEditBrandName("");
-      fetchBrands();
-    } catch (err: any) {
-      alert(err.message || "Failed to update brand.");
-    }
-  };
-
-  const handleDeleteBrand = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this brand?")) return;
-    try {
-      await brandService.deleteBrand(id);
-      fetchBrands();
-    } catch (err: any) {
-      alert(err.message || "Failed to delete brand.");
-    }
-  };
-
-  const handleEditCategory = (category: CategoryDto) => {
-    setEditingCategory(category);
-    setEditCategoryName(category.name);
-  };
-
-  const handleUpdateCategory = async () => {
-    if (!editingCategory || !editCategoryName.trim()) return;
-    try {
-      await categoryService.updateCategory(editingCategory.id, { name: editCategoryName });
-      setEditingCategory(null);
-      setEditCategoryName("");
-      fetchCategories();
-    } catch (err: any) {
-      alert(err.message || "Failed to update category.");
-    }
-  };
-
-  const handleDeleteCategory = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this category?")) return;
-    try {
-      await categoryService.deleteCategory(id);
-      fetchCategories();
-    } catch (err: any) {
-      alert(err.message || "Failed to delete category.");
-    }
-  };
+    categories,
+    categoriesLoading,
+    categoriesError,
+    newCategoryName,
+    setNewCategoryName,
+    editingCategory,
+    setEditingCategory,
+    editCategoryName,
+    setEditCategoryName,
+    handleAddCategory,
+    handleEditCategory,
+    handleUpdateCategory,
+    handleDeleteCategory,
+  } = useManageBrandsCategoriesPage();
 
   return (
     <div className="container mx-auto py-8">
@@ -170,23 +67,44 @@ export default function ManageBrandsCategoriesPage() {
           </div>
           {categoriesLoading && <p>Loading categories...</p>}
           {categoriesError && <p className="text-red-500">{categoriesError}</p>}
-          {!categoriesLoading && !categoriesError && categories.length === 0 && <p>No categories found.</p>}
+          {!categoriesLoading && !categoriesError && categories.length === 0 && (
+            <p>No categories found.</p>
+          )}
           {!categoriesLoading && !categoriesError && categories.length > 0 && (
             <div className="border rounded-md">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category Name</th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Category Name
+                    </th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {categories.map((category) => (
                     <tr key={category.id}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{category.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {category.name}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <Button variant="outline" size="sm" className="mr-2" onClick={() => handleEditCategory(category)}>Edit</Button>
-                        <Button variant="destructive" size="sm" onClick={() => handleDeleteCategory(category.id)}>Delete</Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="mr-2"
+                          onClick={() => handleEditCategory(category)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleDeleteCategory(category.id)}
+                        >
+                          Delete
+                        </Button>
                       </td>
                     </tr>
                   ))}
@@ -216,7 +134,9 @@ export default function ManageBrandsCategoriesPage() {
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setEditingCategory(null)}>Cancel</Button>
+                  <Button variant="outline" onClick={() => setEditingCategory(null)}>
+                    Cancel
+                  </Button>
                   <Button onClick={handleUpdateCategory}>Save changes</Button>
                 </DialogFooter>
               </DialogContent>
@@ -248,17 +168,36 @@ export default function ManageBrandsCategoriesPage() {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Brand Name</th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Brand Name
+                    </th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {brands.map((brand) => (
                     <tr key={brand.id}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{brand.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {brand.name}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <Button variant="outline" size="sm" className="mr-2" onClick={() => handleEditBrand(brand)}>Edit</Button>
-                        <Button variant="destructive" size="sm" onClick={() => handleDeleteBrand(brand.id)}>Delete</Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="mr-2"
+                          onClick={() => handleEditBrand(brand)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleDeleteBrand(brand.id)}
+                        >
+                          Delete
+                        </Button>
                       </td>
                     </tr>
                   ))}
@@ -288,7 +227,9 @@ export default function ManageBrandsCategoriesPage() {
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button variant="outline" onClick={() => setEditingBrand(null)}>Cancel</Button>
+                  <Button variant="outline" onClick={() => setEditingBrand(null)}>
+                    Cancel
+                  </Button>
                   <Button onClick={handleUpdateBrand}>Save changes</Button>
                 </DialogFooter>
               </DialogContent>

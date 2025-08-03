@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -117,9 +117,15 @@ html {
 }
 
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 .animate-float {
@@ -127,8 +133,14 @@ html {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px) rotateX(-5deg) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) rotateX(0deg) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(20px) rotateX(-5deg) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg) scale(1);
+  }
 }
 
 .animate-fade-in-up {

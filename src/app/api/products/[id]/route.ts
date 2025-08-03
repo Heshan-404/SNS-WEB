@@ -4,11 +4,15 @@ import { UploadedImageDto } from '../../../../types/image';
 import { UpdateProductDto } from '@/types/product';
 import { authMiddleware } from '../../../../lib/authMiddleware';
 import { del } from '@vercel/blob';
+import { Product } from '@prisma/client'; // Import Product type from Prisma Client
 
-export async function GET(request: Request, context: any) {
-  const { params } = context;
+export async function GET(
+  request: Request,
+  context: { params: Promise<{ id?: string | string[] }> },
+) {
+  const { id: idParam } = await context.params;
   try {
-    const id = parseInt(params.id, 10);
+    const id = parseInt(idParam as string, 10);
     if (isNaN(id)) {
       return NextResponse.json({ error: 'Invalid product ID' }, { status: 400 });
     }
@@ -20,16 +24,23 @@ export async function GET(request: Request, context: any) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
     return NextResponse.json(product);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching product by ID:', error);
-    return NextResponse.json({ error: 'Failed to fetch product' }, { status: 500 });
+    let errorMessage = 'Failed to fetch product';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
-async function putHandler(request: Request, context: any) {
-  const { params } = context;
+async function putHandler(
+  request: Request,
+  context: { params: Promise<{ id?: string | string[] }> },
+) {
+  const { id: idParam } = await context.params;
   try {
-    const id = parseInt(params.id, 10);
+    const id = parseInt(idParam as string, 10);
     if (isNaN(id)) {
       return NextResponse.json({ error: 'Invalid product ID' }, { status: 400 });
     }
@@ -47,12 +58,15 @@ async function putHandler(request: Request, context: any) {
     // Basic validation for images if provided
     if (data.images !== undefined) {
       if (data.images.length === 0 || !data.images.some((img: UploadedImageDto) => img.isMain)) {
-        return NextResponse.json({ error: 'If updating images, at least one main image is required' }, { status: 400 });
+        return NextResponse.json(
+          { error: 'If updating images, at least one main image is required' },
+          { status: 400 },
+        );
       }
 
       // Determine images to delete from Vercel Blob
       const imagesToDelete = existingProduct.images.filter(
-        (existingImg) => !data.images!.some((newImg) => newImg.url === existingImg.url)
+        (existingImg) => !data.images!.some((newImg) => newImg.url === existingImg.url),
       );
 
       // Delete images from Vercel Blob
@@ -61,7 +75,9 @@ async function putHandler(request: Request, context: any) {
 
     const { images, categoryId, brandId, ...productData } = data;
 
-    const updateData: any = {
+    const updateData: Partial<Product> & {
+      images?: { deleteMany: Record<string, never>; create: { url: string; isMain: boolean }[] };
+    } = {
       ...productData,
     };
 
@@ -75,7 +91,7 @@ async function putHandler(request: Request, context: any) {
     if (images !== undefined) {
       updateData.images = {
         deleteMany: {},
-        create: images.map(img => ({ url: img.url, isMain: img.isMain })),
+        create: images.map((img) => ({ url: img.url, isMain: img.isMain })),
       };
     }
 
@@ -88,20 +104,27 @@ async function putHandler(request: Request, context: any) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
     return NextResponse.json(updatedProduct);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error updating product:', error);
     // Handle foreign key constraint errors (category/brand not found)
-    if (error.code === 'P2003') {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'P2003') {
       return NextResponse.json({ error: 'Invalid categoryId or brandId' }, { status: 400 });
     }
-    return NextResponse.json({ error: 'Failed to update product' }, { status: 500 });
+    let errorMessage = 'Failed to update product';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
-async function deleteHandler(request: Request, context: any) {
-  const { params } = context;
+async function deleteHandler(
+  request: Request,
+  context: { params: Promise<{ id?: string | string[] }> },
+) {
+  const { id: idParam } = await context.params;
   try {
-    const id = parseInt(params.id, 10);
+    const id = parseInt(idParam as string, 10);
     if (isNaN(id)) {
       return NextResponse.json({ error: 'Invalid product ID' }, { status: 400 });
     }
@@ -117,9 +140,13 @@ async function deleteHandler(request: Request, context: any) {
     // Delete associated images from Vercel Blob
     await Promise.all(deletedProduct.images.map((img) => del(img.url)));
     return NextResponse.json({ message: 'Product deleted successfully' });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error deleting product:', error);
-    return NextResponse.json({ error: 'Failed to delete product' }, { status: 500 });
+    let errorMessage = 'Failed to delete product';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 

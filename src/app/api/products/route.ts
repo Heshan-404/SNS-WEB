@@ -12,8 +12,18 @@ export async function GET(request: Request) {
     const categoryIdsParam = searchParams.get('categoryIds');
     const brandIdsParam = searchParams.get('brandIds');
 
-    const categoryIds = categoryIdsParam ? categoryIdsParam.split(',').map(id => parseInt(id.trim(), 10)).filter(id => !isNaN(id)) : undefined;
-    const brandIds = brandIdsParam ? brandIdsParam.split(',').map(id => parseInt(id.trim(), 10)).filter(id => !isNaN(id)) : undefined;
+    const categoryIds = categoryIdsParam
+      ? categoryIdsParam
+          .split(',')
+          .map((id) => parseInt(id.trim(), 10))
+          .filter((id) => !isNaN(id))
+      : undefined;
+    const brandIds = brandIdsParam
+      ? brandIdsParam
+          .split(',')
+          .map((id) => parseInt(id.trim(), 10))
+          .filter((id) => !isNaN(id))
+      : undefined;
 
     const products = await prisma.product.findMany({
       skip: (page - 1) * limit,
@@ -32,15 +42,19 @@ export async function GET(request: Request) {
       },
     });
 
-    const productsWithMainImage = products.map(product => ({
+    const productsWithMainImage = products.map((product) => ({
       ...product,
-      mainImageUrl: product.images.find(image => image.isMain)?.url || null,
+      mainImageUrl: product.images.find((image) => image.isMain)?.url || null,
     }));
 
     return NextResponse.json({ products: productsWithMainImage, total, page, limit });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching products:', error);
-    return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 });
+    let errorMessage = 'Failed to fetch products';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
@@ -49,8 +63,19 @@ async function postHandler(request: Request) {
     const data: CreateProductDto = await request.json();
 
     // Basic validation for required fields
-    if (!data.name || !data.shortName || !data.description || !data.categoryId || !data.brandId || !data.images || data.images.length === 0) {
-      return NextResponse.json({ error: 'Missing required product fields or main image' }, { status: 400 });
+    if (
+      !data.name ||
+      !data.shortName ||
+      !data.description ||
+      !data.categoryId ||
+      !data.brandId ||
+      !data.images ||
+      data.images.length === 0
+    ) {
+      return NextResponse.json(
+        { error: 'Missing required product fields or main image' },
+        { status: 400 },
+      );
     }
     // Ensure at least one main image is provided
     if (!data.images.some((img: UploadedImageDto) => img.isMain)) {
@@ -61,19 +86,23 @@ async function postHandler(request: Request) {
       data: {
         ...data,
         images: {
-          create: data.images.map(img => ({ url: img.url, isMain: img.isMain })),
+          create: data.images.map((img) => ({ url: img.url, isMain: img.isMain })),
         },
       },
       include: { category: true, brand: true, images: true },
     });
     return NextResponse.json(product, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error creating product:', error);
     // Handle foreign key constraint errors (category/brand not found)
-    if (error.code === 'P2003') {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'P2003') {
       return NextResponse.json({ error: 'Invalid categoryId or brandId' }, { status: 400 });
     }
-    return NextResponse.json({ error: 'Failed to create product' }, { status: 500 });
+    let errorMessage = 'Failed to create product';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 

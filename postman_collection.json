@@ -24,14 +24,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/auth/login",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "login"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "auth", "login"]
             },
             "description": "User login"
           },
@@ -53,14 +47,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/auth/register",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "register"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "auth", "register"]
             },
             "description": "User registration"
           },
@@ -78,13 +66,8 @@
             "header": [],
             "url": {
               "raw": "{{baseURL}}/api/brands",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "brands"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "brands"]
             },
             "description": "Get all brands"
           },
@@ -97,14 +80,8 @@
             "header": [],
             "url": {
               "raw": "{{baseURL}}/api/brands/:id",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "brands",
-                ":id"
-              ],
+              "host": ["{{baseURL}}"],
+              "path": ["api", "brands", ":id"],
               "variable": [
                 {
                   "key": "id",
@@ -137,13 +114,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/brands",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "brands"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "brands"]
             },
             "description": "Create a new brand"
           },
@@ -169,14 +141,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/brands/:id",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "brands",
-                ":id"
-              ],
+              "host": ["{{baseURL}}"],
+              "path": ["api", "brands", ":id"],
               "variable": [
                 {
                   "key": "id",
@@ -201,14 +167,8 @@
             ],
             "url": {
               "raw": "{{baseURL}}/api/brands/:id",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "brands",
-                ":id"
-              ],
+              "host": ["{{baseURL}}"],
+              "path": ["api", "brands", ":id"],
               "variable": [
                 {
                   "key": "id",
@@ -233,13 +193,8 @@
             "header": [],
             "url": {
               "raw": "{{baseURL}}/api/categories",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "categories"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "categories"]
             },
             "description": "Get all categories"
           },
@@ -252,14 +207,8 @@
             "header": [],
             "url": {
               "raw": "{{baseURL}}/api/categories/:id",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "categories",
-                ":id"
-              ],
+              "host": ["{{baseURL}}"],
+              "path": ["api", "categories", ":id"],
               "variable": [
                 {
                   "key": "id",
@@ -292,13 +241,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/categories",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "categories"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "categories"]
             },
             "description": "Create a new category"
           },
@@ -324,14 +268,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/categories/:id",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "categories",
-                ":id"
-              ],
+              "host": ["{{baseURL}}"],
+              "path": ["api", "categories", ":id"],
               "variable": [
                 {
                   "key": "id",
@@ -356,14 +294,8 @@
             ],
             "url": {
               "raw": "{{baseURL}}/api/categories/:id",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "categories",
-                ":id"
-              ],
+              "host": ["{{baseURL}}"],
+              "path": ["api", "categories", ":id"],
               "variable": [
                 {
                   "key": "id",
@@ -388,13 +320,8 @@
             "header": [],
             "url": {
               "raw": "{{baseURL}}/api/products?page=1&limit=10&categoryIds=1,2&brandIds=3",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "products"
-              ],
+              "host": ["{{baseURL}}"],
+              "path": ["api", "products"],
               "query": [
                 {
                   "key": "page",
@@ -431,14 +358,8 @@
             "header": [],
             "url": {
               "raw": "{{baseURL}}/api/products/:id",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "products",
-                ":id"
-              ],
+              "host": ["{{baseURL}}"],
+              "path": ["api", "products", ":id"],
               "variable": [
                 {
                   "key": "id",
@@ -471,13 +392,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/products",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "products"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "products"]
             },
             "description": "Create a new product"
           },
@@ -503,14 +419,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/products/:id",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "products",
-                ":id"
-              ],
+              "host": ["{{baseURL}}"],
+              "path": ["api", "products", ":id"],
               "variable": [
                 {
                   "key": "id",
@@ -535,14 +445,8 @@
             ],
             "url": {
               "raw": "{{baseURL}}/api/products/:id",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "products",
-                ":id"
-              ],
+              "host": ["{{baseURL}}"],
+              "path": ["api", "products", ":id"],
               "variable": [
                 {
                   "key": "id",
@@ -576,13 +480,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/contact",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "contact"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "contact"]
             },
             "description": "Send contact form email"
           },
@@ -616,13 +515,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/upload",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "upload"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "upload"]
             },
             "description": "Upload images (use form-data with 'file' key)"
           },

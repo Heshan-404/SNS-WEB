@@ -1,14 +1,16 @@
-import { useState, useEffect, useCallback } from "react";
-import { brandService } from "@/services/brandService";
-import { BrandDto } from "@/types/brand";
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
+import { brandService } from '@/services/brandService';
+import { BrandDto } from '@/types/brand';
 
 export const useManageBrands = () => {
   const [brands, setBrands] = useState<BrandDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [newBrandName, setNewBrandName] = useState("");
+  const [newBrandName, setNewBrandName] = useState('');
   const [editingBrand, setEditingBrand] = useState<BrandDto | null>(null);
-  const [editBrandName, setEditBrandName] = useState("");
+  const [editBrandName, setEditBrandName] = useState('');
 
   const fetchBrands = useCallback(async () => {
     setLoading(true);
@@ -16,8 +18,12 @@ export const useManageBrands = () => {
     try {
       const fetchedBrands = await brandService.getBrands();
       setBrands(fetchedBrands);
-    } catch (err: any) {
-      setError(err.message || "Failed to fetch brands.");
+    } catch (err: unknown) {
+      let errorMessage = 'Failed to fetch brands.';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -31,10 +37,14 @@ export const useManageBrands = () => {
     if (!newBrandName.trim()) return;
     try {
       await brandService.createBrand({ name: newBrandName });
-      setNewBrandName("");
+      setNewBrandName('');
       fetchBrands();
-    } catch (err: any) {
-      alert(err.message || "Failed to add brand.");
+    } catch (err: unknown) {
+      let errorMessage = 'Failed to add brand.';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      alert(errorMessage);
     }
   };
 
@@ -48,20 +58,28 @@ export const useManageBrands = () => {
     try {
       await brandService.updateBrand(editingBrand.id, { name: editBrandName });
       setEditingBrand(null);
-      setEditBrandName("");
+      setEditBrandName('');
       fetchBrands();
-    } catch (err: any) {
-      alert(err.message || "Failed to update brand.");
+    } catch (err: unknown) {
+      let errorMessage = 'Failed to update brand.';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      alert(errorMessage);
     }
   };
 
   const handleDeleteBrand = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this brand?")) return;
+    if (!confirm('Are you sure you want to delete this brand?')) return;
     try {
       await brandService.deleteBrand(id);
       fetchBrands();
-    } catch (err: any) {
-      alert(err.message || "Failed to delete brand.");
+    } catch (err: unknown) {
+      let errorMessage = 'Failed to delete brand.';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      alert(errorMessage);
     }
   };
 

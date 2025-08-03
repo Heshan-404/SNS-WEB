@@ -1,5 +1,5 @@
 // app/products/MainContent.tsx
-"use client";
+'use client';
 
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
@@ -29,5 +29,5 @@ export default function MainContent({ children }: { children: React.ReactNode })
     <Suspense>
       <MainContentInternal>{children}</MainContentInternal>
     </Suspense>
-  )
+  );
 }

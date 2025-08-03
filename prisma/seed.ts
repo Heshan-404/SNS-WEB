@@ -4,27 +4,27 @@ const prisma = new PrismaClient();
 
 async function main() {
   const categories = [
-    "PP-R Pipes & Fittings",
-    "CPVC Pipes & Fittings",
-    "UPVC Pipes & Fittings",
-    "Valve",
-    "Plumbing Items",
-    "Shower & Tap",
-    "Locks & Hinges",
-    "Light Fittings",
-    "Other Items"
+    'PP-R Pipes & Fittings',
+    'CPVC Pipes & Fittings',
+    'UPVC Pipes & Fittings',
+    'Valve',
+    'Plumbing Items',
+    'Shower & Tap',
+    'Locks & Hinges',
+    'Light Fittings',
+    'Other Items',
   ];
 
   const brands = [
-    "IFAN",
-    "ANTON",
-    "PHOENIX",
-    "PLUMB FAST",
-    "Pegler",
-    "FORDmix",
-    "Watermax",
-    "Everlatch",
-    "LUMINUR"
+    'IFAN',
+    'ANTON',
+    'PHOENIX',
+    'PLUMB FAST',
+    'Pegler',
+    'FORDmix',
+    'Watermax',
+    'Everlatch',
+    'LUMINUR',
   ];
 
   console.log('Start seeding...');

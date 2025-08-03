@@ -21,9 +21,13 @@ async function postHandler(request: Request): Promise<NextResponse> {
 
     const uploadedBlobs = await Promise.all(uploadPromises);
     return NextResponse.json(uploadedBlobs);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Vercel Blob upload error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    let errorMessage = 'Failed to upload files';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 

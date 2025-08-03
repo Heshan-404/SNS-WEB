@@ -1,6 +1,7 @@
-"use client";
+'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
+import React from 'react';
+import { useAnimateOnScroll } from '@/hooks/useAnimateOnScroll';
 
 interface AnimateOnScrollProps {
   children: React.ReactNode;
@@ -11,33 +12,9 @@ interface AnimateOnScrollProps {
 const AnimateOnScroll: React.FC<AnimateOnScrollProps> = ({
   children,
   animationClass = 'animate-fade-in-up',
-  threshold = 0.1, // 10% of the element visible
+  threshold = 0.1,
 }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        } else {
-          setIsVisible(false);
-        }
-      },
-      { threshold }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
-    };
-  }, [threshold]);
+  const { ref, isVisible } = useAnimateOnScroll({ threshold });
 
   return (
     <div ref={ref} className={isVisible ? animationClass : 'opacity-0'}>

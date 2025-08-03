@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 
 interface UseProductFilterOptions {
   initialCategoryIds?: string[];
@@ -12,10 +12,10 @@ export const useProductFilter = (options?: UseProductFilterOptions) => {
   const pathname = usePathname();
 
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<Set<string>>(
-    () => new Set(options?.initialCategoryIds || [])
+    () => new Set(options?.initialCategoryIds || []),
   );
   const [selectedBrandIds, setSelectedBrandIds] = useState<Set<string>>(
-    () => new Set(options?.initialBrandIds || [])
+    () => new Set(options?.initialBrandIds || []),
   );
 
   useEffect(() => {
@@ -60,7 +60,7 @@ export const useProductFilter = (options?: UseProductFilterOptions) => {
 
   const applyFilters = useCallback(() => {
     const params = new URLSearchParams(searchParams.toString());
-    
+
     if (selectedCategoryIds.size > 0) {
       params.set('categoryIds', Array.from(selectedCategoryIds).join(','));
     } else {
@@ -72,7 +72,7 @@ export const useProductFilter = (options?: UseProductFilterOptions) => {
     } else {
       params.delete('brandIds');
     }
-    
+
     params.set('page', '1'); // Reset to first page on filter change
     router.push(`${pathname}?${params.toString()}`);
   }, [selectedCategoryIds, selectedBrandIds, searchParams, router, pathname]);

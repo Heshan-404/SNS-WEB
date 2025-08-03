@@ -1,29 +1,30 @@
-"use client";
+'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { UploadedImageDto } from '@/types/image';
 import { cn } from '@/lib/utils';
 import { X } from 'lucide-react';
+import { useManageableImagePreview } from '@/hooks/useManageableImagePreview';
 
 interface ManageableImagePreviewProps {
   images: UploadedImageDto[];
   onRemoveImage: (image: UploadedImageDto) => void;
 }
 
-const ManageableImagePreview: React.FC<ManageableImagePreviewProps> = ({ images, onRemoveImage }) => {
-  const [selectedMainImage, setSelectedMainImage] = useState<UploadedImageDto | undefined>(images.find(img => img.isMain) || images[0]);
-
-  // Update selectedMainImage if the main image changes or is removed
-  React.useEffect(() => {
-    setSelectedMainImage(images.find(img => img.isMain) || images[0]);
-  }, [images]);
+const ManageableImagePreview: React.FC<ManageableImagePreviewProps> = ({
+  images,
+  onRemoveImage,
+}) => {
+  const { selectedMainImage, setSelectedMainImage, subImages } = useManageableImagePreview({
+    images,
+  });
 
   if (!images || images.length === 0) {
-    return <div className="text-center text-gray-500 py-10">No images available for this product.</div>;
+    return (
+      <div className="text-center text-gray-500 py-10">No images available for this product.</div>
+    );
   }
-
-  const subImages = images.filter(img => img.url !== selectedMainImage?.url);
 
   return (
     <div className="w-full max-w-3xl">
@@ -56,8 +57,8 @@ const ManageableImagePreview: React.FC<ManageableImagePreviewProps> = ({ images,
             <div
               key={img.url} // Use img.url as key for better stability
               className={cn(
-                "relative w-full aspect-square rounded-lg overflow-hidden cursor-pointer group",
-                img.url === selectedMainImage?.url && "border-2 border-blue-500"
+                'relative w-full aspect-square rounded-lg overflow-hidden cursor-pointer group',
+                img.url === selectedMainImage?.url && 'border-2 border-blue-500',
               )}
               onClick={() => setSelectedMainImage(img)}
             >
@@ -113,8 +114,8 @@ const ManageableImagePreview: React.FC<ManageableImagePreviewProps> = ({ images,
             <div
               key={img.url}
               className={cn(
-                "relative flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden cursor-pointer group",
-                img.url === selectedMainImage?.url && "border-2 border-blue-500"
+                'relative flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden cursor-pointer group',
+                img.url === selectedMainImage?.url && 'border-2 border-blue-500',
               )}
               onClick={() => setSelectedMainImage(img)}
             >

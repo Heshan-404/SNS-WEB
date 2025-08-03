@@ -3,10 +3,13 @@ import prisma from '../../../../lib/prisma';
 import { UpdateCategoryDto } from '@/types/category';
 import { authMiddleware } from '../../../../lib/authMiddleware';
 
-export async function GET(request: Request, context: any) {
-  const { params } = context;
+export async function GET(
+  request: Request,
+  context: { params: Promise<Record<string, string | string[] | undefined>> },
+) {
+  const params = await context.params;
   try {
-    const id = parseInt(params.id, 10);
+    const id = parseInt(params?.id as string, 10);
     if (isNaN(id)) {
       return NextResponse.json({ error: 'Invalid category ID' }, { status: 400 });
     }
@@ -17,16 +20,23 @@ export async function GET(request: Request, context: any) {
       return NextResponse.json({ error: 'Category not found' }, { status: 404 });
     }
     return NextResponse.json(category);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching category by ID:', error);
-    return NextResponse.json({ error: 'Failed to fetch category' }, { status: 500 });
+    let errorMessage = 'Failed to fetch category';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
-async function putHandler(request: Request, context: any) {
-  const { params } = context;
+async function putHandler(
+  request: Request,
+  context: { params: Promise<Record<string, string | string[] | undefined>> },
+) {
+  const params = await context.params;
   try {
-    const id = parseInt(params.id, 10);
+    const id = parseInt(params?.id as string, 10);
     if (isNaN(id)) {
       return NextResponse.json({ error: 'Invalid category ID' }, { status: 400 });
     }
@@ -42,19 +52,40 @@ async function putHandler(request: Request, context: any) {
       return NextResponse.json({ error: 'Category not found' }, { status: 404 });
     }
     return NextResponse.json(updatedCategory);
-  } catch (error: any) {
-    if (error.code === 'P2002' && error.meta?.target?.includes('name')) {
-      return NextResponse.json({ error: 'Category with this name already exists' }, { status: 409 });
+  } catch (error: unknown) {
+    if (
+      error &&
+      typeof error === 'object' &&
+      'code' in error &&
+      error.code === 'P2002' &&
+      'meta' in error &&
+      typeof error.meta === 'object' &&
+      error.meta &&
+      'target' in error.meta &&
+      Array.isArray(error.meta.target) &&
+      error.meta.target.includes('name')
+    ) {
+      return NextResponse.json(
+        { error: 'Category with this name already exists' },
+        { status: 409 },
+      );
     }
     console.error('Error updating category:', error);
-    return NextResponse.json({ error: 'Failed to update category' }, { status: 500 });
+    let errorMessage = 'Failed to update category';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
-async function deleteHandler(request: Request, context: any) {
-  const { params } = context;
+async function deleteHandler(
+  request: Request,
+  context: { params: Promise<Record<string, string | string[] | undefined>> },
+) {
+  const params = await context.params;
   try {
-    const id = parseInt(params.id, 10);
+    const id = parseInt(params?.id as string, 10);
     if (isNaN(id)) {
       return NextResponse.json({ error: 'Invalid category ID' }, { status: 400 });
     }
@@ -63,7 +94,10 @@ async function deleteHandler(request: Request, context: any) {
     });
 
     if (productsCount > 0) {
-      return NextResponse.json({ error: 'Cannot delete category: It is currently used by products.' }, { status: 409 });
+      return NextResponse.json(
+        { error: 'Cannot delete category: It is currently used by products.' },
+        { status: 409 },
+      );
     }
 
     const deletedCategory = await prisma.category.delete({
@@ -73,13 +107,19 @@ async function deleteHandler(request: Request, context: any) {
       return NextResponse.json({ error: 'Category not found' }, { status: 404 });
     }
     return NextResponse.json({ message: 'Category deleted successfully' });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error deleting category:', error);
-    // Specific error for deletion restriction
-    if (error.message.includes('Cannot delete category')) {
-      return NextResponse.json({ error: error.message }, { status: 409 });
+    let errorMessage = 'Failed to delete category';
+    if (
+      error &&
+      typeof error === 'object' &&
+      'message' in error &&
+      typeof error.message === 'string' &&
+      error.message.includes('Cannot delete category')
+    ) {
+      errorMessage = error.message;
     }
-    return NextResponse.json({ error: 'Failed to delete category' }, { status: 500 });
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 

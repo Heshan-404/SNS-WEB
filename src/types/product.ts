@@ -31,9 +31,16 @@ export interface ProductDto {
   description: string;
   categoryId: number;
   brandId: number;
-  category: { id: number; name: string; createdAt: Date; updatedAt: Date; };
-  brand: { id: number; name: string; createdAt: Date; updatedAt: Date; };
-  images: { id: number; url: string; isMain: boolean; productId: number; createdAt: Date; updatedAt: Date; }[];
+  category: { id: number; name: string; createdAt: Date; updatedAt: Date };
+  brand: { id: number; name: string; createdAt: Date; updatedAt: Date };
+  images: {
+    id: number;
+    url: string;
+    isMain: boolean;
+    productId: number;
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
   availableSizes: string[];
   voltages: string[];
   colors: string[];

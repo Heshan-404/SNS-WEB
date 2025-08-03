@@ -1,14 +1,16 @@
-import { useState, useEffect, useCallback } from "react";
-import { categoryService } from "@/services/categoryService";
-import { CategoryDto } from "@/types/category";
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
+import { categoryService } from '@/services/categoryService';
+import { CategoryDto } from '@/types/category';
 
 export const useManageCategories = () => {
   const [categories, setCategories] = useState<CategoryDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryName, setNewCategoryName] = useState('');
   const [editingCategory, setEditingCategory] = useState<CategoryDto | null>(null);
-  const [editCategoryName, setEditCategoryName] = useState("");
+  const [editCategoryName, setEditCategoryName] = useState('');
 
   const fetchCategories = useCallback(async () => {
     setLoading(true);
@@ -16,8 +18,12 @@ export const useManageCategories = () => {
     try {
       const fetchedCategories = await categoryService.getCategories();
       setCategories(fetchedCategories);
-    } catch (err: any) {
-      setError(err.message || "Failed to fetch categories.");
+    } catch (err: unknown) {
+      let errorMessage = 'Failed to fetch categories.';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -31,10 +37,14 @@ export const useManageCategories = () => {
     if (!newCategoryName.trim()) return;
     try {
       await categoryService.createCategory({ name: newCategoryName });
-      setNewCategoryName("");
+      setNewCategoryName('');
       fetchCategories();
-    } catch (err: any) {
-      alert(err.message || "Failed to add category.");
+    } catch (err: unknown) {
+      let errorMessage = 'Failed to add category.';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      alert(errorMessage);
     }
   };
 
@@ -48,20 +58,28 @@ export const useManageCategories = () => {
     try {
       await categoryService.updateCategory(editingCategory.id, { name: editCategoryName });
       setEditingCategory(null);
-      setEditCategoryName("");
+      setEditCategoryName('');
       fetchCategories();
-    } catch (err: any) {
-      alert(err.message || "Failed to update category.");
+    } catch (err: unknown) {
+      let errorMessage = 'Failed to update category.';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      alert(errorMessage);
     }
   };
 
   const handleDeleteCategory = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this category?")) return;
+    if (!confirm('Are you sure you want to delete this category?')) return;
     try {
       await categoryService.deleteCategory(id);
       fetchCategories();
-    } catch (err: any) {
-      alert(err.message || "Failed to delete category.");
+    } catch (err: unknown) {
+      let errorMessage = 'Failed to delete category.';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      alert(errorMessage);
     }
   };
 

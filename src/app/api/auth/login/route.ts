@@ -21,7 +21,9 @@ export async function POST(request: Request) {
     }
 
     // Generate JWT token
-    const token = jwt.sign({ userId: user.user?.id, email: user.user?.email }, JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user.user?.id, email: user.user?.email }, JWT_SECRET, {
+      expiresIn: '1h',
+    });
 
     const response = NextResponse.json({ user });
     response.cookies.set('token', token, {
@@ -32,8 +34,12 @@ export async function POST(request: Request) {
     });
 
     return response;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Login error:', error);
-    return NextResponse.json({ error: 'Failed to login' }, { status: 500 });
+    let errorMessage = 'Failed to login';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

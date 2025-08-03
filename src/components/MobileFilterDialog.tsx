@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import ProductFilter from "@/components/ProductFilter";
+import React from 'react';
+import ProductFilter from '@/components/ProductFilter';
 import {
   Dialog,
   DialogContent,
@@ -9,19 +9,21 @@ import {
   DialogHeader,
   DialogTitle,
   DialogClose,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Filter, X } from "lucide-react";
-
-import { VisuallyHidden } from "@/components/ui/visually-hidden";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Filter, X } from 'lucide-react';
+import { VisuallyHidden } from '@/components/ui/visually-hidden';
+import { useMobileFilterDialog } from '@/hooks/useMobileFilterDialog';
+import { CategoryDto } from '@/types/category';
+import { BrandDto } from '@/types/brand';
 
 interface MobileFilterDialogProps {
-  categories: any[];
-  brands: any[];
+  categories: CategoryDto[];
+  brands: BrandDto[];
 }
 
 const MobileFilterDialog: React.FC<MobileFilterDialogProps> = ({ categories, brands }) => {
-  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const { isMobileFilterOpen, setIsMobileFilterOpen } = useMobileFilterDialog();
 
   return (
     <div className="md:hidden">
@@ -31,7 +33,10 @@ const MobileFilterDialog: React.FC<MobileFilterDialogProps> = ({ categories, bra
             <Filter className="h-4 w-4" />
           </Button>
         </DialogTrigger>
-        <DialogContent showCloseButton={false} className="fixed inset-x-0 top-16 h-[calc(100vh-4rem)] p-0 bg-white z-50 flex flex-col pointer-events-auto">
+        <DialogContent
+          showCloseButton={false}
+          className="fixed inset-x-0 top-16 h-[calc(100vh-4rem)] p-0 bg-white z-50 flex flex-col pointer-events-auto"
+        >
           <DialogHeader className="flex flex-row items-center justify-between px-4 py-4 border-b">
             <VisuallyHidden>
               <DialogTitle>Filter Products</DialogTitle>

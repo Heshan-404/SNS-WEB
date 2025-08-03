@@ -1,19 +1,30 @@
 import React, { Suspense } from 'react';
-import ProductPageClient from "./ProductPageClient";
+import ProductPageClient from './ProductPageClient';
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  BreadcrumbList, BreadcrumbPage,
-  BreadcrumbSeparator
-} from "@/components/ui/breadcrumb";
-import { categoryService } from "@/services/categoryService";
-import { brandService } from "@/services/brandService";
-import { productService } from "@/services/productService";
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { categoryService } from '@/services/categoryService';
+import { brandService } from '@/services/brandService';
+import { productService } from '@/services/productService';
 
 export const dynamic = 'force-dynamic';
 
-const ProductShowcase = async ({ searchParams }: any) => {
+interface ProductShowcaseProps {
+  searchParams: Promise<{
+    page?: string;
+    categoryIds?: string;
+    brandIds?: string;
+    search?: string;
+  }>;
+}
+
+const ProductShowcase = async ({ searchParams: searchParamsPromise }: ProductShowcaseProps) => {
+  const searchParams = await searchParamsPromise;
   const page = searchParams.page;
   const categoryIds = searchParams.categoryIds;
   const brandIds = searchParams.brandIds;
@@ -24,9 +35,9 @@ const ProductShowcase = async ({ searchParams }: any) => {
   const getIdsFromSearchParams = (param: string | undefined): number[] => {
     if (param) {
       return param
-          .split(",")
-          .map((id) => parseInt(id, 10))
-          .filter((id) => !isNaN(id));
+        .split(',')
+        .map((id) => parseInt(id, 10))
+        .filter((id) => !isNaN(id));
     }
     return [];
   };
@@ -39,11 +50,11 @@ const ProductShowcase = async ({ searchParams }: any) => {
     categoryService.getCategories(),
     brandService.getBrands(),
     productService.getProducts(
-        currentPage,
-        productsPerPage,
-        selectedCategoryIds,
-        selectedBrandIds,
-        searchTerm
+      currentPage,
+      productsPerPage,
+      selectedCategoryIds,
+      selectedBrandIds,
+      searchTerm,
     ),
   ]);
 

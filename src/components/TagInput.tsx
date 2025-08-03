@@ -1,10 +1,9 @@
-"use client";
-
-import React, { useState, KeyboardEvent } from 'react';
+import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { X } from 'lucide-react';
+import { useTagInput } from '@/hooks/useTagInput';
 
 interface TagInputProps {
   label: string;
@@ -14,29 +13,10 @@ interface TagInputProps {
 }
 
 const TagInput: React.FC<TagInputProps> = ({ label, placeholder, tags, setTags }) => {
-  const [inputValue, setInputValue] = useState('');
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
-
-  const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && inputValue.trim() !== '') {
-      e.preventDefault(); // Prevent form submission
-      setTags(prevTags => {
-        const newTag = inputValue.trim();
-        if (!prevTags.includes(newTag)) {
-          return [...prevTags, newTag];
-        }
-        return prevTags;
-      });
-      setInputValue('');
-    }
-  };
-
-  const handleRemoveTag = (tagToRemove: string) => {
-    setTags(prevTags => prevTags.filter(tag => tag !== tagToRemove));
-  };
+  const { inputValue, handleInputChange, handleInputKeyDown, handleRemoveTag } = useTagInput({
+    tags,
+    setTags,
+  });
 
   return (
     <div className="grid gap-2">
@@ -52,7 +32,7 @@ const TagInput: React.FC<TagInputProps> = ({ label, placeholder, tags, setTags }
         {tags.map((tag, index) => (
           <Badge key={tag} variant="secondary" className="flex items-center gap-1 pr-1">
             {tag}
-            <X className="h-3 w-3 cursor-pointer" onClick={() => setTags(prevTags => prevTags.filter(t => t !== tag))} />
+            <X className="h-3 w-3 cursor-pointer" onClick={() => handleRemoveTag(tag)} />
           </Badge>
         ))}
       </div>

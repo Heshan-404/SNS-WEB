@@ -1,4 +1,9 @@
-import { CreateProductDto, ProductDto, PaginatedProductsDto, UpdateProductDto } from '@/types/product';
+import {
+  CreateProductDto,
+  ProductDto,
+  PaginatedProductsDto,
+  UpdateProductDto,
+} from '@/types/product';
 import { UploadedImageDto } from '@/types/image';
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000') + '/api';
@@ -6,7 +11,7 @@ const API_BASE_URL = (process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000
 export const productService = {
   uploadImages: async (files: File[]): Promise<UploadedImageDto[]> => {
     const formData = new FormData();
-    files.forEach(file => {
+    files.forEach((file) => {
       formData.append('files', file);
     });
 
@@ -20,8 +25,13 @@ export const productService = {
       throw new Error(errorData.error || 'Failed to upload images');
     }
 
-    const uploadedBlobs: { url: string; pathname: string; contentType: string; contentDisposition: string; }[] = await response.json();
-    return uploadedBlobs.map(blob => ({
+    const uploadedBlobs: {
+      url: string;
+      pathname: string;
+      contentType: string;
+      contentDisposition: string;
+    }[] = await response.json();
+    return uploadedBlobs.map((blob) => ({
       url: blob.url,
       isMain: false, // This will be set by the client component logic
       name: blob.pathname.split('/').pop() || '',
@@ -47,7 +57,13 @@ export const productService = {
     return response.json();
   },
 
-  getProducts: async (page: number = 1, limit: number = 10, categoryIds?: number[], brandIds?: number[], searchTerm?: string): Promise<PaginatedProductsDto> => {
+  getProducts: async (
+    page: number = 1,
+    limit: number = 10,
+    categoryIds?: number[],
+    brandIds?: number[],
+    searchTerm?: string,
+  ): Promise<PaginatedProductsDto> => {
     const params = new URLSearchParams();
     params.append('page', page.toString());
     params.append('limit', limit.toString());

@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { UploadedImageDto } from '@/types/image';
 import { cn } from '@/lib/utils';
+import { useProductImageViewer } from '@/hooks/useProductImageViewer';
 
 interface ProductImageViewerProps {
   images: UploadedImageDto[];
 }
 
 const ProductImageViewer: React.FC<ProductImageViewerProps> = ({ images }) => {
-  const mainImage = images.find(img => img.isMain) || images[0];
-  const subImages = images.filter(img => img.url !== mainImage?.url).slice(0, 3);
-
-  const [selectedMainImage, setSelectedMainImage] = useState<UploadedImageDto | undefined>(mainImage);
+  const { selectedMainImage, setSelectedMainImage, subImages } = useProductImageViewer({ images });
 
   if (!images || images.length === 0) {
-    return <div className="text-center text-gray-500 py-10">No images available for this product.</div>;
+    return (
+      <div className="text-center text-gray-500 py-10">No images available for this product.</div>
+    );
   }
 
   return (
@@ -41,7 +41,7 @@ const ProductImageViewer: React.FC<ProductImageViewerProps> = ({ images }) => {
             <div
               key={index}
               className={cn(
-                "relative w-full aspect-square rounded-lg overflow-hidden cursor-pointer"
+                'relative w-full aspect-square rounded-lg overflow-hidden cursor-pointer',
               )}
               onClick={() => setSelectedMainImage(img)}
             >
@@ -78,7 +78,7 @@ const ProductImageViewer: React.FC<ProductImageViewerProps> = ({ images }) => {
             <div
               key={index}
               className={cn(
-                "relative flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden cursor-pointer",
+                'relative flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden cursor-pointer',
               )}
               onClick={() => setSelectedMainImage(img)}
             >

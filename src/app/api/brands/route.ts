@@ -9,9 +9,13 @@ export async function GET() {
       orderBy: { name: 'asc' },
     });
     return NextResponse.json(brands);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching brands:', error);
-    return NextResponse.json({ error: 'Failed to fetch brands' }, { status: 500 });
+    let errorMessage = 'Failed to fetch brands';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
@@ -25,12 +29,27 @@ async function postHandler(request: Request) {
       data: { name: data.name },
     });
     return NextResponse.json(brand, { status: 201 });
-  } catch (error: any) {
-    if (error.code === 'P2002' && error.meta?.target?.includes('name')) {
+  } catch (error: unknown) {
+    if (
+      error &&
+      typeof error === 'object' &&
+      'code' in error &&
+      error.code === 'P2002' &&
+      'meta' in error &&
+      typeof error.meta === 'object' &&
+      error.meta &&
+      'target' in error.meta &&
+      Array.isArray(error.meta.target) &&
+      error.meta.target.includes('name')
+    ) {
       return NextResponse.json({ error: 'Brand with this name already exists' }, { status: 409 });
     }
     console.error('Error creating brand:', error);
-    return NextResponse.json({ error: 'Failed to create brand' }, { status: 500 });
+    let errorMessage = 'Failed to create brand';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 

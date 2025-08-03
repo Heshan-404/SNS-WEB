@@ -13,12 +13,27 @@ export async function POST(request: Request) {
 
     const user = await authService.register(data);
     return NextResponse.json(user, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Handle unique email constraint violation
-    if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
+    if (
+      error &&
+      typeof error === 'object' &&
+      'code' in error &&
+      error.code === 'P2002' &&
+      'meta' in error &&
+      typeof error.meta === 'object' &&
+      error.meta &&
+      'target' in error.meta &&
+      Array.isArray(error.meta.target) &&
+      error.meta.target.includes('email')
+    ) {
       return NextResponse.json({ error: 'Email already registered' }, { status: 409 });
     }
     console.error('Registration error:', error);
-    return NextResponse.json({ error: 'Failed to register user' }, { status: 500 });
+    let errorMessage = 'Failed to register user';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

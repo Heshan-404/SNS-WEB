@@ -1,72 +1,42 @@
-import { productService } from '@/services/productService';
+import React from 'react';
 import ProductImageViewer from '@/components/ProductImageViewer';
 import { notFound } from 'next/navigation';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
-import { Separator } from "@/components/ui/separator";
-import type { Metadata } from 'next';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
+import { Separator } from '@/components/ui/separator';
+
 import { UploadedImageDto } from '@/types/image';
+import { productService } from '@/services/productService';
 
-export async function generateMetadata({ params }: any): Promise<Metadata> {
-  const productId = parseInt(params.id, 10);
-  const product = await productService.getProductById(productId);
+// This is the definitive Props type that Next.js is expecting.
+// Both params and searchParams are wrapped in a Promise.
+type Props = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
 
-  if (!product) {
-    return {
-      title: "Product Not Found",
-      description: "The product you are looking for does not exist.",
-    };
-  }
-
-  const mappedImages: UploadedImageDto[] = product.images.map(img => ({
-    url: img.url,
-    isMain: img.isMain,
-    name: `image-${img.id}`, // Dummy name, as Prisma Image model doesn't have it
-    size: 0, // Dummy size
-    type: 'image/jpeg', // Dummy type
-  }));
-
-  return {
-    title: `${product.name} - SNS Pipes & Fittings`,
-    description: product.description,
-    keywords: `${product.name}, ${product.brand.name}, ${product.category.name}, pipes, fittings, plumbing`,
-    openGraph: {
-      title: `${product.name} - SNS Pipes & Fittings`,
-      description: product.description,
-      images: mappedImages.filter(img => img.isMain).map(img => ({
-        url: img.url,
-        width: 800, // Placeholder width
-        height: 600, // Placeholder height
-        alt: product.name,
-      })),
-      url: `https://yourwebsite.com/products/${product.id}`, // Replace with your actual website URL
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${product.name} - SNS Pipes & Fittings`,
-      description: product.description,
-      images: mappedImages.filter(img => img.isMain).map(img => ({
-        url: img.url,
-        alt: product.name,
-      })),
-    },
-  };
-}
-
-const ProductDetailPage: React.FC<any> = async ({ params }) => {
-  const productId = parseInt(params.id, 10);
+// The Page component MUST also be async and use the same Props type.
+export default async function ProductDetailPage({ params }: Props) {
+  // We MUST await the promise here as well.
+  const { id } = await params;
+  const productId = parseInt(id, 10);
 
   if (isNaN(productId)) {
     notFound();
   }
-
   const product = await productService.getProductById(productId);
 
   if (!product) {
     notFound();
   }
 
-  const mappedImages: UploadedImageDto[] = product.images.map(img => ({
+  const mappedImages: UploadedImageDto[] = product.images.map((img) => ({
     url: img.url,
     isMain: img.isMain,
     name: `image-${img.id}`, // Dummy name
@@ -95,21 +65,17 @@ const ProductDetailPage: React.FC<any> = async ({ params }) => {
       <h1 className="text-3xl font-bold text-gray-800 mb-4">{product.name}</h1>
 
       <div className="flex flex-col gap-8">
-        {/* Product Image Gallery */}
         <div>
           <ProductImageViewer images={mappedImages} />
         </div>
-
-        {/* Product Details */}
         <div className="mt-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Product Details</h2>
-
           <div className="mb-6">
             <h3 className="text-base font-bold text-[#121417] mb-2 mt-4">Name</h3>
             <Separator className="mb-2" />
             <p className="text-gray-700 text-lg">{product.name}</p>
           </div>
-
+          {/* ... Rest of your JSX ... */}
           <div className="mb-6">
             <h3 className="text-base font-bold text-[#121417] mb-2 mt-4">Brand</h3>
             <Separator className="mb-2" />
@@ -145,21 +111,18 @@ const ProductDetailPage: React.FC<any> = async ({ params }) => {
               <p className="text-gray-700 text-lg">{product.colors.join(', ')}</p>
             </div>
           )}
-
-
         </div>
       </div>
 
-      {/* Need Assistance Section */}
       <div className="mt-12 text-center">
         <h2 className="text-3xl font-bold text-[#121417] mb-4">Need Assistance?</h2>
-        <p className="text-lg text-gray-700 mb-6">Looking to place an order, get pricing, or have any other questions?</p>
+        <p className="text-lg text-gray-700 mb-6">
+          Looking to place an order, get pricing, or have any other questions?
+        </p>
         <button className="bg-[#1285E8] hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition duration-300 ease-in-out shadow-lg">
           Contact Us
         </button>
       </div>
     </div>
   );
-};
-
-export default ProductDetailPage;
+}

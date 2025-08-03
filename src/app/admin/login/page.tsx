@@ -1,49 +1,22 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { useRouter } from "next/navigation";
-import Image from 'next/image'; // Added import
+import React from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import Image from 'next/image';
+import { useLoginPage } from '@/hooks/useLoginPage';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const router = useRouter();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        router.push("/admin/dashboard"); // Redirect to admin dashboard on successful login
-      } else {
-        setError(data.error || "Login failed. Please check your credentials.");
-      }
-    } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
-    }
-  };
+  const { email, setEmail, password, setPassword, error, handleSubmit } = useLoginPage();
 
   return (
     <div
       className="relative flex min-h-screen items-center justify-center bg-cover bg-center"
       style={{ backgroundImage: `url('/images/props/HeroBackground.png')` }}
     >
-      <div className="absolute inset-0 bg-black opacity-50"></div> {/* Overlay for readability */}
+      <div className="absolute inset-0 bg-black opacity-50"></div>
       <Card className="relative z-10 w-full max-w-md bg-white bg-opacity-90 shadow-lg rounded-lg p-8">
         <div className="flex justify-center mb-6">
           <Image src="/images/props/logo.png" alt="Logo" width={150} height={150} />

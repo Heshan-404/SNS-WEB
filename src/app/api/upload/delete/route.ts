@@ -13,9 +13,13 @@ async function postHandler(request: Request): Promise<NextResponse> {
     await del(url);
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Vercel Blob deletion error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    let errorMessage = 'Failed to delete image';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 

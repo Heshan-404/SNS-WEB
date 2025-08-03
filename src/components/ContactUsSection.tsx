@@ -1,31 +1,81 @@
-// components/ContactUsSection.tsx
+'use client';
+
 import React from 'react';
+import { useContactUsForm } from '@/hooks/useContactUsForm';
 
 const ContactUsSection = () => {
+  const { name, setName, email, setEmail, phone, setPhone, message, setMessage, handleSubmit } =
+    useContactUsForm();
+
   return (
     <section id="contact" className="container mx-auto py-16 px-6 bg-white">
-      <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-10 text-center md:text-left">Contact Us</h2>
+      <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-10 text-center md:text-left">
+        Contact Us
+      </h2>
       <div className="flex flex-col md:flex-row md:space-x-12 items-stretch">
         {/* Contact Form */}
         <div className="md:w-1/2 mb-8 md:mb-0">
-          <form className="bg-white p-0 rounded-lg">
+          <form className="bg-white p-0 rounded-lg" onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Name</label>
-              <input type="text" id="name" name="name" className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Your Name" />
+              <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
+                Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                placeholder="Your Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
             </div>
             <div className="mb-4">
-              <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">Email Address</label>
-              <input type="email" id="email" name="email" className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Your Email" />
+              <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
+                Email Address
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                placeholder="Your Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
             <div className="mb-4">
-              <label htmlFor="phone" className="block text-gray-700 text-sm font-bold mb-2">Phone Number</label>
-              <input type="tel" id="phone" name="phone" className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Your Phone Number" />
+              <label htmlFor="phone" className="block text-gray-700 text-sm font-bold mb-2">
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                placeholder="Your Phone Number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
             </div>
             <div className="mb-6">
-              <label htmlFor="message" className="block text-gray-700 text-sm font-bold mb-2">Message</label>
-              <textarea id="message" name="message" rows={5} className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Your Message"></textarea>
+              <label htmlFor="message" className="block text-gray-700 text-sm font-bold mb-2">
+                Message
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                rows={5}
+                className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                placeholder="Your Message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              ></textarea>
             </div>
-            <button type="submit" className="bg-[#1285E8] hover:bg-[#0f6bbd] text-white font-bold py-3 px-6 w-full rounded-lg focus:outline-none focus:shadow-outline h-10 md:h-12 flex items-center justify-center">
+            <button
+              type="submit"
+              className="bg-[#1285E8] hover:bg-[#0f6bbd] text-white font-bold py-3 px-6 w-full rounded-lg focus:outline-none focus:shadow-outline h-10 md:h-12 flex items-center justify-center"
+            >
               Send Message
             </button>
           </form>
