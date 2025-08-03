@@ -3,7 +3,9 @@ import { authService } from '../../../../services/authService';
 import { LoginUserDto } from '../../../../types/auth';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'sns-123-secret';
+const JWT_SECRET = process.env.JWT_SECRET;
+
+console.log('DEBUG: JWT_SECRET from env:', JWT_SECRET);
 
 export async function POST(request: Request) {
   try {
@@ -14,18 +16,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
     }
 
-    const user = await authService.login(credentials);
+    const authResult = await authService.login(credentials);
 
-    if (!user) {
-      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+    if (!authResult.success) {
+      return NextResponse.json({ error: authResult.message }, { status: 401 });
     }
 
     // Generate JWT token
-    const token = jwt.sign({ userId: user.user?.id, email: user.user?.email }, JWT_SECRET, {
+    const token = jwt.sign({ userId: authResult.user?.id, email: authResult.user?.email }, JWT_SECRET, {
       expiresIn: '1h',
     });
 
-    const response = NextResponse.json({ user });
+    const response = NextResponse.json({ user: authResult.user });
     response.cookies.set('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

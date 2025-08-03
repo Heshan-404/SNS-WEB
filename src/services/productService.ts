@@ -5,6 +5,7 @@ import {
   UpdateProductDto,
 } from '@/types/product';
 import { UploadedImageDto } from '@/types/image';
+import { getAuthHeaders } from '../lib/api';
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000') + '/api';
 
@@ -43,9 +44,7 @@ export const productService = {
   createProduct: async (productData: CreateProductDto): Promise<ProductDto> => {
     const response = await fetch(`${API_BASE_URL}/products`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(productData),
     });
 
@@ -102,9 +101,7 @@ export const productService = {
   updateProduct: async (id: number, productData: UpdateProductDto): Promise<ProductDto> => {
     const response = await fetch(`${API_BASE_URL}/products/${id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(productData),
     });
 
@@ -118,6 +115,7 @@ export const productService = {
   deleteProduct: async (id: number): Promise<void> => {
     const response = await fetch(`${API_BASE_URL}/products/${id}`, {
       method: 'DELETE',
+      headers: getAuthHeaders(),
     });
 
     if (!response.ok) {
@@ -129,9 +127,7 @@ export const productService = {
   deleteImage: async (url: string): Promise<void> => {
     const response = await fetch(`${API_BASE_URL}/upload/delete`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify({ url }),
     });
 

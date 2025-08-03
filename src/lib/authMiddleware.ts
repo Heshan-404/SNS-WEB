@@ -12,7 +12,9 @@ type HandlerFunction = (
   context: { params: Promise<Record<string, string | string[] | undefined>> },
 ) => Promise<NextResponse>;
 
-const JWT_SECRET = process.env.JWT_SECRET || 'sns-123-secret';
+const JWT_SECRET = process.env.JWT_SECRET;
+
+console.log('DEBUG: JWT_SECRET in authMiddleware:', JWT_SECRET);
 
 export function authMiddleware(handler: HandlerFunction) {
   return async (
