@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { useContactUsForm } from '@/hooks/useContactUsForm';
 
 const ContactUsSection = () => {

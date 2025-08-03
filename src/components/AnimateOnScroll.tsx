@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+'use client';
+
 import { useAnimateOnScroll } from '@/hooks/useAnimateOnScroll';
 
 interface AnimateOnScrollProps {

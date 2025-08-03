@@ -15,13 +15,25 @@ import ManageableImagePreview from '@/components/ManageableImagePreview';
 import ImageUploadArea from '@/components/ImageUploadArea';
 import TagInput from '@/components/TagInput';
 import { useAddProductFormLogic } from '@/hooks/useAddProductFormLogic';
+import { CategoryDto } from '@/types/category';
+import { BrandDto } from '@/types/brand';
+import { ProductDto } from '@/types/product';
 
 interface AddProductFormProps {
-  onProductAdded: () => void;
-  onCloseDialog: () => void;
+  onProductAdded?: () => void;
+  onCloseDialog?: () => void;
+  initialData?: ProductDto;
+  initialCategories: CategoryDto[];
+  initialBrands: BrandDto[];
 }
 
-export default function AddProductForm({ onProductAdded, onCloseDialog }: AddProductFormProps) {
+export default function AddProductForm({
+  onProductAdded,
+  onCloseDialog,
+  initialData,
+  initialCategories,
+  initialBrands,
+}: AddProductFormProps) {
   const {
     productName,
     setProductName,
@@ -41,14 +53,11 @@ export default function AddProductForm({ onProductAdded, onCloseDialog }: AddPro
     colors,
     setColors,
     isSubmitting,
-    fetchedCategories,
-    fetchedBrands,
-    isLoadingData,
     handleImageUpload,
     handleRemoveImage,
     handleSubmit,
     imagesForPreview,
-  } = useAddProductFormLogic();
+  } = useAddProductFormLogic(initialData, initialCategories, initialBrands);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -101,16 +110,12 @@ export default function AddProductForm({ onProductAdded, onCloseDialog }: AddPro
           <div className="grid gap-4">
             <div className="grid gap-2 w-full md:w-1/2">
               <Label htmlFor="category">Category</Label>
-              <Select value={category} onValueChange={setCategory} disabled={isLoadingData}>
+              <Select value={category} onValueChange={setCategory}>
                 <SelectTrigger id="category">
-                  {isLoadingData ? (
-                    <SelectValue>Loading categories...</SelectValue>
-                  ) : (
-                    <SelectValue placeholder="Select a category" />
-                  )}
+                  <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {fetchedCategories.map((cat) => (
+                  {initialCategories.map((cat) => (
                     <SelectItem key={cat.id} value={cat.id.toString()}>
                       {cat.name}
                     </SelectItem>
@@ -120,16 +125,12 @@ export default function AddProductForm({ onProductAdded, onCloseDialog }: AddPro
             </div>
             <div className="grid gap-2 w-full md:w-1/2">
               <Label htmlFor="brand">Brand</Label>
-              <Select value={brand} onValueChange={setBrand} disabled={isLoadingData}>
+              <Select value={brand} onValueChange={setBrand}>
                 <SelectTrigger id="brand">
-                  {isLoadingData ? (
-                    <SelectValue>Loading brands...</SelectValue>
-                  ) : (
-                    <SelectValue placeholder="Select a brand" />
-                  )}
+                  <SelectValue placeholder="Select a brand" />
                 </SelectTrigger>
                 <SelectContent>
-                  {fetchedBrands.map((b) => (
+                  {initialBrands.map((b) => (
                     <SelectItem key={b.id} value={b.id.toString()}>
                       {b.name}
                     </SelectItem>
@@ -190,7 +191,7 @@ export default function AddProductForm({ onProductAdded, onCloseDialog }: AddPro
       </Card>
 
       <div className="flex justify-end">
-        <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting || isLoadingData}>
+        <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting}>
           {isSubmitting ? 'Adding Product...' : 'Add Product'}
         </Button>
       </div>

@@ -6,6 +6,7 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isLoginPage = pathname === '/admin/login';
+  const isAdminRoot = pathname === '/admin';
 
   if (isLoginPage) {
     if (token) {
@@ -20,6 +21,11 @@ export function middleware(request: NextRequest) {
   if (!token) {
     // Redirect to login page if not authenticated
     return NextResponse.redirect(new URL('/admin/login', request.url));
+  }
+
+  // If authenticated and trying to access /admin, redirect to /admin/products
+  if (isAdminRoot) {
+    return NextResponse.redirect(new URL('/admin/products', request.url));
   }
 
   return NextResponse.next();

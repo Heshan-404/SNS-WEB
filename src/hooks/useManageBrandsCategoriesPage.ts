@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useManageBrands } from '@/hooks/useManageBrands';
 import { useManageCategories } from '@/hooks/useManageCategories';
 import { BrandDto } from '@/types/brand';
 import { CategoryDto } from '@/types/category';
 
-export const useManageBrandsCategoriesPage = () => {
+export const useManageBrandsCategoriesPage = (
+  initialBrands: BrandDto[] = [],
+  initialCategories: CategoryDto[] = [],
+) => {
   const {
     brands,
     loading: brandsLoading,
@@ -20,7 +23,7 @@ export const useManageBrandsCategoriesPage = () => {
     setEditingBrand,
     editBrandName,
     setEditBrandName,
-  } = useManageBrands();
+  } = useManageBrands(initialBrands);
   const {
     categories,
     loading: categoriesLoading,
@@ -36,7 +39,7 @@ export const useManageBrandsCategoriesPage = () => {
     setEditingCategory,
     editCategoryName,
     setEditCategoryName,
-  } = useManageCategories();
+  } = useManageCategories(initialCategories);
 
   return {
     // Brands

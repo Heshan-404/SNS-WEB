@@ -5,42 +5,57 @@ import { toast } from 'sonner';
 import { CategoryDto } from '@/types/category';
 import { BrandDto } from '@/types/brand';
 import { UploadedImageDto } from '@/types/image';
-import { CreateProductDto } from '@/types/product';
+import { CreateProductDto, ProductDto, UpdateProductDto } from '@/types/product';
 import { categoryService } from '@/services/categoryService';
 import { brandService } from '@/services/brandService';
 import { productService } from '@/services/productService';
 
-export const useAddProductFormLogic = () => {
-  const [productName, setProductName] = useState('');
-  const [shortName, setShortName] = useState('');
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('');
-  const [brand, setBrand] = useState('');
-  const [uploadedImages, setUploadedImages] = useState<UploadedImageDto[]>([]);
-  const [sizes, setSizes] = useState<string[]>([]);
-  const [voltages, setVoltages] = useState<string[]>([]);
-  const [colors, setColors] = useState<string[]>([]);
+export const useAddProductFormLogic = (
+  initialData?: ProductDto,
+  initialCategories: CategoryDto[] = [],
+  initialBrands: BrandDto[] = [],
+) => {
+  const [productName, setProductName] = useState(initialData?.name || '');
+  const [shortName, setShortName] = useState(initialData?.shortName || '');
+  const [description, setDescription] = useState(initialData?.description || '');
+  const [category, setCategory] = useState(initialData?.categoryId?.toString() || '');
+  const [brand, setBrand] = useState(initialData?.brandId?.toString() || '');
+  const [uploadedImages, setUploadedImages] = useState<UploadedImageDto[]>(
+    initialData?.images.map((img) => ({
+      url: img.url,
+      isMain: img.isMain,
+      name: img.url.substring(img.url.lastIndexOf('/') + 1), // Extract name from URL
+      size: 0, // Default or fetch if available
+      type: '', // Default or fetch if available
+    })) || [],
+  );
+  const [sizes, setSizes] = useState<string[]>(initialData?.availableSizes || []);
+  const [voltages, setVoltages] = useState<string[]>(initialData?.voltages || []);
+  const [colors, setColors] = useState<string[]>(initialData?.colors || []);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [fetchedCategories, setFetchedCategories] = useState<CategoryDto[]>([]);
-  const [fetchedBrands, setFetchedBrands] = useState<BrandDto[]>([]);
-  const [isLoadingData, setIsLoadingData] = useState(true);
+  const [fetchedCategories, setFetchedCategories] = useState<CategoryDto[]>(initialCategories);
+  const [fetchedBrands, setFetchedBrands] = useState<BrandDto[]>(initialBrands);
+  const [isLoadingData, setIsLoadingData] = useState(false);
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const categoriesData = await categoryService.getCategories();
-        const brandsData = await brandService.getBrands();
-        setFetchedCategories(categoriesData);
-        setFetchedBrands(brandsData);
-      } catch (error: unknown) {
-        toast.error('Failed to load categories or brands.');
-        console.error('Error loading categories/brands:', error);
-      } finally {
-        setIsLoadingData(false);
-      }
-    };
-    loadData();
-  }, []);
+    if (initialCategories.length === 0 || initialBrands.length === 0) {
+      const loadData = async () => {
+        setIsLoadingData(true);
+        try {
+          const categoriesData = await categoryService.getCategories();
+          const brandsData = await brandService.getBrands();
+          setFetchedCategories(categoriesData);
+          setFetchedBrands(brandsData);
+        } catch (error: unknown) {
+          toast.error('Failed to load categories or brands.');
+          console.error('Error loading categories/brands:', error);
+        } finally {
+          setIsLoadingData(false);
+        }
+      };
+      loadData();
+    }
+  }, [initialCategories, initialBrands]);
 
   const handleImageUpload = (newFiles: File[]) => {
     setUploadedImages((prevImages) => {
@@ -123,20 +138,29 @@ export const useAddProductFormLogic = () => {
         }));
       }
 
-      const productData: CreateProductDto = {
+      // Combine existing images (if editing) with newly uploaded ones
+      const existingImages = uploadedImages.filter((image) => !(image.file instanceof File));
+      const allImages = [...existingImages, ...finalImages];
+
+      const productData: CreateProductDto | UpdateProductDto = {
         name: productName,
         shortName: shortName,
         description: description,
         categoryId: parseInt(category),
         brandId: parseInt(brand),
-        images: finalImages,
+        images: allImages,
         availableSizes: sizes,
         voltages: voltages,
         colors: colors,
       };
 
-      await productService.createProduct(productData);
-      toast.success('Product added successfully!');
+      if (initialData) {
+        await productService.updateProduct(initialData.id, productData as UpdateProductDto);
+        toast.success('Product updated successfully!');
+      } else {
+        await productService.createProduct(productData as CreateProductDto);
+        toast.success('Product added successfully!');
+      }
 
       // Crucial cleanup: Revoke all blob: URLs from the uploadedImages state
       uploadedImages.forEach((image) => {
@@ -145,19 +169,21 @@ export const useAddProductFormLogic = () => {
         }
       });
 
-      // Clear form
-      setProductName('');
-      setShortName('');
-      setDescription('');
-      setCategory('');
-      setBrand('');
-      setUploadedImages([]);
-      setSizes([]);
-      setVoltages([]);
-      setColors([]);
+      // Clear form if adding new product
+      if (!initialData) {
+        setProductName('');
+        setShortName('');
+        setDescription('');
+        setCategory('');
+        setBrand('');
+        setUploadedImages([]);
+        setSizes([]);
+        setVoltages([]);
+        setColors([]);
+      }
     } catch (error: unknown) {
-      console.error('Error adding product:', error);
-      let errorMessage = 'Failed to add product.';
+      console.error('Error adding/updating product:', error);
+      let errorMessage = 'Failed to add/update product.';
       if (error instanceof Error) {
         errorMessage = error.message;
       }

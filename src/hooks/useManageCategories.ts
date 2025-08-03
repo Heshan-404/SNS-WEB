@@ -4,8 +4,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { categoryService } from '@/services/categoryService';
 import { CategoryDto } from '@/types/category';
 
-export const useManageCategories = () => {
-  const [categories, setCategories] = useState<CategoryDto[]>([]);
+export const useManageCategories = (initialCategories: CategoryDto[] = []) => {
+  const [categories, setCategories] = useState<CategoryDto[]>(initialCategories);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [newCategoryName, setNewCategoryName] = useState('');
@@ -30,8 +30,13 @@ export const useManageCategories = () => {
   }, []);
 
   useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
+    if (initialCategories.length > 0) {
+      setCategories(initialCategories);
+      setLoading(false);
+    } else {
+      fetchCategories();
+    }
+  }, [fetchCategories, initialCategories]);
 
   const handleAddCategory = async () => {
     if (!newCategoryName.trim()) return;

@@ -3,6 +3,7 @@ import {
   ProductDto,
   PaginatedProductsDto,
   UpdateProductDto,
+  ProductListDto,
 } from '@/types/product';
 import { UploadedImageDto } from '@/types/image';
 import { getAuthHeaders } from '../lib/api';
@@ -134,5 +135,15 @@ export const productService = {
       const errorData = await response.json();
       throw new Error(errorData.error || 'Failed to delete image');
     }
+  },
+
+  getFeaturedProducts: async (): Promise<ProductListDto[]> => {
+    const response = await fetch(`${API_BASE_URL}/products?isFeatured=true`);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to fetch featured products');
+    }
+    const data: PaginatedProductsDto = await response.json();
+    return data.products;
   },
 };

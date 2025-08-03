@@ -4,6 +4,8 @@ import FeaturedProductsSection from '@/components/FeaturedProductsSection';
 import ContactUsSection from '@/components/ContactUsSection';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
 
+export const dynamic = 'force-dynamic';
+
 export default function Home() {
   return (
     <>

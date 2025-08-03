@@ -4,8 +4,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { brandService } from '@/services/brandService';
 import { BrandDto } from '@/types/brand';
 
-export const useManageBrands = () => {
-  const [brands, setBrands] = useState<BrandDto[]>([]);
+export const useManageBrands = (initialBrands: BrandDto[] = []) => {
+  const [brands, setBrands] = useState<BrandDto[]>(initialBrands);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [newBrandName, setNewBrandName] = useState('');
@@ -30,8 +30,13 @@ export const useManageBrands = () => {
   }, []);
 
   useEffect(() => {
-    fetchBrands();
-  }, [fetchBrands]);
+    if (initialBrands.length > 0) {
+      setBrands(initialBrands);
+      setLoading(false);
+    } else {
+      fetchBrands();
+    }
+  }, [fetchBrands, initialBrands]);
 
   const handleAddBrand = async () => {
     if (!newBrandName.trim()) return;

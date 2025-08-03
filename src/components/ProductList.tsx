@@ -7,7 +7,7 @@ interface ProductListProps {
   loading?: boolean; // Add loading prop
 }
 
-const ProductList: React.FC<ProductListProps> = ({ products, loading }) => {
+const ProductList = ({ products, loading }: ProductListProps) => {
   if (loading) {
     return (
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 py-4 lg:p-4">

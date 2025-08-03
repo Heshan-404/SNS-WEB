@@ -1,5 +1,4 @@
 // components/ProductCard.tsx
-import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -11,13 +10,7 @@ interface ProductCardProps {
   category: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({
-  productId,
-  imageUrl,
-  title,
-  brand,
-  category,
-}) => {
+const ProductCard = ({ productId, imageUrl, title, brand, category }: ProductCardProps) => {
   return (
     <Link href={`/products/${productId}`}>
       <div className=" rounded-lg overflow-hidden transform transition duration-300 hover:scale-105">

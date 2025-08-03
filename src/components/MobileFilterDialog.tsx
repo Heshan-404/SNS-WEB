@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogClose,
+  DialogDescription,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Filter, X } from 'lucide-react';
@@ -35,11 +36,14 @@ const MobileFilterDialog: React.FC<MobileFilterDialogProps> = ({ categories, bra
         </DialogTrigger>
         <DialogContent
           showCloseButton={false}
-          className="fixed inset-x-0 top-7 h-[calc(100vh-1rem)] p-0 bg-white z-40 flex flex-col pointer-events-auto"
+          className="h-[calc(100vh-1rem)] p-0 bg-white z-40 flex flex-col pointer-events-auto"
         >
           <DialogHeader>
             <VisuallyHidden>
               <DialogTitle>Filter Options</DialogTitle>
+              <DialogDescription>
+                Filter products by categories, brands, and other criteria.
+              </DialogDescription>
             </VisuallyHidden>
           </DialogHeader>
           <ProductFilter
