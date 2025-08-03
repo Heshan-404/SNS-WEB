@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { brandService } from '@/services/brandService';
 import { BrandDto } from '@/types/brand';
 
 export const useBrands = () => {

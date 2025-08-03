@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../../lib/prisma';
-import { UploadedImageDto } from '../../../../types/image';
+import { UploadedImageDto } from '@/types/image';
 import { UpdateProductDto } from '@/types/product';
-import { authMiddleware } from '../../../../lib/authMiddleware';
+import { authMiddleware } from '@/lib/authMiddleware';
 import { del } from '@vercel/blob';
 import { Product } from '@prisma/client'; // Import Product type from Prisma Client
 
@@ -56,7 +56,7 @@ async function putHandler(
     }
 
     // Handle isFeatured logic
-    if (data.isFeatured !== undefined && data.isFeatured === true) {
+    if (data.isFeatured !== undefined && data.isFeatured) {
       const featuredProductsCount = await prisma.product.count({
         where: { isFeatured: true, id: { not: id } }, // Exclude current product if it's already featured
       });

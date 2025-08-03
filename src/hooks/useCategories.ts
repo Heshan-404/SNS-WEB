@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { categoryService } from '@/services/categoryService';
 import { CategoryDto } from '@/types/category';
 
 export const useCategories = () => {

@@ -1,7 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
 import { UploadedImageDto } from '@/types/image';
-import { cn } from '@/lib/utils';
 import ImageViewerClient from './ImageViewerClient';
 import { Skeleton } from '@/components/ui/skeleton';
 

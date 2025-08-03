@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
 import ProductCard from './ProductCard';
-import { Skeleton } from '@/components/ui/skeleton';
 import { productService } from '@/services/productService';
 import { ProductListDto } from '@/types/product';
 

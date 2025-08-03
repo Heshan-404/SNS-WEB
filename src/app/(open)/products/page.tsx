@@ -1,12 +1,4 @@
 import React, { Suspense } from 'react';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
 import { categoryService } from '@/services/categoryService';
 import { brandService } from '@/services/brandService';
 import { productService } from '@/services/productService';

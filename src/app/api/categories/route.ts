@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../lib/prisma';
 import { CreateCategoryDto } from '@/types/category';
-import { authMiddleware } from '../../../lib/authMiddleware';
+import { authMiddleware } from '@/lib/authMiddleware';
 
 export async function GET() {
   try {

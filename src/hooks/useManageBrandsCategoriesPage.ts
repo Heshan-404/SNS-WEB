@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { useManageBrands } from '@/hooks/useManageBrands';
 import { useManageCategories } from '@/hooks/useManageCategories';
 import { BrandDto } from '@/types/brand';

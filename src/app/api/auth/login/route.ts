@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { authService } from '../../../../services/authService';
-import { LoginUserDto } from '../../../../types/auth';
+import { authService } from '@/services/authService';
+import { LoginUserDto } from '@/types/auth';
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET;

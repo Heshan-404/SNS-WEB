@@ -1,7 +1,6 @@
 'use client';
 
 import { useProductPageClient } from '@/hooks/useProductPageClient';
-import { ProductListDto } from '@/types/product';
 import { CategoryDto } from '@/types/category';
 import { BrandDto } from '@/types/brand';
 import {
@@ -12,8 +11,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import MobileFilterDialog from '@/components/MobileFilterDialog';
-import SearchInput from '@/components/SearchInput';
 
 interface ProductPaginationClientProps {
   total: number;

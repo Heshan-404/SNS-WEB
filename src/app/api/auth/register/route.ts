@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { authService } from '../../../../services/authService';
-import { RegisterUserDto } from '../../../../types/auth';
+import { authService } from '@/services/authService';
+import { RegisterUserDto } from '@/types/auth';
 
 export async function POST(request: Request) {
   try {

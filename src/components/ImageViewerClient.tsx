@@ -23,8 +23,8 @@ const ImageViewerClient: React.FC<ImageViewerClientProps> = ({ images }) => {
             <Image
               src={selectedMainImage.url}
               alt="Main product image"
-              layout="fill"
-              objectFit="cover"
+              fill={true}
+              className="object-cover"
             />
           )}
         </div>
@@ -42,8 +42,8 @@ const ImageViewerClient: React.FC<ImageViewerClientProps> = ({ images }) => {
               <Image
                 src={img.url}
                 alt={`Product thumbnail ${index + 1}`}
-                layout="fill"
-                objectFit="cover"
+                fill={true}
+                className="object-cover"
               />
             </div>
           ))}
@@ -60,8 +60,7 @@ const ImageViewerClient: React.FC<ImageViewerClientProps> = ({ images }) => {
               alt="Main product image"
               width={600}
               height={600}
-              layout="responsive"
-              objectFit="contain"
+              className="object-contain"
             />
           )}
         </div>
@@ -79,8 +78,8 @@ const ImageViewerClient: React.FC<ImageViewerClientProps> = ({ images }) => {
               <Image
                 src={img.url}
                 alt={`Product thumbnail ${index + 1}`}
-                layout="fill"
-                objectFit="cover"
+                fill={true}
+                className="object-cover"
               />
             </div>
           ))}

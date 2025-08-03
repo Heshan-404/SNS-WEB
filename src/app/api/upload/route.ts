@@ -1,6 +1,6 @@
 import { put } from '@vercel/blob';
 import { NextResponse } from 'next/server';
-import { authMiddleware } from '../../../lib/authMiddleware';
+import { authMiddleware } from '@/lib/authMiddleware';
 
 async function postHandler(request: Request): Promise<NextResponse> {
   try {

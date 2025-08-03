@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../lib/prisma';
-import { UploadedImageDto } from '../../../types/image';
+import { UploadedImageDto } from '@/types/image';
 import { CreateProductDto } from '@/types/product';
-import { authMiddleware } from '../../../lib/authMiddleware';
+import { authMiddleware } from '@/lib/authMiddleware';
 
 export async function GET(request: Request) {
   try {

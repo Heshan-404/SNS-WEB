@@ -1,6 +1,5 @@
 import bcrypt from 'bcryptjs';
-import prisma from '../lib/prisma';
-import { RegisterUserDto, LoginUserDto, AuthResponseDto } from '../types/auth';
+import { RegisterUserDto, LoginUserDto, AuthResponseDto } from '@/types/auth';
 
 export class AuthService {
   private _adminPasswordHash: string | null = null;
