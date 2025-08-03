@@ -13,7 +13,6 @@ import { Separator } from '@/components/ui/separator';
 
 import { UploadedImageDto } from '@/types/image';
 import { productService } from '@/services/productService';
-import ContactAssistanceSection from '@/components/ContactAssistanceSection';
 
 // This is the definitive Props type that Next.js is expecting.
 // Both params and searchParams are wrapped in a Promise.

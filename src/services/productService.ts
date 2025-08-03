@@ -6,7 +6,7 @@ import {
   ProductListDto,
 } from '@/types/product';
 import { UploadedImageDto } from '@/types/image';
-import { getAuthHeaders } from '../lib/api';
+import { getAuthHeaders } from '@/lib/api';
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000') + '/api';
 

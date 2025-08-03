@@ -1,4 +1,4 @@
-import { CreateContactFormSubmissionDto, ContactFormSubmissionDto } from '../types/contact';
+import { CreateContactFormSubmissionDto, ContactFormSubmissionDto } from '@/types/contact';
 
 export class ContactService {
   async createSubmission(data: CreateContactFormSubmissionDto): Promise<ContactFormSubmissionDto> {

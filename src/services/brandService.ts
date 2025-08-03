@@ -1,5 +1,5 @@
-import { BrandDto, CreateBrandDto, UpdateBrandDto } from '../types/brand';
-import { getAuthHeaders } from '../lib/api';
+import { BrandDto, CreateBrandDto, UpdateBrandDto } from '@/types/brand';
+import { getAuthHeaders } from '@/lib/api';
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000') + '/api';
 

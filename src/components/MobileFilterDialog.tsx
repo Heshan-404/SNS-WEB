@@ -8,11 +8,10 @@ import {
   DialogTrigger,
   DialogHeader,
   DialogTitle,
-  DialogClose,
   DialogDescription,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Filter, X } from 'lucide-react';
+import { Filter } from 'lucide-react';
 import { VisuallyHidden } from '@/components/ui/visually-hidden';
 import { useMobileFilterDialog } from '@/hooks/useMobileFilterDialog';
 import { CategoryDto } from '@/types/category';

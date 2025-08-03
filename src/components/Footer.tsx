@@ -47,15 +47,15 @@ const Footer = () => {
             <Link href="/" className="hover:text-blue-400 transition-colors duration-200">
               Home
             </Link>
-            <Link href="/products" className="hover:text-blue-400 transition-colors duration-200">
+            <Link href="/#products" className="hover:text-blue-400 transition-colors duration-200">
               Products
             </Link>
           </div>
           <div className="flex justify-between w-full">
-            <Link href="/about" className="hover:text-blue-400 transition-colors duration-200">
+            <Link href="/#about" className="hover:text-blue-400 transition-colors duration-200">
               About Us
             </Link>
-            <Link href="/contact" className="hover:text-blue-400 transition-colors duration-200">
+            <Link href="/#contact" className="hover:text-blue-400 transition-colors duration-200">
               Contact Us
             </Link>
           </div>
@@ -66,13 +66,13 @@ const Footer = () => {
           <Link href="/" className="hover:text-blue-400 transition-colors duration-200">
             Home
           </Link>
-          <Link href="/products" className="hover:text-blue-400 transition-colors duration-200">
+          <Link href="/#products" className="hover:text-blue-400 transition-colors duration-200">
             Products
           </Link>
-          <Link href="/about" className="hover:text-blue-400 transition-colors duration-200">
+          <Link href="/#about" className="hover:text-blue-400 transition-colors duration-200">
             About Us
           </Link>
-          <Link href="/contact" className="hover:text-blue-400 transition-colors duration-200">
+          <Link href="/#contact" className="hover:text-blue-400 transition-colors duration-200">
             Contact Us
           </Link>
         </nav>

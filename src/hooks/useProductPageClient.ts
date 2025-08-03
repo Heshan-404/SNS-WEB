@@ -1,9 +1,8 @@
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { useSearchParams, usePathname } from 'next/navigation';
 import { useMemo } from 'react';
 
 export const useProductPageClient = (total: number) => {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const pathname = usePathname();
 
   const pageParam = searchParams.get('page');
