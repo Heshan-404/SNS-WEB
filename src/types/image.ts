@@ -4,6 +4,7 @@ export interface UploadedImageDto {
   name: string;
   size: number;
   type: string;
+  file?: File; // Optional: for newly selected files before upload
 }
 
 export interface ImageUploadResponse {

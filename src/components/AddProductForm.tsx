@@ -28,7 +28,7 @@ export default function AddProductForm({ onProductAdded, onCloseDialog }: AddPro
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
   const [brand, setBrand] = useState('');
-  const [uploadedImages, setUploadedImages] = useState<File[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<UploadedImageDto[]>([]);
   const [sizes, setSizes] = useState<string[]>([]);
   const [voltages, setVoltages] = useState<string[]>([]);
   const [colors, setColors] = useState<string[]>([]);
@@ -55,17 +55,44 @@ export default function AddProductForm({ onProductAdded, onCloseDialog }: AddPro
   }, []);
 
   const handleImageUpload = (newFiles: File[]) => {
-    setUploadedImages(prevFiles => {
-      const combinedFiles = [...prevFiles, ...newFiles];
-      const limitedFiles = combinedFiles.slice(0, 4); // Limit to 4 images
-      return limitedFiles;
+    setUploadedImages(prevImages => {
+      const combinedImages = [...prevImages];
+      let newImageCount = 0;
+
+      for (const file of newFiles) {
+        if (combinedImages.length >= 4) {
+          // If limit reached, revoke URL for any new files that won't be added
+          URL.revokeObjectURL(URL.createObjectURL(file));
+          continue;
+        }
+        combinedImages.push({
+          file: file,
+          url: URL.createObjectURL(file),
+          isMain: false,
+          name: file.name,
+          size: file.size,
+          type: file.type,
+        });
+        newImageCount++;
+      }
+
+      // If more than 4 images were already present, revoke URLs for those that are dropped
+      while (combinedImages.length > 4) {
+        const removedImage = combinedImages.pop(); // Remove from the end
+        if (removedImage && removedImage.url.startsWith('blob:')) {
+          URL.revokeObjectURL(removedImage.url);
+        }
+      }
+      return combinedImages;
     });
   };
 
-  const handleRemoveImage = (fileToRemove: File) => {
-    setUploadedImages(prevFiles => {
-      const updatedFiles = prevFiles.filter(file => file !== fileToRemove);
-      return updatedFiles;
+  const handleRemoveImage = (imageToRemove: UploadedImageDto) => {
+    setUploadedImages(prevImages => {
+      if (imageToRemove.url.startsWith('blob:')) {
+        URL.revokeObjectURL(imageToRemove.url);
+      }
+      return prevImages.filter(image => image !== imageToRemove);
     });
   };
 
@@ -80,17 +107,26 @@ export default function AddProductForm({ onProductAdded, onCloseDialog }: AddPro
     }
 
     try {
-      // Upload images first
-      const uploadedBlobs = await productService.uploadImages(uploadedImages);
+      // Identify files to upload (only those with a 'file' property)
+      const filesToUpload = uploadedImages
+        .filter(image => image.file instanceof File)
+        .map(image => image.file as File);
 
-      // Map uploaded blobs to UploadedImageDto, setting the first as main
-      const finalImages: UploadedImageDto[] = uploadedBlobs.map((blob, index) => ({
-        url: blob.url,
-        isMain: index === 0,
-        name: uploadedImages[index]?.name || '',
-        size: uploadedImages[index]?.size || 0,
-        type: uploadedImages[index]?.type || '',
-      }));
+      let finalImages: UploadedImageDto[] = [];
+
+      if (filesToUpload.length > 0) {
+        // Upload images first
+        const uploadedBlobs = await productService.uploadImages(filesToUpload);
+
+        // Map uploaded blobs to UploadedImageDto, setting the first as main
+        finalImages = uploadedBlobs.map((blob, index) => ({
+          url: blob.url,
+          isMain: index === 0, // Set the first uploaded image as main
+          name: filesToUpload[index]?.name || '',
+          size: filesToUpload[index]?.size || 0,
+          type: filesToUpload[index]?.type || '',
+        }));
+      }
 
       const productData: CreateProductDto = {
         name: productName,
@@ -108,6 +144,14 @@ export default function AddProductForm({ onProductAdded, onCloseDialog }: AddPro
       toast.success('Product added successfully!');
       onProductAdded();
       onCloseDialog();
+
+      // Crucial cleanup: Revoke all blob: URLs from the uploadedImages state
+      uploadedImages.forEach(image => {
+        if (image.url.startsWith('blob:')) {
+          URL.revokeObjectURL(image.url);
+        }
+      });
+
       // Clear form
       setProductName('');
       setShortName('');
@@ -125,6 +169,9 @@ export default function AddProductForm({ onProductAdded, onCloseDialog }: AddPro
       setIsSubmitting(false);
     }
   };
+
+  // Prepare images for ManageableImagePreview
+  const imagesForPreview: UploadedImageDto[] = uploadedImages;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -215,16 +262,10 @@ export default function AddProductForm({ onProductAdded, onCloseDialog }: AddPro
           <CardTitle className="text-lg font-bold">Product Imagery</CardTitle>
         </CardHeader>
         <CardContent>
-          {uploadedImages.length > 0 && (
+          {imagesForPreview.length > 0 && (
             <div className="mb-6">
               <h3 className="text-md font-semibold mb-2">Uploaded Images Preview</h3>
-              <ManageableImagePreview images={uploadedImages.map(file => ({
-                url: URL.createObjectURL(file),
-                isMain: false, // This is for display only, actual isMain is set on submit
-                name: file.name,
-                size: file.size,
-                type: file.type,
-              }))} onRemoveImage={(imgDto) => handleRemoveImage(uploadedImages.find(file => URL.createObjectURL(file) === imgDto.url)!)} />
+              <ManageableImagePreview images={imagesForPreview} onRemoveImage={handleRemoveImage} />
             </div>
           )}
           <ImageUploadArea onImageUpload={handleImageUpload} currentImageCount={uploadedImages.length} />

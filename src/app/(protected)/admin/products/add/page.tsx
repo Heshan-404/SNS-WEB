@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,7 +27,7 @@ const AddProductPage = () => {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
   const [brand, setBrand] = useState('');
-  const [uploadedImages, setUploadedImages] = useState<File[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<UploadedImageDto[]>([]);
   const [sizes, setSizes] = useState<string[]>([]);
   const [voltages, setVoltages] = useState<string[]>([]);
   const [colors, setColors] = useState<string[]>([]);
@@ -54,17 +56,40 @@ const AddProductPage = () => {
   }, []);
 
   const handleImageUpload = (newFiles: File[]) => {
-    setUploadedImages(prevFiles => {
-      const combinedFiles = [...prevFiles, ...newFiles];
-      const limitedFiles = combinedFiles.slice(0, 4); // Limit to 4 images
-      return limitedFiles;
+    setUploadedImages(prevImages => {
+      const combinedImages = [...prevImages];
+      for (const file of newFiles) {
+        if (combinedImages.length >= 4) {
+          // If limit reached, revoke URL for any new files that won't be added
+          URL.revokeObjectURL(URL.createObjectURL(file));
+          continue;
+        }
+        combinedImages.push({
+          file: file,
+          url: URL.createObjectURL(file),
+          isMain: false,
+          name: file.name,
+          size: file.size,
+          type: file.type,
+        });
+      }
+      // If more than 4 images were already present, revoke URLs for those that are dropped
+      while (combinedImages.length > 4) {
+        const removedImage = combinedImages.pop(); // Remove from the end
+        if (removedImage && removedImage.url.startsWith('blob:')) {
+          URL.revokeObjectURL(removedImage.url);
+        }
+      }
+      return combinedImages;
     });
   };
 
-  const handleRemoveImage = (fileToRemove: File) => {
-    setUploadedImages(prevFiles => {
-      const updatedFiles = prevFiles.filter(file => file !== fileToRemove);
-      return updatedFiles;
+  const handleRemoveImage = (imageToRemove: UploadedImageDto) => {
+    setUploadedImages(prevImages => {
+      if (imageToRemove.url.startsWith('blob:')) {
+        URL.revokeObjectURL(imageToRemove.url);
+      }
+      return prevImages.filter(image => image !== imageToRemove);
     });
   };
 
@@ -79,17 +104,26 @@ const AddProductPage = () => {
     }
 
     try {
-      // Upload images first
-      const uploadedBlobs = await productService.uploadImages(uploadedImages);
+      // Identify files to upload (only those with a 'file' property)
+      const filesToUpload = uploadedImages
+        .filter(image => image.file instanceof File)
+        .map(image => image.file as File);
 
-      // Map uploaded blobs to UploadedImageDto, setting the first as main
-      const finalImages: UploadedImageDto[] = uploadedBlobs.map((blob, index) => ({
-        url: blob.url,
-        isMain: index === 0,
-        name: uploadedImages[index]?.name || '',
-        size: uploadedImages[index]?.size || 0,
-        type: uploadedImages[index]?.type || '',
-      }));
+      let finalImages: UploadedImageDto[] = [];
+
+      if (filesToUpload.length > 0) {
+        // Upload images first
+        const uploadedBlobs = await productService.uploadImages(filesToUpload);
+
+        // Map uploaded blobs to UploadedImageDto, setting the first as main
+        finalImages = uploadedBlobs.map((blob, index) => ({
+          url: blob.url,
+          isMain: index === 0, // Set the first uploaded image as main
+          name: filesToUpload[index]?.name || '',
+          size: filesToUpload[index]?.size || 0,
+          type: filesToUpload[index]?.type || '',
+        }));
+      }
 
       const productData: CreateProductDto = {
         name: productName,
@@ -105,6 +139,14 @@ const AddProductPage = () => {
 
       await productService.createProduct(productData);
       toast.success('Product added successfully!');
+
+      // Crucial cleanup: Revoke all blob: URLs from the uploadedImages state
+      uploadedImages.forEach(image => {
+        if (image.url.startsWith('blob:')) {
+          URL.revokeObjectURL(image.url);
+        }
+      });
+
       // Clear form
       setProductName('');
       setShortName('');

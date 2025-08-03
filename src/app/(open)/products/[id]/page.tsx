@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { Separator } from "@/components/ui/separator";
 import type { Metadata } from 'next';
+import { UploadedImageDto } from '@/types/image';
 
 export async function generateMetadata({ params }: any): Promise<Metadata> {
   const productId = parseInt(params.id, 10);
@@ -16,6 +17,14 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
     };
   }
 
+  const mappedImages: UploadedImageDto[] = product.images.map(img => ({
+    url: img.url,
+    isMain: img.isMain,
+    name: `image-${img.id}`, // Dummy name, as Prisma Image model doesn't have it
+    size: 0, // Dummy size
+    type: 'image/jpeg', // Dummy type
+  }));
+
   return {
     title: `${product.name} - SNS Pipes & Fittings`,
     description: product.description,
@@ -23,7 +32,7 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
     openGraph: {
       title: `${product.name} - SNS Pipes & Fittings`,
       description: product.description,
-      images: product.images.filter(img => img.isMain).map(img => ({
+      images: mappedImages.filter(img => img.isMain).map(img => ({
         url: img.url,
         width: 800, // Placeholder width
         height: 600, // Placeholder height
@@ -36,7 +45,7 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
       card: 'summary_large_image',
       title: `${product.name} - SNS Pipes & Fittings`,
       description: product.description,
-      images: product.images.filter(img => img.isMain).map(img => ({
+      images: mappedImages.filter(img => img.isMain).map(img => ({
         url: img.url,
         alt: product.name,
       })),
@@ -56,6 +65,14 @@ const ProductDetailPage: React.FC<any> = async ({ params }) => {
   if (!product) {
     notFound();
   }
+
+  const mappedImages: UploadedImageDto[] = product.images.map(img => ({
+    url: img.url,
+    isMain: img.isMain,
+    name: `image-${img.id}`, // Dummy name
+    size: 0, // Dummy size
+    type: 'image/jpeg', // Dummy type
+  }));
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -80,7 +97,7 @@ const ProductDetailPage: React.FC<any> = async ({ params }) => {
       <div className="flex flex-col gap-8">
         {/* Product Image Gallery */}
         <div>
-          <ProductImageViewer images={product.images} />
+          <ProductImageViewer images={mappedImages} />
         </div>
 
         {/* Product Details */}
