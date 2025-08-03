@@ -14,6 +14,10 @@ type HandlerFunction = (
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET is not defined in environment variables.');
+}
+
 console.log('DEBUG: JWT_SECRET in authMiddleware:', JWT_SECRET);
 
 export function authMiddleware(handler: HandlerFunction) {
@@ -36,8 +40,17 @@ export function authMiddleware(handler: HandlerFunction) {
     }
 
     try {
-      const decoded = jwt.verify(token, JWT_SECRET) as { userId: number; email: string };
-      request.user = decoded; // Attach user payload to request
+      const decoded = jwt.verify(token, JWT_SECRET as string) as jwt.JwtPayload;
+      if (
+        typeof decoded === 'object' &&
+        decoded !== null &&
+        'userId' in decoded &&
+        'email' in decoded
+      ) {
+        request.user = { userId: decoded.userId as number, email: decoded.email as string }; // Attach user payload to request
+      } else {
+        return NextResponse.json({ message: 'Invalid token payload' }, { status: 403 });
+      }
       return handler(request, context);
     } catch (error) {
       return NextResponse.json({ message: 'Invalid token' }, { status: 403 });

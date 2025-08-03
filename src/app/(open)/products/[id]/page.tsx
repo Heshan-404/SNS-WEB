@@ -95,7 +95,10 @@ export default async function ProductDetailPage({ params }: Props) {
               <Separator className="mb-2" />
               <div className="flex flex-wrap gap-2">
                 {product.availableSizes.map((size, index) => (
-                  <span key={index} className="bg-gray-200 text-gray-800 text-sm px-3 py-1 rounded-md">
+                  <span
+                    key={index}
+                    className="bg-gray-200 text-gray-800 text-sm px-3 py-1 rounded-md"
+                  >
                     {size}
                   </span>
                 ))}
@@ -109,7 +112,10 @@ export default async function ProductDetailPage({ params }: Props) {
               <Separator className="mb-2" />
               <div className="flex flex-wrap gap-2">
                 {product.voltages.map((voltage, index) => (
-                  <span key={index} className="bg-gray-200 text-gray-800 text-sm px-3 py-1 rounded-md">
+                  <span
+                    key={index}
+                    className="bg-gray-200 text-gray-800 text-sm px-3 py-1 rounded-md"
+                  >
                     {voltage}
                   </span>
                 ))}
@@ -123,7 +129,10 @@ export default async function ProductDetailPage({ params }: Props) {
               <Separator className="mb-2" />
               <div className="flex flex-wrap gap-2">
                 {product.colors.map((color, index) => (
-                  <span key={index} className="bg-gray-200 text-gray-800 text-sm px-3 py-1 rounded-md">
+                  <span
+                    key={index}
+                    className="bg-gray-200 text-gray-800 text-sm px-3 py-1 rounded-md"
+                  >
                     {color}
                   </span>
                 ))}

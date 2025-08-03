@@ -32,7 +32,6 @@ export const useManageProducts = (
       }
       setError(errorMessage);
     } finally {
-      
       setLoading(false);
     }
   }, [searchTerm, categoryId, brandId, isFeatured]);

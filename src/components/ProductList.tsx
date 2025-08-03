@@ -23,11 +23,7 @@ const ProductList: React.FC<ProductListProps> = ({ products, loading }) => {
   }
 
   if (products.length === 0) {
-    return (
-      <div className="py-4 lg:p-4 text-center text-gray-500">
-        No products found.
-      </div>
-    );
+    return <div className="py-4 lg:p-4 text-center text-gray-500">No products found.</div>;
   }
 
   return (

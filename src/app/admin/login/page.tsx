@@ -12,8 +12,7 @@ export default function LoginPage() {
   const { email, setEmail, password, setPassword, error, handleSubmit } = useLoginPage();
 
   return (
-    <div
-      className="flex min-h-screen items-center justify-center" >
+    <div className="flex min-h-screen items-center justify-center">
       <Card className="relative z-10 w-full max-w-md bg-white bg-opacity-90 shadow-lg rounded-lg p-8">
         <div className="flex justify-center mb-6">
           <Image src="/images/props/logo.png" alt="Logo" width={150} height={150} />

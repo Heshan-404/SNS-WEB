@@ -1,12 +1,12 @@
 import { getCookie } from 'cookies-next';
 
-export function getAuthHeaders() {
+export function getAuthHeaders(): Record<string, string> {
   const token = getCookie('token');
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
   if (token) {
-    return {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    };
+    headers['Authorization'] = `Bearer ${token}`;
   }
-  return { 'Content-Type': 'application/json' };
+  return headers;
 }

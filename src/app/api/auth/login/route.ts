@@ -5,6 +5,10 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET is not defined in environment variables.');
+}
+
 console.log('DEBUG: JWT_SECRET from env:', JWT_SECRET);
 
 export async function POST(request: Request) {
@@ -23,9 +27,13 @@ export async function POST(request: Request) {
     }
 
     // Generate JWT token
-    const token = jwt.sign({ userId: authResult.user?.id, email: authResult.user?.email }, JWT_SECRET, {
-      expiresIn: '1h',
-    });
+    const token = jwt.sign(
+      { userId: authResult.user?.id, email: authResult.user?.email },
+      JWT_SECRET as string,
+      {
+        expiresIn: '1h',
+      },
+    );
 
     const response = NextResponse.json({ user: authResult.user });
     response.cookies.set('token', token, {

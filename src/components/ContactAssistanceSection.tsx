@@ -9,7 +9,10 @@ const ContactAssistanceSection = () => {
       <p className="text-lg text-gray-700 mb-6">
         Looking to place an order, get pricing, or have any other questions?
       </p>
-      <a href="tel:07620400659" className="inline-block bg-[#1285E8] hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition duration-300 ease-in-out shadow-lg">
+      <a
+        href="tel:07620400659"
+        className="inline-block bg-[#1285E8] hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition duration-300 ease-in-out shadow-lg"
+      >
         Contact Us
       </a>
     </div>

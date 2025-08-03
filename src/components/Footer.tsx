@@ -20,7 +20,8 @@ const Footer = () => {
             <FontAwesomeIcon icon={faPhone} className="mr-1" />
             <a href="tel:+07620400659" className="hover:underline md:font-bold">
               07620400659
-            </a>&nbsp;/&nbsp;
+            </a>
+            &nbsp;/&nbsp;
             <a href="tel:+0760188505" className="hover:underline md:font-bold">
               0760188505
             </a>

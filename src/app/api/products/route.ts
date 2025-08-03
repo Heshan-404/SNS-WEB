@@ -46,8 +46,6 @@ export async function GET(request: Request) {
       include: { category: true, brand: true, images: true },
     });
 
-    
-
     const total = await prisma.product.count({
       where: {
         ...(categoryIds && categoryIds.length > 0 && { categoryId: { in: categoryIds } }),

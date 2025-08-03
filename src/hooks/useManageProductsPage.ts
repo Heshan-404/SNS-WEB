@@ -12,12 +12,13 @@ export const useManageProductsPage = () => {
   const [isAddProductDialogOpen, setIsAddProductDialogOpen] = useState(false);
   const [isFeaturedFilter, setIsFeaturedFilter] = useState<boolean | undefined>(undefined); // New state
 
-  const { products, loading, error, handleDeleteProduct, fetchProducts, toggleProductFeatured } = useManageProducts(
-    searchTerm,
-    selectedCategoryId,
-    selectedBrandId,
-    isFeaturedFilter, // Pass new filter to useManageProducts
-  );
+  const { products, loading, error, handleDeleteProduct, fetchProducts, toggleProductFeatured } =
+    useManageProducts(
+      searchTerm,
+      selectedCategoryId,
+      selectedBrandId,
+      isFeaturedFilter, // Pass new filter to useManageProducts
+    );
   const { categories, loading: categoriesLoading } = useCategories();
   const { brands, loading: brandsLoading } = useBrands();
 

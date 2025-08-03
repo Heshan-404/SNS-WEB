@@ -89,7 +89,6 @@ export const productService = {
   },
 
   getProductById: async (id: number): Promise<ProductDto> => {
-    
     const response = await fetch(`${API_BASE_URL}/products/${id}`);
     if (!response.ok) {
       const errorData = await response.json();

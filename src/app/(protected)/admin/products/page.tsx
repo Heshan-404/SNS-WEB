@@ -159,7 +159,8 @@ export default function ManageProductsPage() {
                   <TableHead>Category</TableHead>
                   <TableHead>Brand</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Featured</TableHead><TableHead className="text-right">Actions</TableHead>
+                  <TableHead>Featured</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -185,7 +186,9 @@ export default function ManageProductsPage() {
                         <Switch
                           id={`featured-switch-${product.id}`}
                           checked={product.isFeatured}
-                          onCheckedChange={() => handleToggleFeatured(product.id, !product.isFeatured)}
+                          onCheckedChange={() =>
+                            handleToggleFeatured(product.id, !product.isFeatured)
+                          }
                         />
                         <Label htmlFor={`featured-switch-${product.id}`}>
                           {product.isFeatured ? 'Yes' : 'No'}
@@ -193,7 +196,6 @@ export default function ManageProductsPage() {
                       </div>
                     </TableCell>
                     <TableCell className="text-right">
-                      
                       <Link href={`/admin/products/${product.id}/edit`} className="mr-2">
                         <Button variant="outline" size="sm">
                           Edit

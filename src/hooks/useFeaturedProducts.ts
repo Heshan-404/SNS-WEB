@@ -21,7 +21,6 @@ export const useFeaturedProducts = () => {
         }
         setError(errorMessage);
       } finally {
-        
         setLoading(false);
       }
     };
