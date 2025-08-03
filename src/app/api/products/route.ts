@@ -11,6 +11,7 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get('limit') || '10', 10);
     const categoryIdsParam = searchParams.get('categoryIds');
     const brandIdsParam = searchParams.get('brandIds');
+    const isFeaturedParam = searchParams.get('isFeatured');
 
     const categoryIds = categoryIdsParam
       ? categoryIdsParam
@@ -24,6 +25,7 @@ export async function GET(request: Request) {
           .map((id) => parseInt(id.trim(), 10))
           .filter((id) => !isNaN(id))
       : undefined;
+    const isFeatured = isFeaturedParam ? isFeaturedParam === 'true' : undefined;
 
     const products = await prisma.product.findMany({
       skip: (page - 1) * limit,
@@ -31,14 +33,18 @@ export async function GET(request: Request) {
       where: {
         ...(categoryIds && categoryIds.length > 0 && { categoryId: { in: categoryIds } }),
         ...(brandIds && brandIds.length > 0 && { brandId: { in: brandIds } }),
+        ...(isFeatured !== undefined && { isFeatured: isFeatured }),
       },
       include: { category: true, brand: true, images: true },
     });
+
+    
 
     const total = await prisma.product.count({
       where: {
         ...(categoryIds && categoryIds.length > 0 && { categoryId: { in: categoryIds } }),
         ...(brandIds && brandIds.length > 0 && { brandId: { in: brandIds } }),
+        ...(isFeatured !== undefined && { isFeatured: isFeatured }),
       },
     });
 

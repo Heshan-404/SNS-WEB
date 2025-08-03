@@ -24,7 +24,7 @@ const ContactUsSection = () => {
                 type="text"
                 id="name"
                 name="name"
-                className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="appearance-none border border-gray-200 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none"
                 placeholder="Your Name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -38,7 +38,7 @@ const ContactUsSection = () => {
                 type="email"
                 id="email"
                 name="email"
-                className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="appearance-none border border-gray-200 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none"
                 placeholder="Your Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -52,7 +52,7 @@ const ContactUsSection = () => {
                 type="tel"
                 id="phone"
                 name="phone"
-                className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="appearance-none border border-gray-200 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none"
                 placeholder="Your Phone Number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
@@ -66,7 +66,7 @@ const ContactUsSection = () => {
                 id="message"
                 name="message"
                 rows={5}
-                className="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="appearance-none border border-gray-200 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none"
                 placeholder="Your Message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
@@ -74,7 +74,7 @@ const ContactUsSection = () => {
             </div>
             <button
               type="submit"
-              className="bg-[#1285E8] hover:bg-[#0f6bbd] text-white font-bold py-3 px-6 w-full rounded-lg focus:outline-none focus:shadow-outline h-10 md:h-12 flex items-center justify-center"
+              className="bg-[#1285E8] hover:bg-[#0f6bbd] text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline h-10 md:h-12 flex items-center justify-center cursor-pointer"
             >
               Send Message
             </button>

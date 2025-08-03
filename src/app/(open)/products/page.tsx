@@ -59,9 +59,9 @@ const ProductShowcase = async ({ searchParams: searchParamsPromise }: ProductSho
   ]);
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex">
       <main className="flex-1">
-        <Suspense fallback={<div>Loading Products...</div>}>
+        <Suspense fallback={null}>
           <ProductPageClient
             products={products}
             total={total}

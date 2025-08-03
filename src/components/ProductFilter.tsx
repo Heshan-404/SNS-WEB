@@ -17,9 +17,10 @@ interface ProductFilterProps {
   brands: BrandDto[];
   isMobile?: boolean; // New prop for mobile view
   onClose?: () => void; // New prop for closing the mobile filter
+  loading?: boolean; // New prop for loading state
 }
 
-const ProductFilter: React.FC<ProductFilterProps> = ({ categories, brands, isMobile, onClose }) => {
+const ProductFilter: React.FC<ProductFilterProps> = ({ categories, brands, isMobile, onClose, loading }) => {
   const {
     activeTab,
     setActiveTab,
@@ -42,7 +43,9 @@ const ProductFilter: React.FC<ProductFilterProps> = ({ categories, brands, isMob
   };
 
   return (
-    <section className={`p-4 bg-white ${isMobile ? 'w-full h-full flex flex-col' : 'w-[330px]'}`}>
+    <section
+      className={`p-4 pt-12 bg-white ${isMobile ? 'w-full h-full flex flex-col' : 'w-[330px]'}`}
+    >
       {!isMobile && (
         <>
           <div className="mb-3">
@@ -96,18 +99,18 @@ const ProductFilter: React.FC<ProductFilterProps> = ({ categories, brands, isMob
           <div className={cn('mb-6', !isMobile && 'mt-5')}>
             <Label className="text-lg font-semibold mb-3 block">Category</Label>
             <div className="space-y-2">
-              {categories.map((category) => (
-                <div key={category.id} className="flex items-center space-x-2 mb-5 cursor-pointer">
-                  <Checkbox
-                    id={`category-${category.id}`}
-                    checked={selectedCategoryIds.has(category.id.toString())}
-                    onCheckedChange={(checked) =>
-                      handleCategoryChange(category.id.toString(), checked as boolean)
-                    }
-                  />
-                  <Label
-                    style={{ fontSize: 16, fontWeight: 'normal' }}
-                    htmlFor={`category-${category.id}`}
+              {loading ? (
+                Array.from({ length: 5 }).map((_, index) => (
+                  <div key={index} className="flex items-center space-x-2 mb-5">
+                    <Skeleton className="h-4 w-4 rounded-sm" />
+                    <Skeleton className="h-4 w-3/4" />
+                  </div>
+                ))
+              ) : (
+                categories.map((category) => (
+                  <div
+                    key={category.id}
+                    className="flex items-center space-x-2 mb-5 cursor-pointer"
                     onClick={() =>
                       handleCategoryChange(
                         category.id.toString(),
@@ -115,10 +118,19 @@ const ProductFilter: React.FC<ProductFilterProps> = ({ categories, brands, isMob
                       )
                     }
                   >
-                    {category.name}
-                  </Label>
-                </div>
-              ))}
+                    <Checkbox
+                      id={`category-${category.id}`}
+                      checked={selectedCategoryIds.has(category.id.toString())}
+                      onCheckedChange={(checked) =>
+                        handleCategoryChange(category.id.toString(), checked as boolean)
+                      }
+                    />
+                    <Label className="cursor-pointer" style={{ fontSize: 16, fontWeight: 'normal' }}>
+                      {category.name}
+                    </Label>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         )}
@@ -127,18 +139,18 @@ const ProductFilter: React.FC<ProductFilterProps> = ({ categories, brands, isMob
           <div className="mb-6">
             <Label className="text-lg font-semibold mb-3 block">Brand</Label>
             <div className="space-y-2">
-              {brands.map((brand) => (
-                <div key={brand.id} className="flex items-center space-x-2 mb-5 cursor-pointer">
-                  <Checkbox
-                    id={`brand-${brand.id}`}
-                    checked={selectedBrandIds.has(brand.id.toString())}
-                    onCheckedChange={(checked) =>
-                      handleBrandChange(brand.id.toString(), checked as boolean)
-                    }
-                  />
-                  <Label
-                    style={{ fontSize: 16, fontWeight: 'normal' }}
-                    htmlFor={`brand-${brand.id}`}
+              {loading ? (
+                Array.from({ length: 5 }).map((_, index) => (
+                  <div key={index} className="flex items-center space-x-2 mb-5">
+                    <Skeleton className="h-4 w-4 rounded-sm" />
+                    <Skeleton className="h-4 w-3/4" />
+                  </div>
+                ))
+              ) : (
+                brands.map((brand) => (
+                  <div
+                    key={brand.id}
+                    className="flex items-center space-x-2 mb-5 cursor-pointer"
                     onClick={() =>
                       handleBrandChange(
                         brand.id.toString(),
@@ -146,10 +158,19 @@ const ProductFilter: React.FC<ProductFilterProps> = ({ categories, brands, isMob
                       )
                     }
                   >
-                    {brand.name}
-                  </Label>
-                </div>
-              ))}
+                    <Checkbox
+                      id={`brand-${brand.id}`}
+                      checked={selectedBrandIds.has(brand.id.toString())}
+                      onCheckedChange={(checked) =>
+                        handleBrandChange(brand.id.toString(), checked as boolean)
+                      }
+                    />
+                    <Label className="cursor-pointer" style={{ fontSize: 16, fontWeight: 'normal' }}>
+                      {brand.name}
+                    </Label>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         )}

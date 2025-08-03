@@ -13,10 +13,7 @@ export default function LoginPage() {
 
   return (
     <div
-      className="relative flex min-h-screen items-center justify-center bg-cover bg-center"
-      style={{ backgroundImage: `url('/images/props/HeroBackground.png')` }}
-    >
-      <div className="absolute inset-0 bg-black opacity-50"></div>
+      className="flex min-h-screen items-center justify-center" >
       <Card className="relative z-10 w-full max-w-md bg-white bg-opacity-90 shadow-lg rounded-lg p-8">
         <div className="flex justify-center mb-6">
           <Image src="/images/props/logo.png" alt="Logo" width={150} height={150} />

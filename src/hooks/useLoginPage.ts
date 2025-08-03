@@ -24,7 +24,7 @@ export const useLoginPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        router.push('/admin/dashboard'); // Redirect to admin dashboard on successful login
+        router.push('/admin/products'); // Redirect to admin products on successful login
       } else {
         setError(data.error || 'Login failed. Please check your credentials.');
       }

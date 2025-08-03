@@ -20,6 +20,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch'; // Import Switch component
+import { Label } from '@/components/ui/label'; // Import Label component for Switch
 import Link from 'next/link';
 import {
   Dialog,
@@ -51,6 +53,9 @@ export default function ManageProductsPage() {
     brands,
     brandsLoading,
     handleProductAdded,
+    isFeaturedFilter, // New state for featured filter
+    setIsFeaturedFilter, // New setter for featured filter
+    handleToggleFeatured, // New handler for toggling featured status
   } = useManageProductsPage();
 
   return (
@@ -119,6 +124,16 @@ export default function ManageProductsPage() {
                 )}
               </SelectContent>
             </Select>
+
+            {/* New Switch for Featured Filter */}
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="isFeaturedFilter"
+                checked={isFeaturedFilter || false}
+                onCheckedChange={(checked) => setIsFeaturedFilter(checked ? true : undefined)}
+              />
+              <Label htmlFor="isFeaturedFilter">Show Featured Only</Label>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -130,7 +145,7 @@ export default function ManageProductsPage() {
           {error && <p className="text-red-500">{error}</p>}
           {!loading && !error && products.length === 0 && (
             <p>
-              {searchTerm || selectedCategoryId || selectedBrandId
+              {searchTerm || selectedCategoryId || selectedBrandId || isFeaturedFilter !== undefined
                 ? 'No matching products found.'
                 : 'No products found.'}
             </p>
@@ -144,7 +159,7 @@ export default function ManageProductsPage() {
                   <TableHead>Category</TableHead>
                   <TableHead>Brand</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>Featured</TableHead><TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -165,12 +180,20 @@ export default function ManageProductsPage() {
                     <TableCell>{product.category?.name || 'N/A'}</TableCell>
                     <TableCell>{product.brand?.name || 'N/A'}</TableCell>
                     <TableCell>Active</TableCell>
+                    <TableCell>
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          id={`featured-switch-${product.id}`}
+                          checked={product.isFeatured}
+                          onCheckedChange={() => handleToggleFeatured(product.id, !product.isFeatured)}
+                        />
+                        <Label htmlFor={`featured-switch-${product.id}`}>
+                          {product.isFeatured ? 'Yes' : 'No'}
+                        </Label>
+                      </div>
+                    </TableCell>
                     <TableCell className="text-right">
-                      <Link href={`/admin/products/${product.id}`} className="mr-2">
-                        <Button variant="outline" size="sm">
-                          View
-                        </Button>
-                      </Link>
+                      
                       <Link href={`/admin/products/${product.id}/edit`} className="mr-2">
                         <Button variant="outline" size="sm">
                           Edit

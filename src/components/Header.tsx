@@ -74,7 +74,7 @@ const Header = () => {
         <div className="md:hidden flex items-center">
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="text-gray-600 focus:outline-none"
+            className="text-gray-600 focus:outline-none font-bold"
           >
             <FontAwesomeIcon icon={faBars} className="w-8 h-8" />
           </button>
@@ -84,7 +84,7 @@ const Header = () => {
       {/* Mobile Sidebar */}
       {isMenuOpen && (
         <div
-          className={`fixed top-0 right-0 bottom-0 w-64 h-dvh bg-white z-50 overflow-y-auto transition-transform duration-2000 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+          className={`fixed top-0 right-0 bottom-0 w-80 h-dvh bg-white z-50 overflow-y-auto transition-transform duration-2000 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
         >
           {/* Close Button */}
           <div className="flex justify-end p-4">
@@ -97,7 +97,7 @@ const Header = () => {
           </div>
 
           {/* Navigation Links */}
-          <nav className="space-y-4 px-4 ps-10 pt-5">
+          <nav className="space-y-4 px-4 ps-10 pt-5 font-bold">
             <Link
               href="/"
               className="flex items-center py-2 text-gray-800 hover:text-blue-600 pr-2 cursor-pointer"
@@ -158,12 +158,14 @@ const Header = () => {
 
           {/* Contact Info */}
           <div className="absolute bottom-4 left-4 right-4 px-4">
-            <a href="tel:+0720400659" className="text-gray-800 hover:text-blue-600 block">
-              0720400659 / 0760188505
-            </a>
+            <div className="bg-[#097DCA] text-white rounded-full px-4 py-2 text-center">
+              <a href="tel:+0720400659" className="font-bold">
+                0720400659 / 0760188505
+              </a>
+            </div>
             <a
               href="mailto:sales@snspipes.com"
-              className="text-gray-800 hover:text-blue-600 block mt-2"
+              className="text-black/50 hover:text-blue-600 block mt-2 text-center font-bold"
             >
               sales@snspipes.com
             </a>

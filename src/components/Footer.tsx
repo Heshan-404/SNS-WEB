@@ -14,27 +14,26 @@ const Footer = () => {
   return (
     <footer className="bg-gray-900 text-white">
       {/* Top Contact Bar */}
-      <div className="bg-[#097DCA] py-4 px-4 flex flex-col md:flex-row justify-start md:justify-center items-center text-xs md:text-base text-white w-full space-y-2 md:space-y-0">
-        <div className="flex flex-col md:flex-row space-y-1 md:space-y-0 items-start md:items-center md:gap-x-8 md:w-full">
+      <div className="bg-[#097DCA] py-2 px-4 flex flex-col md:flex-row justify-start md:justify-center items-center text-sm md:text-base text-white w-full space-y-3 md:space-y-0">
+        <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 items-start md:items-center md:gap-x-8 md:w-full">
           <div className="flex items-center justify-center flex-grow px-4 md:w-1/3">
             <FontAwesomeIcon icon={faPhone} className="mr-1" />
-            <a href="tel:+07620400659" className="hover:underline">
+            <a href="tel:+07620400659" className="hover:underline md:font-bold">
               07620400659
-            </a>{' '}
-            /{' '}
-            <a href="tel:+0760188505" className="hover:underline">
+            </a>&nbsp;/&nbsp;
+            <a href="tel:+0760188505" className="hover:underline md:font-bold">
               0760188505
             </a>
           </div>
           <div className="flex items-center justify-center flex-grow px-4 md:w-1/3">
             <FontAwesomeIcon icon={faEnvelope} className="mr-1" />
-            <a href="mailto:sales@snspipes.com" className="hover:underline">
+            <a href="mailto:sales@snspipes.com" className="hover:underline md:font-bold">
               sales@snspipes.com
             </a>
           </div>
           <div className="flex items-center justify-center flex-grow px-4 md:w-1/3">
             <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-1" />
-            <span>No 380/03, Paragasthota, Bandaragama</span>
+            <span className="md:font-bold">No 380/03, Paragasthota, Bandaragama</span>
           </div>
         </div>
       </div>

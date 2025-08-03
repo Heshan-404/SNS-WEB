@@ -20,9 +20,10 @@ import { BrandDto } from '@/types/brand';
 interface MobileFilterDialogProps {
   categories: CategoryDto[];
   brands: BrandDto[];
+  loading?: boolean;
 }
 
-const MobileFilterDialog: React.FC<MobileFilterDialogProps> = ({ categories, brands }) => {
+const MobileFilterDialog: React.FC<MobileFilterDialogProps> = ({ categories, brands, loading }) => {
   const { isMobileFilterOpen, setIsMobileFilterOpen } = useMobileFilterDialog();
 
   return (
@@ -35,23 +36,19 @@ const MobileFilterDialog: React.FC<MobileFilterDialogProps> = ({ categories, bra
         </DialogTrigger>
         <DialogContent
           showCloseButton={false}
-          className="fixed inset-x-0 top-16 h-[calc(100vh-4rem)] p-0 bg-white z-50 flex flex-col pointer-events-auto"
+          className="fixed inset-x-0 top-7 h-[calc(100vh-1rem)] p-0 bg-white z-40 flex flex-col pointer-events-auto"
         >
-          <DialogHeader className="flex flex-row items-center justify-between px-4 py-4 border-b">
+          <DialogHeader>
             <VisuallyHidden>
-              <DialogTitle>Filter Products</DialogTitle>
+              <DialogTitle>Filter Options</DialogTitle>
             </VisuallyHidden>
-            <DialogClose asChild>
-              <Button variant="ghost" size="icon">
-                <X className="h-5 w-5" />
-              </Button>
-            </DialogClose>
           </DialogHeader>
           <ProductFilter
             categories={categories}
             brands={brands}
             isMobile={true}
             onClose={() => setIsMobileFilterOpen(false)}
+            loading={loading}
           />
         </DialogContent>
       </Dialog>

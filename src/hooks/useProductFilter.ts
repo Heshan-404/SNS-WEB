@@ -17,6 +17,7 @@ export const useProductFilter = (options?: UseProductFilterOptions) => {
   const [selectedBrandIds, setSelectedBrandIds] = useState<Set<string>>(
     () => new Set(options?.initialBrandIds || []),
   );
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   useEffect(() => {
     const categoryIdsParam = searchParams.get('categoryIds');
@@ -31,6 +32,13 @@ export const useProductFilter = (options?: UseProductFilterOptions) => {
       setSelectedBrandIds(new Set(brandIdsParam.split(',')));
     } else {
       setSelectedBrandIds(new Set());
+    }
+
+    const searchTermParam = searchParams.get('search');
+    if (searchTermParam) {
+      setSearchTerm(searchTermParam);
+    } else {
+      setSearchTerm('');
     }
   }, [searchParams]);
 
@@ -58,6 +66,10 @@ export const useProductFilter = (options?: UseProductFilterOptions) => {
     });
   }, []);
 
+  const handleSearchTermChange = useCallback((term: string) => {
+    setSearchTerm(term);
+  }, []);
+
   const applyFilters = useCallback(() => {
     const params = new URLSearchParams(searchParams.toString());
 
@@ -73,21 +85,28 @@ export const useProductFilter = (options?: UseProductFilterOptions) => {
       params.delete('brandIds');
     }
 
+    if (searchTerm) {
+      params.set('search', searchTerm);
+    } else {
+      params.delete('search');
+    }
+
     params.set('page', '1'); // Reset to first page on filter change
     router.push(`${pathname}?${params.toString()}`);
-  }, [selectedCategoryIds, selectedBrandIds, searchParams, router, pathname]);
+  }, [selectedCategoryIds, selectedBrandIds, searchTerm, searchParams, router, pathname]);
 
   const clearFilters = useCallback(() => {
     const params = new URLSearchParams();
-    params.delete('search'); // Always delete search param
     router.push(`${pathname}?${params.toString()}`);
   }, [router, pathname]);
 
   return {
     selectedCategoryIds,
     selectedBrandIds,
+    searchTerm,
     handleCategoryChange,
     handleBrandChange,
+    handleSearchTermChange,
     applyFilters,
     clearFilters,
   };

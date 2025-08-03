@@ -34,10 +34,12 @@ export default function ProductPageClient({
     <>
       <div className="flex justify-between items-center mt-4">
         <h1 className="text-2xl font-bold">Products</h1>
-        <MobileFilterDialog categories={categories} brands={brands} />
+        <Suspense fallback={<MobileFilterDialog categories={[]} brands={[]} loading={true} />}>
+          <MobileFilterDialog categories={categories} brands={brands} />
+        </Suspense>
       </div>
       <div className="md:hidden mt-4">
-        <Suspense fallback={<div>Loading search...</div>}>
+        <Suspense fallback={<SearchInput loading={true} />}>
           <SearchInput />
         </Suspense>
       </div>

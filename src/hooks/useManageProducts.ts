@@ -2,7 +2,12 @@ import { useState, useEffect, useCallback } from 'react';
 import { ProductListDto } from '@/types/product';
 import { productService } from '@/services/productService';
 
-export const useManageProducts = (searchTerm?: string, categoryId?: number, brandId?: number) => {
+export const useManageProducts = (
+  searchTerm?: string,
+  categoryId?: number,
+  brandId?: number,
+  isFeatured?: boolean,
+) => {
   const [products, setProducts] = useState<ProductListDto[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -17,6 +22,7 @@ export const useManageProducts = (searchTerm?: string, categoryId?: number, bran
         categoryId ? [categoryId] : undefined,
         brandId ? [brandId] : undefined,
         searchTerm,
+        isFeatured, // Pass isFeatured to the service
       );
       setProducts(fetchedProducts.products);
     } catch (err: unknown) {
@@ -26,9 +32,10 @@ export const useManageProducts = (searchTerm?: string, categoryId?: number, bran
       }
       setError(errorMessage);
     } finally {
+      
       setLoading(false);
     }
-  }, [searchTerm, categoryId, brandId]);
+  }, [searchTerm, categoryId, brandId, isFeatured]);
 
   useEffect(() => {
     fetchProducts();
@@ -48,11 +55,25 @@ export const useManageProducts = (searchTerm?: string, categoryId?: number, bran
     }
   };
 
+  const toggleProductFeatured = async (productId: number, isFeatured: boolean) => {
+    try {
+      await productService.updateProduct(productId, { isFeatured });
+      fetchProducts(); // Refresh products after update
+    } catch (err: unknown) {
+      let errorMessage = 'Failed to update featured status.';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      alert(errorMessage);
+    }
+  };
+
   return {
     products,
     loading,
     error,
     fetchProducts,
     handleDeleteProduct,
+    toggleProductFeatured,
   };
 };

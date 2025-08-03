@@ -55,6 +55,20 @@ async function putHandler(
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
 
+    // Handle isFeatured logic
+    if (data.isFeatured !== undefined && data.isFeatured === true) {
+      const featuredProductsCount = await prisma.product.count({
+        where: { isFeatured: true, id: { not: id } }, // Exclude current product if it's already featured
+      });
+
+      if (featuredProductsCount >= 4) {
+        return NextResponse.json(
+          { error: 'Cannot feature more than 4 products.' },
+          { status: 400 },
+        );
+      }
+    }
+
     // Basic validation for images if provided
     if (data.images !== undefined) {
       if (data.images.length === 0 || !data.images.some((img: UploadedImageDto) => img.isMain)) {

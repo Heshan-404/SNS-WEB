@@ -13,6 +13,7 @@ import { Separator } from '@/components/ui/separator';
 
 import { UploadedImageDto } from '@/types/image';
 import { productService } from '@/services/productService';
+import ContactAssistanceSection from '@/components/ContactAssistanceSection';
 
 // This is the definitive Props type that Next.js is expecting.
 // Both params and searchParams are wrapped in a Promise.
@@ -45,7 +46,7 @@ export default async function ProductDetailPage({ params }: Props) {
   }));
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container mx-auto px-4 pt-6 pb-5">
       <Breadcrumb className="mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -92,7 +93,13 @@ export default async function ProductDetailPage({ params }: Props) {
             <div className="mb-6">
               <h3 className="text-base font-bold text-[#121417] mb-2 mt-4">Available Sizes</h3>
               <Separator className="mb-2" />
-              <p className="text-gray-700 text-lg">{product.availableSizes.join(', ')}</p>
+              <div className="flex flex-wrap gap-2">
+                {product.availableSizes.map((size, index) => (
+                  <span key={index} className="bg-gray-200 text-gray-800 text-sm px-3 py-1 rounded-md">
+                    {size}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
 
@@ -100,7 +107,13 @@ export default async function ProductDetailPage({ params }: Props) {
             <div className="mb-6">
               <h3 className="text-base font-bold text-[#121417] mb-2 mt-4">Voltage</h3>
               <Separator className="mb-2" />
-              <p className="text-gray-700 text-lg">{product.voltages.join(', ')}</p>
+              <div className="flex flex-wrap gap-2">
+                {product.voltages.map((voltage, index) => (
+                  <span key={index} className="bg-gray-200 text-gray-800 text-sm px-3 py-1 rounded-md">
+                    {voltage}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
 
@@ -108,20 +121,16 @@ export default async function ProductDetailPage({ params }: Props) {
             <div className="mb-6">
               <h3 className="text-base font-bold text-[#121417] mb-2 mt-4">Color</h3>
               <Separator className="mb-2" />
-              <p className="text-gray-700 text-lg">{product.colors.join(', ')}</p>
+              <div className="flex flex-wrap gap-2">
+                {product.colors.map((color, index) => (
+                  <span key={index} className="bg-gray-200 text-gray-800 text-sm px-3 py-1 rounded-md">
+                    {color}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
         </div>
-      </div>
-
-      <div className="mt-12 text-center">
-        <h2 className="text-3xl font-bold text-[#121417] mb-4">Need Assistance?</h2>
-        <p className="text-lg text-gray-700 mb-6">
-          Looking to place an order, get pricing, or have any other questions?
-        </p>
-        <button className="bg-[#1285E8] hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition duration-300 ease-in-out shadow-lg">
-          Contact Us
-        </button>
       </div>
     </div>
   );

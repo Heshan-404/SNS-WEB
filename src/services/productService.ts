@@ -63,6 +63,7 @@ export const productService = {
     categoryIds?: number[],
     brandIds?: number[],
     searchTerm?: string,
+    isFeatured?: boolean, // New parameter
   ): Promise<PaginatedProductsDto> => {
     const params = new URLSearchParams();
     params.append('page', page.toString());
@@ -76,6 +77,9 @@ export const productService = {
     if (searchTerm) {
       params.append('searchTerm', searchTerm);
     }
+    if (isFeatured !== undefined) {
+      params.append('isFeatured', isFeatured.toString());
+    }
 
     const response = await fetch(`${API_BASE_URL}/products?${params.toString()}`);
     if (!response.ok) {
@@ -86,6 +90,7 @@ export const productService = {
   },
 
   getProductById: async (id: number): Promise<ProductDto> => {
+    
     const response = await fetch(`${API_BASE_URL}/products/${id}`);
     if (!response.ok) {
       const errorData = await response.json();

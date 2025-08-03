@@ -37,6 +37,7 @@ export const metadata: Metadata = {
 };
 
 import { Toaster } from 'sonner';
+import ContactAssistanceSection from '@/components/ContactAssistanceSection';
 
 export default function RootLayout({
   children,
@@ -46,7 +47,8 @@ export default function RootLayout({
   return (
     <>
       <Header />
-      <main className="pt-16">{children}</main>
+      <main className="pt-10">{children}</main>
+      <ContactAssistanceSection />
       <Footer />
       <Toaster />
     </>
