@@ -11,12 +11,11 @@ export function authMiddleware(handler: Function) {
     }
 
     const authHeader = request.headers.get('authorization');
+    const token = authHeader?.startsWith('Bearer ') ? authHeader.split(' ')[1] : request.cookies.get('token')?.value;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!token) {
       return NextResponse.json({ message: 'No token provided' }, { status: 401 });
     }
-
-    const token = authHeader.split(' ')[1];
 
     try {
       const decoded = jwt.verify(token, JWT_SECRET);
