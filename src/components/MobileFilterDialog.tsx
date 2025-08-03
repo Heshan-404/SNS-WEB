@@ -20,10 +20,9 @@ import { BrandDto } from '@/types/brand';
 interface MobileFilterDialogProps {
   categories: CategoryDto[];
   brands: BrandDto[];
-  loading?: boolean;
 }
 
-const MobileFilterDialog: React.FC<MobileFilterDialogProps> = ({ categories, brands, loading }) => {
+const MobileFilterDialog: React.FC<MobileFilterDialogProps> = ({ categories, brands }) => {
   const { isMobileFilterOpen, setIsMobileFilterOpen } = useMobileFilterDialog();
 
   return (
@@ -48,7 +47,6 @@ const MobileFilterDialog: React.FC<MobileFilterDialogProps> = ({ categories, bra
             brands={brands}
             isMobile={true}
             onClose={() => setIsMobileFilterOpen(false)}
-            loading={loading}
           />
         </DialogContent>
       </Dialog>

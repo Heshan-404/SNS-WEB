@@ -22,6 +22,7 @@ export interface UpdateProductDto {
   availableSizes?: string[];
   voltages?: string[];
   colors?: string[];
+  isFeatured?: boolean;
 }
 
 export interface ProductDto {
@@ -56,6 +57,7 @@ export interface ProductListDto {
   brand: { id: number; name: string };
   category: { id: number; name: string };
   mainImageUrl?: string; // Only main image for list view
+  isFeatured?: boolean;
 }
 
 export interface PaginatedProductsDto {

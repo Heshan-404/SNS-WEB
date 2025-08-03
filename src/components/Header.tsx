@@ -35,25 +35,25 @@ const Header = () => {
         <nav className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 space-x-6">
           <Link
             href="/"
-            className="text-gray-600 hover:text-blue-600 transition-colors duration-200 py-2 whitespace-nowrap cursor-pointer"
+            className="text-gray-600 hover:text-blue-600 transition-colors duration-200 py-2 whitespace-nowrap cursor-pointer font-bold"
           >
             Home
           </Link>
           <Link
             href="/products?page=1"
-            className="text-gray-600 hover:text-blue-600 transition-colors duration-200 py-2 whitespace-nowrap cursor-pointer"
+            className="text-gray-600 hover:text-blue-600 transition-colors duration-200 py-2 whitespace-nowrap cursor-pointer font-bold"
           >
             Products
           </Link>
           <Link
             href="/#about"
-            className="text-gray-600 hover:text-blue-600 transition-colors duration-200 py-2 whitespace-nowrap cursor-pointer"
+            className="text-gray-600 hover:text-blue-600 transition-colors duration-200 py-2 whitespace-nowrap cursor-pointer font-bold"
           >
             About Us
           </Link>
           <Link
             href="/#contact"
-            className="text-gray-600 hover:text-blue-600 transition-colors duration-200 py-2 whitespace-nowrap cursor-pointer"
+            className="text-gray-600 hover:text-blue-600 transition-colors duration-200 py-2 whitespace-nowrap cursor-pointer font-bold"
           >
             Contact Us
           </Link>
@@ -61,11 +61,11 @@ const Header = () => {
 
         {/* Contact Info - Single Blue Container (Desktop) */}
         <div className="md:flex hidden items-center space-x-4 bg-[#1285E8] px-4 py-2 rounded-full">
-          <a href="tel:+0720400659" className="text-white text-sm leading-none">
+          <a href="tel:+0720400659" className="text-white text-sm leading-none font-bold">
             0720400659 / 0760188505
           </a>
-          <span className="text-white text-sm leading-none">|</span>
-          <a href="mailto:sales@snspipes.com" className="text-white text-sm leading-none">
+          <span className="text-white text-sm leading-none font-bold">|</span>
+          <a href="mailto:sales@snspipes.com" className="text-white text-sm leading-none font-bold">
             sales@snspipes.com
           </a>
         </div>

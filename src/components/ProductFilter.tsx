@@ -11,16 +11,18 @@ import SearchInput from '@/components/SearchInput';
 import { useProductFilterLogic } from '@/hooks/useProductFilterLogic';
 import { CategoryDto } from '@/types/category';
 import { BrandDto } from '@/types/brand';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface ProductFilterProps {
   categories: CategoryDto[];
   brands: BrandDto[];
   isMobile?: boolean; // New prop for mobile view
   onClose?: () => void; // New prop for closing the mobile filter
-  loading?: boolean; // New prop for loading state
 }
 
-const ProductFilter: React.FC<ProductFilterProps> = ({ categories, brands, isMobile, onClose, loading }) => {
+const ProductFilter: React.FC<ProductFilterProps> = ({ categories: initialCategories, brands: initialBrands, isMobile, onClose }) => {
+  const categories = initialCategories || [];
+  const brands = initialBrands || [];
   const {
     activeTab,
     setActiveTab,
@@ -99,7 +101,7 @@ const ProductFilter: React.FC<ProductFilterProps> = ({ categories, brands, isMob
           <div className={cn('mb-6', !isMobile && 'mt-5')}>
             <Label className="text-lg font-semibold mb-3 block">Category</Label>
             <div className="space-y-2">
-              {loading ? (
+              {(categories?.length === 0) ? (
                 Array.from({ length: 5 }).map((_, index) => (
                   <div key={index} className="flex items-center space-x-2 mb-5">
                     <Skeleton className="h-4 w-4 rounded-sm" />
@@ -139,7 +141,7 @@ const ProductFilter: React.FC<ProductFilterProps> = ({ categories, brands, isMob
           <div className="mb-6">
             <Label className="text-lg font-semibold mb-3 block">Brand</Label>
             <div className="space-y-2">
-              {loading ? (
+              {(brands?.length === 0) ? (
                 Array.from({ length: 5 }).map((_, index) => (
                   <div key={index} className="flex items-center space-x-2 mb-5">
                     <Skeleton className="h-4 w-4 rounded-sm" />

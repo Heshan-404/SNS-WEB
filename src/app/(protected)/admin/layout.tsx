@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import '../../globals.css'; // Import global styles
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { MenuIcon } from 'lucide-react';
 import { useAdminLayout } from '@/hooks/useAdminLayout';
@@ -23,6 +23,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </Button>
           </SheetTrigger>
           <SheetContent side="left">
+            <SheetTitle className="sr-only">Admin Navigation</SheetTitle>
             <nav className="grid gap-6 text-lg font-medium">
               <span className="text-foreground whitespace-nowrap">ADMIN PANEL</span>
               <Link href="/admin/products" passHref>

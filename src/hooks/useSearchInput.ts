@@ -21,7 +21,7 @@ export const useSearchInput = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
-    }, 500); // 500ms debounce delay
+    }, 1500); // 1500ms debounce delay
 
     return () => {
       clearTimeout(timer);

@@ -27,6 +27,8 @@ export async function GET(request: Request) {
       : undefined;
     const isFeatured = isFeaturedParam ? isFeaturedParam === 'true' : undefined;
 
+    const searchTerm = searchParams.get('searchTerm');
+
     const products = await prisma.product.findMany({
       skip: (page - 1) * limit,
       take: limit,
@@ -34,6 +36,12 @@ export async function GET(request: Request) {
         ...(categoryIds && categoryIds.length > 0 && { categoryId: { in: categoryIds } }),
         ...(brandIds && brandIds.length > 0 && { brandId: { in: brandIds } }),
         ...(isFeatured !== undefined && { isFeatured: isFeatured }),
+        ...(searchTerm && {
+          OR: [
+            { name: { contains: searchTerm, mode: 'insensitive' } },
+            { description: { contains: searchTerm, mode: 'insensitive' } },
+          ],
+        }),
       },
       include: { category: true, brand: true, images: true },
     });
@@ -45,6 +53,12 @@ export async function GET(request: Request) {
         ...(categoryIds && categoryIds.length > 0 && { categoryId: { in: categoryIds } }),
         ...(brandIds && brandIds.length > 0 && { brandId: { in: brandIds } }),
         ...(isFeatured !== undefined && { isFeatured: isFeatured }),
+        ...(searchTerm && {
+          OR: [
+            { name: { contains: searchTerm, mode: 'insensitive' } },
+            { description: { contains: searchTerm, mode: 'insensitive' } },
+          ],
+        }),
       },
     });
 
