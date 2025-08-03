@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   keywords: "pipes, fittings, PPR, brass fittings, plumbing, hardware, construction, pipe supplier, pipe shop",
   openGraph: {
     title: "SNS Pipes & Fittings - Quality Pipes for Every Project",
-    description: "Discover high-quality pipes and fittings for all your projects. We offer a wide range of products including PPR, brass fittings, and more. Contact us today!",
+    description: "Discover high-quality pipes and fittings for all your projects. We offer a wide range of products including PPR, brass fittings and more. Contact us today!",
     url: "https://yourwebsite.com", // Replace with your actual website URL
     siteName: "SNS Pipes & Fittings",
     images: [
@@ -32,18 +32,19 @@ export const metadata: Metadata = {
   },
 };
 
+import { Toaster } from 'sonner';
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="">
-        <Header />
-        <main className="pt-16">{children}</main>
-        <Footer />
-      </body>
-    </html>
+    <>
+      <Header />
+      <main className="pt-16">{children}</main>
+      <Footer />
+      <Toaster />
+    </>
   );
 }

@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import SearchInput from "@/components/SearchInput";
+import { useProductFilter } from "@/hooks/useProductFilter";
 
 interface ProductFilterProps {
   categories: any[];
@@ -18,78 +18,16 @@ interface ProductFilterProps {
 }
 
 const ProductFilter: React.FC<ProductFilterProps> = ({ categories, brands, isMobile, onClose }) => {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
-
   const [activeTab, setActiveTab] = useState('category'); // For mobile tab view
-  const [selectedCategoryIds, setSelectedCategoryIds] = useState<Set<string>>(new Set());
-  const [selectedBrandIds, setSelectedBrandIds] = useState<Set<string>>(new Set());
+  const { selectedCategoryIds, selectedBrandIds, handleCategoryChange, handleBrandChange, applyFilters, clearFilters } = useProductFilter();
 
-  useEffect(() => {
-    const categoryIdsParam = searchParams.get('categoryIds');
-    if (categoryIdsParam) {
-      setSelectedCategoryIds(new Set(categoryIdsParam.split(',')));
-    } else {
-      setSelectedCategoryIds(new Set());
-    }
-
-    const brandIdsParam = searchParams.get('brandIds');
-    if (brandIdsParam) {
-      setSelectedBrandIds(new Set(brandIdsParam.split(',')));
-    } else {
-      setSelectedBrandIds(new Set());
-    }
-  }, [searchParams]);
-
-  const handleCategoryChange = (categoryId: string, checked: boolean) => {
-    setSelectedCategoryIds((prev) => {
-      const newSet = new Set(prev);
-      if (checked) {
-        newSet.add(categoryId);
-      } else {
-        newSet.delete(categoryId);
-      }
-      return newSet;
-    });
-  };
-
-  const handleBrandChange = (brandId: string, checked: boolean) => {
-    setSelectedBrandIds((prev) => {
-      const newSet = new Set(prev);
-      if (checked) {
-        newSet.add(brandId);
-      } else {
-        newSet.delete(brandId);
-      }
-      return newSet;
-    });
-  };
-
-  const applyFilters = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    
-    if (selectedCategoryIds.size > 0) {
-      params.set('categoryIds', Array.from(selectedCategoryIds).join(','));
-    } else {
-      params.delete('categoryIds');
-    }
-
-    if (selectedBrandIds.size > 0) {
-      params.set('brandIds', Array.from(selectedBrandIds).join(','));
-    } else {
-      params.delete('brandIds');
-    }
-    
-    params.set('page', '1'); // Reset to first page on filter change
-    router.push(`/products?${params.toString()}`);
+  const handleApplyFilters = () => {
+    applyFilters();
     onClose?.(); // Close mobile filter after applying
   };
 
-  const clearFilters = () => {
-    const params = new URLSearchParams();
-    params.delete('search'); // Always delete search param
-    router.push(`/products?${params.toString()}`);
+  const handleClearFilters = () => {
+    clearFilters();
     onClose?.(); // Close mobile filter after clearing
   };
 
@@ -102,10 +40,10 @@ const ProductFilter: React.FC<ProductFilterProps> = ({ categories, brands, isMob
             <SearchInput />
           </div>
           <div className="flex flex-col space-y-2 mt-4">
-            <Button className="w-full rounded-xl bg-[#0A78ED] text-white" onClick={applyFilters}>
+            <Button className="w-full rounded-xl bg-[#0A78ED] text-white" onClick={handleApplyFilters}>
               Apply Filters
             </Button>
-            <Button variant="outline" className="w-full rounded-xl bg-[#F0F2F5] text-black" onClick={clearFilters}>
+            <Button variant="outline" className="w-full rounded-xl bg-[#F0F2F5] text-black" onClick={handleClearFilters}>
               Clear Filters
             </Button>
           </div>
@@ -189,7 +127,7 @@ const ProductFilter: React.FC<ProductFilterProps> = ({ categories, brands, isMob
 
       {isMobile && (
         <div className="flex-shrink-0 p-4 border-t border-gray-200 flex flex-col space-y-2">
-          <Button variant="outline" className="w-full rounded-xl bg-[#F0F2F5] text-black" onClick={clearFilters}>
+          <Button variant="outline" className="w-full rounded-xl bg-[#F0F2F5] text-black" onClick={handleClearFilters}>
             Clear Filters
           </Button>
           <div className="flex justify-between space-x-2">

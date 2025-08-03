@@ -17,9 +17,9 @@ const HeroSection = () => {
           S N S PIPES & FITTINGS is committed to providing high-quality plumbing solutions for a wide range of projects. 
           Our extensive product range ensures you'll find the perfect fit for your needs.
         </p>
-        <button className="bg-[#1285E8] hover:bg-[#0f6bbd] text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 ease-in-out shadow-lg animate-float">
+        <a href="#products" className="bg-[#1285E8] hover:bg-[#0f6bbd] text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 ease-in-out shadow-lg animate-float cursor-pointer">
           Explore Our Products
-        </button>
+        </a>
       </div> {/* This was the missing closing div */}
     </section>
   );

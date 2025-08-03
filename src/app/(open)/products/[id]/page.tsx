@@ -1,5 +1,4 @@
-import { ProductService } from '@/services/productService';
-const serverProductService = new ProductService(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000');
+import { productService } from '@/services/productService';
 import ProductImageViewer from '@/components/ProductImageViewer';
 import { notFound } from 'next/navigation';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
@@ -8,7 +7,7 @@ import type { Metadata } from 'next';
 
 export async function generateMetadata({ params }: any): Promise<Metadata> {
   const productId = parseInt(params.id, 10);
-  const product = await serverProductService.getProductById(productId);
+  const product = await productService.getProductById(productId);
 
   if (!product) {
     return {
@@ -52,7 +51,7 @@ const ProductDetailPage: React.FC<any> = async ({ params }) => {
     notFound();
   }
 
-  const product = await serverProductService.getProductById(productId);
+  const product = await productService.getProductById(productId);
 
   if (!product) {
     notFound();

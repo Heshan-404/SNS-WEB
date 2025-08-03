@@ -1,37 +1,34 @@
-"use client";
-
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import React, { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ManageableImagePreview from '@/components/ManageableImagePreview';
-import { UploadedImageDto } from '@/types/image';
 import ImageUploadArea from '@/components/ImageUploadArea';
 import TagInput from '@/components/TagInput';
-import { productService } from '@/services/productService';
-import { CreateProductDto, UpdateProductDto } from '@/types/product';
-import { Button } from '@/components/ui/button';
+import { UploadedImageDto } from '@/types/image';
+import { CreateProductDto } from '@/types/product';
 import { toast } from 'sonner';
 import { CategoryDto } from '@/types/category';
 import { BrandDto } from '@/types/brand';
 import { categoryService } from '@/services/categoryService';
 import { brandService } from '@/services/brandService';
-import { useParams } from 'next/navigation';
+import {productService} from "@/services/productService";
 
-const EditProductPage = () => {
-  const { id } = useParams() as { id: string };
-  const productId = parseInt(id, 10);
+interface AddProductFormProps {
+  onProductAdded: () => void;
+  onCloseDialog: () => void;
+}
 
+export default function AddProductForm({ onProductAdded, onCloseDialog }: AddProductFormProps) {
   const [productName, setProductName] = useState('');
   const [shortName, setShortName] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
   const [brand, setBrand] = useState('');
-  const [uploadedImages, setUploadedImages] = useState<UploadedImageDto[]>([]); // For display
-  const [newlyAddedFiles, setNewlyAddedFiles] = useState<File[]>([]); // For actual new File objects
-  const [imagesToDelete, setImagesToDelete] = useState<string[]>([]); // URLs of images to delete from Blob/DB
+  const [uploadedImages, setUploadedImages] = useState<File[]>([]);
   const [sizes, setSizes] = useState<string[]>([]);
   const [voltages, setVoltages] = useState<string[]>([]);
   const [colors, setColors] = useState<string[]>([]);
@@ -47,56 +44,28 @@ const EditProductPage = () => {
         const brandsData = await brandService.getBrands();
         setFetchedCategories(categoriesData);
         setFetchedBrands(brandsData);
-
-        const fetchedProduct = await productService.getProductById(productId);
-        if (fetchedProduct) {
-          setProductName(fetchedProduct.name);
-          setShortName(fetchedProduct.shortName);
-          setDescription(fetchedProduct.description);
-          setCategory(fetchedProduct.categoryId.toString());
-          setBrand(fetchedProduct.brandId.toString());
-          setSizes(fetchedProduct.availableSizes || []);
-          setVoltages(fetchedProduct.voltages || []);
-          setColors(fetchedProduct.colors || []);
-          // Populate uploadedImages with existing images
-          setUploadedImages(fetchedProduct.images);
-        }
       } catch (error) {
-        toast.error('Failed to load product data, categories or brands.');
-        console.error('Error loading data:', error);
+        toast.error('Failed to load categories or brands.');
+        console.error('Error loading categories/brands:', error);
       } finally {
         setIsLoadingData(false);
       }
     };
     loadData();
-  }, [productId]);
+  }, []);
 
   const handleImageUpload = (newFiles: File[]) => {
-    setNewlyAddedFiles(prevFiles => [...prevFiles, ...newFiles]);
-    setUploadedImages(prevImages => [
-      ...prevImages,
-      ...newFiles.map(file => ({
-        url: URL.createObjectURL(file),
-        isMain: false, // Will be determined on submit
-        name: file.name,
-        size: file.size,
-        type: file.type,
-      })),
-    ]);
+    setUploadedImages(prevFiles => {
+      const combinedFiles = [...prevFiles, ...newFiles];
+      const limitedFiles = combinedFiles.slice(0, 4); // Limit to 4 images
+      return limitedFiles;
+    });
   };
 
-  const handleRemoveImage = (imageToRemove: UploadedImageDto) => {
-    setUploadedImages(prevImages => {
-      const updatedImages = prevImages.filter(img => img.url !== imageToRemove.url);
-
-      // If it's an existing image (not a blob URL), mark for deletion
-      if (!imageToRemove.url.startsWith('blob:')) {
-        setImagesToDelete(prevUrls => [...prevUrls, imageToRemove.url]);
-      } else {
-        // If it's a newly added file, remove it from newlyAddedFiles
-        setNewlyAddedFiles(prevFiles => prevFiles.filter(file => URL.createObjectURL(file) !== imageToRemove.url));
-      }
-      return updatedImages;
+  const handleRemoveImage = (fileToRemove: File) => {
+    setUploadedImages(prevFiles => {
+      const updatedFiles = prevFiles.filter(file => file !== fileToRemove);
+      return updatedFiles;
     });
   };
 
@@ -111,36 +80,19 @@ const EditProductPage = () => {
     }
 
     try {
-      // 1. Delete images marked for deletion
-      await Promise.all(imagesToDelete.map(url => productService.deleteImage(url)));
+      // Upload images first
+      const uploadedBlobs = await productService.uploadImages(uploadedImages);
 
-      // 2. Upload newly added files
-      const uploadedBlobs = newlyAddedFiles.length > 0
-        ? await productService.uploadImages(newlyAddedFiles)
-        : [];
+      // Map uploaded blobs to UploadedImageDto, setting the first as main
+      const finalImages: UploadedImageDto[] = uploadedBlobs.map((blob, index) => ({
+        url: blob.url,
+        isMain: index === 0,
+        name: uploadedImages[index]?.name || '',
+        size: uploadedImages[index]?.size || 0,
+        type: uploadedImages[index]?.type || '',
+      }));
 
-      // 3. Combine existing (non-deleted) images with newly uploaded images
-      const existingNonDeletedImages = uploadedImages.filter(
-        img => !img.url.startsWith('blob:') && !imagesToDelete.includes(img.url)
-      );
-
-      const finalImages: UploadedImageDto[] = [
-        ...existingNonDeletedImages,
-        ...uploadedBlobs.map((blob, index) => ({
-          url: blob.url,
-          isMain: false, // Will be set below
-          name: newlyAddedFiles[index]?.name || '',
-          size: newlyAddedFiles[index]?.size || 0,
-          type: newlyAddedFiles[index]?.type || '',
-        })),
-      ];
-
-      // Ensure the first image is main
-      if (finalImages.length > 0) {
-        finalImages[0].isMain = true;
-      }
-
-      const productData: UpdateProductDto = {
+      const productData: CreateProductDto = {
         name: productName,
         shortName: shortName,
         description: description,
@@ -152,27 +104,30 @@ const EditProductPage = () => {
         colors: colors,
       };
 
-      await productService.updateProduct(productId, productData);
-      toast.success('Product updated successfully!');
-      // Optionally redirect after update
-      // router.push('/admin/products');
+      await productService.createProduct(productData);
+      toast.success('Product added successfully!');
+      onProductAdded();
+      onCloseDialog();
+      // Clear form
+      setProductName('');
+      setShortName('');
+      setDescription('');
+      setCategory('');
+      setBrand('');
+      setUploadedImages([]);
+      setSizes([]);
+      setVoltages([]);
+      setColors([]);
     } catch (error: any) {
-      console.error('Error updating product:', error);
-      toast.error(error.message || 'Failed to update product.');
+      console.error('Error adding product:', error);
+      toast.error(error.message || 'Failed to add product.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (isLoadingData) {
-    return <div className="container mx-auto py-8">Loading product data...</div>;
-  }
-
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-6 text-left">Edit Product</h1>
-      <form onSubmit={handleSubmit}>
-
+    <form onSubmit={handleSubmit} className="space-y-4">
       {/* Product Information */}
       <Card className="mb-6 border-none shadow-none">
         <CardHeader>
@@ -263,7 +218,13 @@ const EditProductPage = () => {
           {uploadedImages.length > 0 && (
             <div className="mb-6">
               <h3 className="text-md font-semibold mb-2">Uploaded Images Preview</h3>
-              <ManageableImagePreview images={uploadedImages} onRemoveImage={handleRemoveImage} />
+              <ManageableImagePreview images={uploadedImages.map(file => ({
+                url: URL.createObjectURL(file),
+                isMain: false, // This is for display only, actual isMain is set on submit
+                name: file.name,
+                size: file.size,
+                type: file.type,
+              }))} onRemoveImage={(imgDto) => handleRemoveImage(uploadedImages.find(file => URL.createObjectURL(file) === imgDto.url)!)} />
             </div>
           )}
           <ImageUploadArea onImageUpload={handleImageUpload} currentImageCount={uploadedImages.length} />
@@ -301,12 +262,9 @@ const EditProductPage = () => {
 
       <div className="flex justify-end">
         <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting || isLoadingData}>
-          {isSubmitting ? 'Updating Product...' : 'Update Product'}
+          {isSubmitting ? 'Adding Product...' : 'Add Product'}
         </Button>
       </div>
     </form>
-  </div>
   );
-};
-
-export default EditProductPage;
+}

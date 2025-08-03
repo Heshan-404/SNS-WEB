@@ -1,11 +1,8 @@
 import ProductFilter from "@/components/ProductFilter";
 import React from "react";
 import MainContent from './MainContent';
-import { CategoryService } from "@/services/categoryService";
-import { BrandService } from "@/services/brandService";
-
-const categoryService = new CategoryService();
-const brandService = new BrandService();
+import { categoryService } from "@/services/categoryService";
+import { brandService } from "@/services/brandService";
 
 export default async function ProductsLayout({
   children,

@@ -1,71 +1,63 @@
 import { CategoryDto, CreateCategoryDto, UpdateCategoryDto } from '../types/category';
 
-export class CategoryService {
-  private baseUrl: string;
+const API_BASE_URL = (process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000') + '/api';
 
-  constructor(baseUrl: string = '') {
-    this.baseUrl = baseUrl;
-  }
-
-  async createCategory(data: CreateCategoryDto): Promise<CategoryDto> {
-    // Mock data
-    console.log("Mocking createCategory with data:", data);
-    const newCategory: CategoryDto = {
-      id: Math.floor(Math.random() * 1000) + 100,
-      name: data.name,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    return newCategory;
-  }
-
-  async getCategories(): Promise<CategoryDto[]> {
-    // Mock data
-    return [
-      { id: 1, name: "Category X", createdAt: new Date(), updatedAt: new Date() },
-      { id: 2, name: "Category Y", createdAt: new Date(), updatedAt: new Date() },
-      { id: 3, name: "Category Z", createdAt: new Date(), updatedAt: new Date() },
-    ];
-  }
-
-  async getCategoryById(id: number): Promise<CategoryDto | null> {
-    // Mock data
-    const mockCategories: CategoryDto[] = [
-      { id: 1, name: "Category X", createdAt: new Date(), updatedAt: new Date() },
-      { id: 2, name: "Category Y", createdAt: new Date(), updatedAt: new Date() },
-      { id: 3, name: "Category Z", createdAt: new Date(), updatedAt: new Date() },
-    ];
-    return mockCategories.find(cat => cat.id === id) || null;
-  }
-
-  async updateCategory(id: number, data: UpdateCategoryDto): Promise<CategoryDto | null> {
-    // Mock data
-    console.log(`Mocking updateCategory for ID ${id} with data:`, data);
-    const existingCategory = await this.getCategoryById(id);
-    if (!existingCategory) {
-      return null;
+export const categoryService = {
+  createCategory: async (data: CreateCategoryDto): Promise<CategoryDto> => {
+    const response = await fetch(`${API_BASE_URL}/categories`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to create category');
     }
-    const updatedCategory: CategoryDto = {
-      ...existingCategory,
-      name: data.name || existingCategory.name,
-      updatedAt: new Date(),
-    };
-    return updatedCategory;
-  }
+    return response.json();
+  },
 
-  async deleteCategory(id: number): Promise<CategoryDto | null> {
-    // Mock data
-    console.log(`Mocking deleteCategory for ID ${id}`);
-    const existingCategory = await this.getCategoryById(id);
-    if (!existingCategory) {
-      return null;
+  getCategories: async (): Promise<CategoryDto[]> => {
+    const response = await fetch(`${API_BASE_URL}/categories`);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to fetch categories');
     }
-    // Simulate deletion restriction
-    if (id === 1) { // Example: Category X is used by products
-      throw new Error('Cannot delete category: It is currently used by products.');
-    }
-    return existingCategory;
-  }
-}
+    return response.json();
+  },
 
-export const categoryService = new CategoryService();
+  getCategoryById: async (id: number): Promise<CategoryDto> => {
+    const response = await fetch(`${API_BASE_URL}/categories/${id}`);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to fetch category');
+    }
+    return response.json();
+  },
+
+  updateCategory: async (id: number, data: UpdateCategoryDto): Promise<CategoryDto> => {
+    const response = await fetch(`${API_BASE_URL}/categories/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to update category');
+    }
+    return response.json();
+  },
+
+  deleteCategory: async (id: number): Promise<void> => {
+    const response = await fetch(`${API_BASE_URL}/categories/${id}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to delete category');
+    }
+  },
+};

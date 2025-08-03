@@ -1,71 +1,63 @@
-
 import { BrandDto, CreateBrandDto, UpdateBrandDto } from '../types/brand';
 
-export class BrandService {
-  private baseUrl: string;
+const API_BASE_URL = (process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000') + '/api';
 
-  constructor(baseUrl: string = '') {
-    this.baseUrl = baseUrl;
-  }
-  async createBrand(data: CreateBrandDto): Promise<BrandDto> {
-    // Mock data
-    console.log("Mocking createBrand with data:", data);
-    const newBrand: BrandDto = {
-      id: Math.floor(Math.random() * 1000) + 100,
-      name: data.name,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    return newBrand;
-  }
-
-  async getBrands(): Promise<BrandDto[]> {
-    // Mock data
-    return [
-      { id: 1, name: "Brand A", createdAt: new Date(), updatedAt: new Date() },
-      { id: 2, name: "Brand B", createdAt: new Date(), updatedAt: new Date() },
-      { id: 3, name: "Brand C", createdAt: new Date(), updatedAt: new Date() },
-    ];
-  }
-
-  async getBrandById(id: number): Promise<BrandDto | null> {
-    // Mock data
-    const mockBrands: BrandDto[] = [
-      { id: 1, name: "Brand A", createdAt: new Date(), updatedAt: new Date() },
-      { id: 2, name: "Brand B", createdAt: new Date(), updatedAt: new Date() },
-      { id: 3, name: "Brand C", createdAt: new Date(), updatedAt: new Date() },
-    ];
-    return mockBrands.find(brand => brand.id === id) || null;
-  }
-
-  async updateBrand(id: number, data: UpdateBrandDto): Promise<BrandDto | null> {
-    // Mock data
-    console.log(`Mocking updateBrand for ID ${id} with data:`, data);
-    const existingBrand = await this.getBrandById(id);
-    if (!existingBrand) {
-      return null;
+export const brandService = {
+  createBrand: async (data: CreateBrandDto): Promise<BrandDto> => {
+    const response = await fetch(`${API_BASE_URL}/brands`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to create brand');
     }
-    const updatedBrand: BrandDto = {
-      ...existingBrand,
-      name: data.name || existingBrand.name,
-      updatedAt: new Date(),
-    };
-    return updatedBrand;
-  }
+    return response.json();
+  },
 
-  async deleteBrand(id: number): Promise<BrandDto | null> {
-    // Mock data
-    console.log(`Mocking deleteBrand for ID ${id}`);
-    const existingBrand = await this.getBrandById(id);
-    if (!existingBrand) {
-      return null;
+  getBrands: async (): Promise<BrandDto[]> => {
+    const response = await fetch(`${API_BASE_URL}/brands`);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to fetch brands');
     }
-    // Simulate deletion restriction
-    if (id === 1) { // Example: Brand A is used by products
-      throw new Error('Cannot delete brand: It is currently used by products.');
-    }
-    return existingBrand;
-  }
-}
+    return response.json();
+  },
 
-export const brandService = new BrandService();
+  getBrandById: async (id: number): Promise<BrandDto> => {
+    const response = await fetch(`${API_BASE_URL}/brands/${id}`);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to fetch brand');
+    }
+    return response.json();
+  },
+
+  updateBrand: async (id: number, data: UpdateBrandDto): Promise<BrandDto> => {
+    const response = await fetch(`${API_BASE_URL}/brands/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to update brand');
+    }
+    return response.json();
+  },
+
+  deleteBrand: async (id: number): Promise<void> => {
+    const response = await fetch(`${API_BASE_URL}/brands/${id}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to delete brand');
+    }
+  },
+};

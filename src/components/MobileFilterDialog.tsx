@@ -13,6 +13,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Filter, X } from "lucide-react";
 
+import { VisuallyHidden } from "@/components/ui/visually-hidden";
+
 interface MobileFilterDialogProps {
   categories: any[];
   brands: any[];
@@ -31,7 +33,9 @@ const MobileFilterDialog: React.FC<MobileFilterDialogProps> = ({ categories, bra
         </DialogTrigger>
         <DialogContent showCloseButton={false} className="fixed inset-x-0 top-16 h-[calc(100vh-4rem)] p-0 bg-white z-50 flex flex-col pointer-events-auto">
           <DialogHeader className="flex flex-row items-center justify-between px-4 py-4 border-b">
-            <DialogTitle>Filter Products</DialogTitle>
+            <VisuallyHidden>
+              <DialogTitle>Filter Products</DialogTitle>
+            </VisuallyHidden>
             <DialogClose asChild>
               <Button variant="ghost" size="icon">
                 <X className="h-5 w-5" />

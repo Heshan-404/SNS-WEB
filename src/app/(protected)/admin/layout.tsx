@@ -1,76 +1,86 @@
+"use client";
+
 import React from 'react';
 import Link from 'next/link';
 import "../../globals.css"; // Import global styles
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { MenuIcon } from "lucide-react";
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      // Call the logout API endpoint (optional, for server-side session invalidation)
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+      });
+
+      toast.success('Logged out successfully!');
+      router.push('/admin/login'); // Redirect to login page
+    } catch (error) {
+      console.error('Logout failed:', error);
+      toast.error('Failed to logout. Please try again.');
+    }
+  };
+
   return (
-    <html lang="en">
-      <body>
-        <div className="flex min-h-screen w-full flex-col">
-          <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
-            <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
-              <Link href="/admin/dashboard" className="text-foreground transition-colors hover:text-foreground">
-                Admin Panel
+    <div className="flex min-h-screen w-full flex-col">
+      <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+        <span className="text-foreground text-lg font-medium whitespace-nowrap">ADMIN PANEL</span>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="shrink-0 md:hidden"
+            >
+              <MenuIcon className="h-5 w-5" />
+              <span className="sr-only">Toggle navigation menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left">
+            <nav className="grid gap-6 text-lg font-medium">
+              <span className="text-foreground whitespace-nowrap">ADMIN PANEL</span>
+              <Link href="/admin/products" passHref>
+                <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
+                  Products
+                </Button>
               </Link>
-              <Link
-                href="/admin/products"
-                className="text-muted-foreground transition-colors hover:text-foreground"
-              >
-                Products
-              </Link>
-              <Link
-                href="/admin/brands-categories"
-                className="text-muted-foreground transition-colors hover:text-foreground"
-              >
-                Brands & Categories
+              <Link href="/admin/brands-categories" passHref>
+                <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
+                  Brands & Categories
+                </Button>
               </Link>
             </nav>
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="shrink-0 md:hidden"
-                >
-                  <MenuIcon className="h-5 w-5" />
-                  <span className="sr-only">Toggle navigation menu</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left">
-                <nav className="grid gap-6 text-lg font-medium">
-                  <Link href="/admin/dashboard" className="text-foreground transition-colors hover:text-foreground">
-                    Admin Panel
-                  </Link>
-                  <Link
-                    href="/admin/products"
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    Products
-                  </Link>
-                  <Link
-                    href="/admin/brands-categories"
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    Brands & Categories
-                  </Link>
-                </nav>
-              </SheetContent>
-            </Sheet>
-            <div className="flex w-full items-center justify-end gap-4 md:ml-auto md:gap-2 lg:gap-4">
-              {/* Add any right-aligned items here, e.g., user dropdown or logout button */}
-              <Link href="/api/auth/logout" className="text-sm font-medium text-muted-foreground hover:text-foreground">
-                Logout
-              </Link>
-            </div>
-          </header>
-          <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-            {children}
-          </main>
+          </SheetContent>
+        </Sheet>
+        <div className="flex w-full items-center justify-end gap-4 md:ml-auto md:gap-2 lg:gap-4">
+          <Link href="/admin/products" passHref className="hidden md:block">
+            <Button variant="ghost" className="text-muted-foreground transition-colors hover:text-foreground">
+              Products
+            </Button>
+          </Link>
+          <Link href="/admin/brands-categories" passHref className="hidden md:block">
+            <Button variant="ghost" className="text-muted-foreground transition-colors hover:text-foreground">
+              Brands & Categories
+            </Button>
+          </Link>
+          <Button
+            variant="ghost"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground"
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
         </div>
-      </body>
-    </html>
+      </header>
+      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+        {children}
+      </main>
+    </div>
   );
 }

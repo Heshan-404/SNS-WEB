@@ -5,6 +5,11 @@ const JWT_SECRET = process.env.JWT_SECRET || 'sns-123-secret';
 
 export function authMiddleware(handler: Function) {
   return async (request: NextRequest, context: any) => {
+    // Allow GET requests to bypass authentication
+    if (request.method === 'GET') {
+      return handler(request, context);
+    }
+
     const authHeader = request.headers.get('authorization');
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {

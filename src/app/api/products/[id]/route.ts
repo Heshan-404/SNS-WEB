@@ -3,6 +3,7 @@ import prisma from '../../../../lib/prisma';
 import { UploadedImageDto } from '../../../../types/image';
 import { UpdateProductDto } from '@/types/product';
 import { authMiddleware } from '../../../../lib/authMiddleware';
+import { del } from '@vercel/blob';
 
 export async function GET(request: Request, context: any) {
   const { params } = context;
@@ -34,11 +35,28 @@ async function putHandler(request: Request, context: any) {
     }
     const data: UpdateProductDto = await request.json();
 
+    const existingProduct = await prisma.product.findUnique({
+      where: { id },
+      include: { images: true },
+    });
+
+    if (!existingProduct) {
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+    }
+
     // Basic validation for images if provided
     if (data.images !== undefined) {
       if (data.images.length === 0 || !data.images.some((img: UploadedImageDto) => img.isMain)) {
         return NextResponse.json({ error: 'If updating images, at least one main image is required' }, { status: 400 });
       }
+
+      // Determine images to delete from Vercel Blob
+      const imagesToDelete = existingProduct.images.filter(
+        (existingImg) => !data.images!.some((newImg) => newImg.url === existingImg.url)
+      );
+
+      // Delete images from Vercel Blob
+      await Promise.all(imagesToDelete.map((img) => del(img.url)));
     }
 
     const { images, categoryId, brandId, ...productData } = data;
@@ -89,11 +107,15 @@ async function deleteHandler(request: Request, context: any) {
     }
     const deletedProduct = await prisma.product.delete({
       where: { id },
-      include: { category: true, brand: true, images: true },
+      include: { images: true }, // Include images to delete from blob
     });
+
     if (!deletedProduct) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
+
+    // Delete associated images from Vercel Blob
+    await Promise.all(deletedProduct.images.map((img) => del(img.url)));
     return NextResponse.json({ message: 'Product deleted successfully' });
   } catch (error: any) {
     console.error('Error deleting product:', error);

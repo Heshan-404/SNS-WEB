@@ -45,8 +45,6 @@ model Product {
   name        String
   shortName   String
   description String
-  price       Float
-  stock       Int
 
   categoryId Int
   category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict) // Prevent deletion of category if products exist

@@ -7,13 +7,9 @@ import {
   BreadcrumbList, BreadcrumbPage,
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
-import { CategoryService } from "@/services/categoryService";
-import { BrandService } from "@/services/brandService";
-import { ProductService } from "@/services/productService";
-
-const categoryService = new CategoryService();
-const brandService = new BrandService();
-const productService = new ProductService();
+import { categoryService } from "@/services/categoryService";
+import { brandService } from "@/services/brandService";
+import { productService } from "@/services/productService";
 
 export const dynamic = 'force-dynamic';
 

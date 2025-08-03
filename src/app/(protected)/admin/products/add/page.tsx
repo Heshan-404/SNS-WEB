@@ -1,221 +1,267 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useRouter } from "next/navigation";
-import { ProductService } from "@/services/productService";
-const clientProductService = new ProductService();
-import { BrandService } from "@/services/brandService";
-const clientBrandService = new BrandService();
-import { CategoryService } from "@/services/categoryService";
-const clientCategoryService = new CategoryService();
-import { BrandDto } from "@/types/brand";
-import { CategoryDto } from "@/types/category";
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import ManageableImagePreview from '@/components/ManageableImagePreview';
+import { UploadedImageDto } from '@/types/image';
+import ImageUploadArea from '@/components/ImageUploadArea';
+import TagInput from '@/components/TagInput';
+import { productService } from '@/services/productService';
+import { CreateProductDto } from '@/types/product';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import { CategoryDto } from '@/types/category';
+import { BrandDto } from '@/types/brand';
+import { categoryService } from '@/services/categoryService';
+import { brandService } from '@/services/brandService';
 
-export default function AddProductPage() {
-  const router = useRouter();
-  const [name, setName] = useState("");
-  const [shortName, setShortName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState<number>(0);
-  const [stock, setStock] = useState<number>(0);
-  const [brandId, setBrandId] = useState<string | undefined>(undefined);
-  const [categoryId, setCategoryId] = useState<string | undefined>(undefined);
-  const [availableSizes, setAvailableSizes] = useState<string>("");
-  const [voltages, setVoltages] = useState<string>("");
-  const [colors, setColors] = useState<string>("");
-  const [imageUrls, setImageUrls] = useState<string>(""); // Comma-separated URLs
-  const [brands, setBrands] = useState<BrandDto[]>([]);
-  const [categories, setCategories] = useState<CategoryDto[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+const AddProductPage = () => {
+  const [productName, setProductName] = useState('');
+  const [shortName, setShortName] = useState('');
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('');
+  const [brand, setBrand] = useState('');
+  const [uploadedImages, setUploadedImages] = useState<File[]>([]);
+  const [sizes, setSizes] = useState<string[]>([]);
+  const [voltages, setVoltages] = useState<string[]>([]);
+  const [colors, setColors] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [fetchedCategories, setFetchedCategories] = useState<CategoryDto[]>([]);
+  const [fetchedBrands, setFetchedBrands] = useState<BrandDto[]>([]);
+  const [isLoadingData, setIsLoadingData] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const loadData = async () => {
       try {
-        const fetchedBrands = await clientBrandService.getBrands();
-        const fetchedCategories = await clientCategoryService.getCategories();
-        setBrands(fetchedBrands);
-        setCategories(fetchedCategories);
-      } catch (err: any) {
-        setError(err.message || "Failed to fetch brands and categories.");
+        const categoriesData = await categoryService.getCategories();
+        console.log('Fetched categories:', categoriesData);
+        const brandsData = await brandService.getBrands();
+        console.log('Fetched brands:', brandsData);
+        setFetchedCategories(categoriesData);
+        setFetchedBrands(brandsData);
+      } catch (error) {
+        toast.error('Failed to load categories or brands.');
+        console.error('Error loading categories/brands:', error);
       } finally {
-        setLoading(false);
+        setIsLoadingData(false);
       }
     };
-    fetchData();
+    loadData();
   }, []);
+
+  const handleImageUpload = (newFiles: File[]) => {
+    setUploadedImages(prevFiles => {
+      const combinedFiles = [...prevFiles, ...newFiles];
+      const limitedFiles = combinedFiles.slice(0, 4); // Limit to 4 images
+      return limitedFiles;
+    });
+  };
+
+  const handleRemoveImage = (fileToRemove: File) => {
+    setUploadedImages(prevFiles => {
+      const updatedFiles = prevFiles.filter(file => file !== fileToRemove);
+      return updatedFiles;
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setIsSubmitting(true);
+
+    if (!productName || !shortName || !description || !category || !brand || uploadedImages.length === 0) {
+      toast.error('Please fill in all required fields and upload at least one image.');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
-      await clientProductService.createProduct({
-        name,
+      // Upload images first
+      const uploadedBlobs = await productService.uploadImages(uploadedImages);
+
+      // Map uploaded blobs to UploadedImageDto, setting the first as main
+      const finalImages: UploadedImageDto[] = uploadedBlobs.map((blob, index) => ({
+        url: blob.url,
+        isMain: index === 0,
+        name: uploadedImages[index]?.name || '',
+        size: uploadedImages[index]?.size || 0,
+        type: uploadedImages[index]?.type || '',
+      }));
+
+      const productData: CreateProductDto = {
+        name: productName,
         shortName: shortName,
-        description,
-        price,
-        stock,
-        brandId: parseInt(brandId || '0'),
-        categoryId: parseInt(categoryId || '0'),
-        images: imageUrls.split(',').filter(url => url.trim() !== '').map(url => ({ url: url.trim(), isMain: false, id: 0, productId: 0, createdAt: new Date(), updatedAt: new Date() })),
-        availableSizes: availableSizes.split(',').filter(size => size.trim() !== ''),
-        voltages: voltages.split(',').filter(voltage => voltage.trim() !== ''),
-        colors: colors.split(',').filter(color => color.trim() !== ''),
-      });
-      router.push("/admin/products");
-    } catch (err: any) {
-      setError(err.message || "Failed to add product.");
+        description: description,
+        categoryId: parseInt(category),
+        brandId: parseInt(brand),
+        images: finalImages,
+        availableSizes: sizes,
+        voltages: voltages,
+        colors: colors,
+      };
+
+      await productService.createProduct(productData);
+      toast.success('Product added successfully!');
+      // Clear form
+      setProductName('');
+      setShortName('');
+      setDescription('');
+      setCategory('');
+      setBrand('');
+      setUploadedImages([]);
+      setSizes([]);
+      setVoltages([]);
+      setColors([]);
+    } catch (error: any) {
+      console.error('Error adding product:', error);
+      toast.error(error.message || 'Failed to add product.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  if (loading) {
-    return <div className="container mx-auto py-8">Loading form...</div>;
-  }
-
-  if (error) {
-    return <div className="container mx-auto py-8 text-red-500">Error: {error}</div>;
-  }
-
   return (
     <div className="container mx-auto py-8">
-      <Card>
+      <h1 className="text-3xl font-bold mb-6 text-left">ADD Product</h1>
+      <form onSubmit={handleSubmit}>
+
+      {/* Product Information */}
+      <Card className="mb-6 border-none shadow-none">
         <CardHeader>
-          <CardTitle>Add New Product</CardTitle>
-          <CardDescription>Fill in the details to add a new product.</CardDescription>
+          <CardTitle className="text-lg font-bold">Product Information</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Product Name</Label>
+          <div className="grid gap-4">
+            <div className="grid gap-2 w-full md:w-1/2">
+              <Label htmlFor="productName">Product Name</Label>
               <Input
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
+                id="productName"
+                value={productName}
+                onChange={(e) => setProductName(e.target.value)}
+                placeholder="Enter full product name"
               />
             </div>
-            <div className="space-y-2">
+            <div className="grid gap-2 w-full md:w-1/2">
               <Label htmlFor="shortName">Short Name</Label>
               <Input
                 id="shortName"
                 value={shortName}
                 onChange={(e) => setShortName(e.target.value)}
-                required
+                placeholder="Enter short name for showcase pages"
+                maxLength={45}
               />
             </div>
-            <div className="space-y-2">
+            <div className="grid gap-2 w-full md:w-1/2">
               <Label htmlFor="description">Description</Label>
               <Textarea
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                rows={4}
+                placeholder="Enter product description"
+                rows={10}
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="imageUrls">Image URLs (comma-separated)</Label>
-              <Input
-                id="imageUrls"
-                value={imageUrls}
-                onChange={(e) => setImageUrls(e.target.value)}
-                placeholder="e.g., url1.jpg, url2.png"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="availableSizes">Available Sizes (comma-separated)</Label>
-              <Input
-                id="availableSizes"
-                value={availableSizes}
-                onChange={(e) => setAvailableSizes(e.target.value)}
-                placeholder="e.g., S, M, L"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="voltages">Voltages (comma-separated)</Label>
-              <Input
-                id="voltages"
-                value={voltages}
-                onChange={(e) => setVoltages(e.target.value)}
-                placeholder="e.g., 110V, 220V"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="colors">Colors (comma-separated)</Label>
-              <Input
-                id="colors"
-                value={colors}
-                onChange={(e) => setColors(e.target.value)}
-                placeholder="e.g., Red, Blue, Green"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="price">Price</Label>
-                <Input
-                  id="price"
-                  type="number"
-                  value={price}
-                  onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
-                  step="0.01"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="stock">Stock</Label>
-                <Input
-                  id="stock"
-                  type="number"
-                  value={stock}
-                  onChange={(e) => setStock(parseInt(e.target.value) || 0)}
-                  required
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="brand">Brand</Label>
-                <Select onValueChange={setBrandId} value={brandId}>
-                  <SelectTrigger id="brand">
-                    <SelectValue placeholder="Select a brand" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {brands.map((brand) => (
-                      <SelectItem key={brand.id} value={brand.id.toString()}>
-                        {brand.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="category">Category</Label>
-                <Select onValueChange={setCategoryId} value={categoryId}>
-                  <SelectTrigger id="category">
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem key={category.id} value={category.id.toString()}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-            <Button type="submit" className="w-full">
-              Add Product
-            </Button>
-          </form>
+          </div>
         </CardContent>
       </Card>
-    </div>
+
+      {/* Categorization */}
+      <Card className="mb-6 border-none shadow-none">
+        <CardHeader>
+          <CardTitle className="text-lg font-bold">Categorization</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4">
+            <div className="grid gap-2 w-full md:w-1/2">
+              <Label htmlFor="category">Category</Label>
+              <Select value={category} onValueChange={setCategory} disabled={isLoadingData}>
+                <SelectTrigger id="category">
+                  {isLoadingData ? <SelectValue>Loading categories...</SelectValue> : <SelectValue placeholder="Select a category" />}
+                </SelectTrigger>
+                <SelectContent>
+                  {fetchedCategories.map((cat) => (
+                    <SelectItem key={cat.id} value={cat.id.toString()}>
+                      {cat.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid gap-2 w-full md:w-1/2">
+              <Label htmlFor="brand">Brand</Label>
+              <Select value={brand} onValueChange={setBrand} disabled={isLoadingData}>
+                <SelectTrigger id="brand">
+                  {isLoadingData ? <SelectValue>Loading brands...</SelectValue> : <SelectValue placeholder="Select a brand" />}
+                </SelectTrigger>
+                <SelectContent>
+                  {fetchedBrands.map((b) => (
+                    <SelectItem key={b.id} value={b.id.toString()}>
+                      {b.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Product Imagery */}
+      <Card className="mb-6 border-none shadow-none">
+        <CardHeader>
+          <CardTitle className="text-lg font-bold">Product Imagery</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {uploadedImages.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-md font-semibold mb-2">Uploaded Images Preview</h3>
+              <ManageableImagePreview images={uploadedImages} onRemoveImage={handleRemoveImage} />
+            </div>
+          )}
+          <ImageUploadArea onImageUpload={handleImageUpload} currentImageCount={uploadedImages.length} />
+        </CardContent>
+      </Card>
+
+      {/* Specifications */}
+      <Card className="mb-6 border-none shadow-none">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Specifications</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-6">
+            <TagInput
+              label="Available Sizes"
+              placeholder="Enter sizes (e.g., Small, Medium, XL)"
+              tags={sizes}
+              setTags={setSizes}
+            />
+            <TagInput
+              label="Voltages"
+              placeholder="Enter voltages (e.g., 110V, 220V)"
+              tags={voltages}
+              setTags={setVoltages}
+            />
+            <TagInput
+              label="Colors"
+              placeholder="Enter colors (e.g., Red, Blue, Green)"
+              tags={colors}
+              setTags={setColors}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="flex justify-end">
+        <Button type="submit" className="w-full md:w-auto" disabled={isSubmitting || isLoadingData}>
+          {isSubmitting ? 'Adding Product...' : 'Add Product'}
+        </Button>
+      </div>
+    </form>
+  </div>
   );
-}
+};
+
+export default AddProductPage;

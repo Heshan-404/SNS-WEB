@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     // Generate JWT token
     const token = jwt.sign({ userId: user.user?.id, email: user.user?.email }, JWT_SECRET, { expiresIn: '1h' });
 
-    const response = NextResponse.json(user);
+    const response = NextResponse.json({ user });
     response.cookies.set('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
