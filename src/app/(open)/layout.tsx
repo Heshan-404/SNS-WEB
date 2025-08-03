@@ -38,6 +38,7 @@ export const metadata: Metadata = {
 
 import { Toaster } from 'sonner';
 import ContactAssistanceSection from '@/components/ContactAssistanceSection';
+import FloatingContactButton from '@/components/FloatingContactButton';
 
 export default function RootLayout({
   children,
@@ -51,6 +52,7 @@ export default function RootLayout({
       <ContactAssistanceSection />
       <Footer />
       <Toaster />
+      <FloatingContactButton />
     </>
   );
 }

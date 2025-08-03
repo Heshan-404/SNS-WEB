@@ -20,7 +20,7 @@ const HeroSection = () => {
         </p>
         <a
           href="#products"
-          className="bg-[#1285E8] hover:bg-[#0f6bbd] text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 ease-in-out shadow-lg animate-float cursor-pointer"
+          className="inline-block bg-[#1285E8] hover:bg-[#0f6bbd] text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 ease-in-out shadow-lg animate-float cursor-pointer"
         >
           Explore Our Products
         </a>

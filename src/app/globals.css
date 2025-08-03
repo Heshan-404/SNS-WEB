@@ -132,6 +132,30 @@ html {
   animation: float 3s ease-in-out infinite;
 }
 
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.3);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-dot {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.8);
+  }
+}
+
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -181,4 +205,52 @@ html {
 * {
   scrollbar-width: thin; /* "auto" or "thin" */
   scrollbar-color: #888 #f1f1f1; /* thumb color track color */
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.3);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-dot {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.8);
+  }
+}
+
+.animate-ringing-phone {
+  position: relative;
+}
+
+.animate-ringing-phone::before,
+.animate-ringing-phone::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 9999px; /* Full circle */
+  background-color: #1285E8;
+  z-index: -1;
+}
+
+.animate-ringing-phone::before {
+  animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+}
+
+.animate-ringing-phone::after {
+  animation: pulse-dot 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
 }
