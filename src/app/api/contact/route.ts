@@ -1,28 +1,26 @@
 import { NextResponse } from 'next/server';
-import { contactService } from '../../../services/contactService';
-import { CreateContactFormSubmissionDto } from '@/types/contact';
+import prisma from '../../../lib/prisma';
 
 export async function POST(request: Request) {
   try {
-    const data: CreateContactFormSubmissionDto = await request.json();
+    const { name, email, phone, message } = await request.json();
 
-    // Basic validation
-    if (!data.name || !data.phoneNo || !data.message) {
-      return NextResponse.json(
-        { error: 'Name, Phone Number, and Message are required' },
-        { status: 400 },
-      );
+    if (!name || !email || !message) {
+      return NextResponse.json({ error: 'Name, email, and message are required' }, { status: 400 });
     }
 
-    const submission = await contactService.createSubmission(data);
-    // In a real application, you would also send an email to the shop owner here.
-    return NextResponse.json(submission, { status: 201 });
-  } catch (error: unknown) {
+    const newSubmission = await prisma.contactFormSubmission.create({
+      data: {
+        name,
+        email,
+        phoneNo: phone,
+        message,
+      },
+    });
+
+    return NextResponse.json(newSubmission, { status: 201 });
+  } catch (error) {
     console.error('Error submitting contact form:', error);
-    let errorMessage = 'Failed to submit contact form';
-    if (error instanceof Error) {
-      errorMessage = error.message;
-    }
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to submit contact form' }, { status: 500 });
   }
 }

@@ -1,17 +1,21 @@
-import prisma from '../lib/prisma';
 import { CreateContactFormSubmissionDto, ContactFormSubmissionDto } from '../types/contact';
 
 export class ContactService {
   async createSubmission(data: CreateContactFormSubmissionDto): Promise<ContactFormSubmissionDto> {
-    const submission = await prisma.contactFormSubmission.create({
-      data: {
-        name: data.name,
-        email: data.email,
-        phoneNo: data.phoneNo,
-        message: data.message,
+    const response = await fetch('/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify(data),
     });
-    return submission;
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to submit contact form');
+    }
+
+    return response.json();
   }
 }
 
