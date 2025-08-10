@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { CategoryDto } from '@/types/category';
 import { BrandDto } from '@/types/brand';
@@ -37,8 +37,10 @@ export const useAddProductFormLogic = (
   const [fetchedBrands, setFetchedBrands] = useState<BrandDto[]>(initialBrands);
   const [isLoadingData, setIsLoadingData] = useState(false);
 
+  const hasFetchedData = useRef(false);
+
   useEffect(() => {
-    if (initialCategories.length === 0 || initialBrands.length === 0) {
+    if ((initialCategories.length === 0 || initialBrands.length === 0) && !hasFetchedData.current) {
       const loadData = async () => {
         setIsLoadingData(true);
         try {
@@ -46,6 +48,7 @@ export const useAddProductFormLogic = (
           const brandsData = await brandService.getBrands();
           setFetchedCategories(categoriesData);
           setFetchedBrands(brandsData);
+          hasFetchedData.current = true; // Mark data as fetched
         } catch (error: unknown) {
           toast.error('Failed to load categories or brands.');
           console.error('Error loading categories/brands:', error);

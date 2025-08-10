@@ -2,12 +2,13 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.0.x"]
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RfaWQiOjEsInNlY3VyZV9rZXkiOiJza195YTNzbWJpVUFFVGN0UVBBR3oydnoiLCJhcGlfa2V5IjoiMDFLMjRNVFBTUlk0TU5FVE5WRTJLQ1dZMzQiLCJ0ZW5hbnRfaWQiOiI1ODIyZmZlNDhmYWZhZTU1MjdiNWMwNjExMjM1M2NiNjNkMWRmMDU3YzlkNjE4YzBmNGQ5MTRiZWJkNWY0MTM0IiwiaW50ZXJuYWxfc2VjcmV0IjoiNTU3ZmZiY2YtMDFkOC00NjIzLWIwNjAtNGNjNWE1NGQ0MTRhIn0._ht0nkocGnmcr997yyOFaA-PpuQVXzV81dGXDAo2Rg4"
 }
 
 // Admin User for authentication

@@ -124,19 +124,8 @@ export default function ManageProductsClient({
           </div>
         </CardHeader>
         <CardContent>
-          {loading && (
-            <div className="flex justify-center items-center h-32">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
-          )}
           {error && <p className="text-red-500">{error}</p>}
-          {!loading && !error && products.length === 0 ? (
-            <p>
-              {searchTerm || selectedCategoryId || selectedBrandId || isFeaturedFilter !== undefined
-                ? 'No matching products found.'
-                : 'No products found.'}
-            </p>
-          ) : (
+          {!error && (
             <Table>
               <TableHeader>
                 <TableRow>
@@ -150,53 +139,74 @@ export default function ManageProductsClient({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {products.map((product) => (
-                  <TableRow key={product.id}>
-                    <TableCell>
-                      <div className="relative w-16 h-16 rounded-lg overflow-hidden">
-                        <Image
-                          src={product.mainImageUrl || '/placeholder.png'}
-                          alt={product.name}
-                          layout="fill"
-                          objectFit="cover"
-                          className="rounded-lg"
-                        />
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-8">
+                      <div className="flex justify-center items-center">
+                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
                       </div>
-                    </TableCell>
-                    <TableCell>{product.name}</TableCell>
-                    <TableCell>{product.category?.name || 'N/A'}</TableCell>
-                    <TableCell>{product.brand?.name || 'N/A'}</TableCell>
-                    <TableCell>Active</TableCell>
-                    <TableCell>
-                      <div className="flex items-center space-x-2">
-                        <Switch
-                          id={`featured-switch-${product.id}`}
-                          checked={product.isFeatured}
-                          onCheckedChange={() =>
-                            handleToggleFeatured(product.id, !product.isFeatured)
-                          }
-                        />
-                        <Label htmlFor={`featured-switch-${product.id}`}>
-                          {product.isFeatured ? 'Yes' : 'No'}
-                        </Label>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Link href={`/admin/products/${product.id}/edit`} className="mr-2">
-                        <Button variant="outline" size="sm">
-                          Edit
-                        </Button>
-                      </Link>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => handleDeleteProduct(product.id)}
-                      >
-                        Delete
-                      </Button>
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : products.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-8">
+                      {searchTerm ||
+                      selectedCategoryId ||
+                      selectedBrandId ||
+                      isFeaturedFilter !== undefined
+                        ? 'No matching products found.'
+                        : 'No products found.'}
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  products.map((product) => (
+                    <TableRow key={product.id}>
+                      <TableCell>
+                        <div className="relative w-16 h-16 rounded-lg overflow-hidden">
+                          <Image
+                            src={product.mainImageUrl || '/placeholder.png'}
+                            alt={product.name}
+                            layout="fill"
+                            objectFit="cover"
+                            className="rounded-lg"
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell>{product.name}</TableCell>
+                      <TableCell>{product.category?.name || 'N/A'}</TableCell>
+                      <TableCell>{product.brand?.name || 'N/A'}</TableCell>
+                      <TableCell>Active</TableCell>
+                      <TableCell>
+                        <div className="flex items-center space-x-2">
+                          <Switch
+                            id={`featured-switch-${product.id}`}
+                            checked={product.isFeatured}
+                            onCheckedChange={() =>
+                              handleToggleFeatured(product.id, !product.isFeatured)
+                            }
+                          />
+                          <Label htmlFor={`featured-switch-${product.id}`}>
+                            {product.isFeatured ? 'Yes' : 'No'}
+                          </Label>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Link href={`/admin/products/${product.id}/edit`} className="mr-2">
+                          <Button variant="outline" size="sm">
+                            Edit
+                          </Button>
+                        </Link>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleDeleteProduct(product.id)}
+                        >
+                          Delete
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           )}

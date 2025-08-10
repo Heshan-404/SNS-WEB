@@ -6,12 +6,9 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "postinstall": "prisma generate",
-    "prisma:seed": "tsx prisma/seed.ts"
-  },
-  "prisma": {
+    "start": "node server.cjs",
+    "lint:fix": "next lint --fix && prettier --write .",
+    "postinstall": "npm exec prisma generate",
     "prisma:seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
@@ -57,6 +54,7 @@
     "@types/react-dom": "^19",
     "@types/react-scroll": "^1.8.10",
     "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "cross-env": "^10.0.0",
     "eslint": "^9.32.0",
     "eslint-config-next": "^15.4.5",
     "eslint-config-prettier": "^10.1.8",

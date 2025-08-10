@@ -10,26 +10,54 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
-
 import { UploadedImageDto } from '@/types/image';
 import { productService } from '@/services/productService';
+import WhatsAppButton from '@/components/WhatsppButton';
 
-// This is the definitive Props type that Next.js is expecting.
-// Both params and searchParams are wrapped in a Promise.
+// ✅ For dynamic metadata
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const { id } = await params;
+  const productId = parseInt(id, 10);
+  const product = await productService.getProductById(productId);
+
+  if (!product) {
+    return {};
+  }
+
+  const mainImage = product.images.find((img) => img.isMain)?.url || product.images[0]?.url;
+
+  return {
+    title: product.name,
+    description: product.description,
+    openGraph: {
+      title: product.name,
+      description: product.description,
+      images: [
+        {
+          url: mainImage,
+          width: 800,
+          height: 600,
+          alt: product.name,
+        },
+      ],
+      url: `https://yourdomain.com/products/${product.id}`,
+      type: 'website',
+    },
+  };
+}
+
 type Props = {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-// The Page component MUST also be async and use the same Props type.
 export default async function ProductDetailPage({ params }: Props) {
-  // We MUST await the promise here as well.
   const { id } = await params;
   const productId = parseInt(id, 10);
 
   if (isNaN(productId)) {
     notFound();
   }
+
   const product = await productService.getProductById(productId);
 
   if (!product) {
@@ -39,9 +67,9 @@ export default async function ProductDetailPage({ params }: Props) {
   const mappedImages: UploadedImageDto[] = product.images.map((img) => ({
     url: img.url,
     isMain: img.isMain,
-    name: `image-${img.id}`, // Dummy name
-    size: 0, // Dummy size
-    type: 'image/jpeg', // Dummy type
+    name: `image-${img.id}`,
+    size: 0,
+    type: 'image/jpeg',
   }));
 
   return (
@@ -70,27 +98,28 @@ export default async function ProductDetailPage({ params }: Props) {
         </div>
         <div className="mt-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Product Details</h2>
+
           <div className="mb-6">
-            <h3 className="text-base font-bold text-[#121417] mb-2 mt-4">Name</h3>
+            <h3 className="text-base font-bold mb-2">Name</h3>
             <Separator className="mb-2" />
             <p className="text-gray-700 text-lg">{product.name}</p>
           </div>
-          {/* ... Rest of your JSX ... */}
+
           <div className="mb-6">
-            <h3 className="text-base font-bold text-[#121417] mb-2 mt-4">Brand</h3>
+            <h3 className="text-base font-bold mb-2">Brand</h3>
             <Separator className="mb-2" />
             <p className="text-gray-700 text-lg">{product.brand.name}</p>
           </div>
 
           <div className="mb-6">
-            <h3 className="text-base font-bold text-[#121417] mb-2 mt-4">Description</h3>
+            <h3 className="text-base font-bold mb-2">Description</h3>
             <Separator className="mb-2" />
             <p className="text-gray-700 text-lg leading-relaxed">{product.description}</p>
           </div>
 
-          {product.availableSizes && product.availableSizes.length > 0 && (
+          {product.availableSizes?.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-base font-bold text-[#121417] mb-2 mt-4">Available Sizes</h3>
+              <h3 className="text-base font-bold mb-2">Available Sizes</h3>
               <Separator className="mb-2" />
               <div className="flex flex-wrap gap-2">
                 {product.availableSizes.map((size, index) => (
@@ -105,9 +134,9 @@ export default async function ProductDetailPage({ params }: Props) {
             </div>
           )}
 
-          {product.voltages && product.voltages.length > 0 && (
+          {product.voltages?.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-base font-bold text-[#121417] mb-2 mt-4">Voltage</h3>
+              <h3 className="text-base font-bold mb-2">Voltage</h3>
               <Separator className="mb-2" />
               <div className="flex flex-wrap gap-2">
                 {product.voltages.map((voltage, index) => (
@@ -122,9 +151,9 @@ export default async function ProductDetailPage({ params }: Props) {
             </div>
           )}
 
-          {product.colors && product.colors.length > 0 && (
+          {product.colors?.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-base font-bold text-[#121417] mb-2 mt-4">Color</h3>
+              <h3 className="text-base font-bold mb-2">Color</h3>
               <Separator className="mb-2" />
               <div className="flex flex-wrap gap-2">
                 {product.colors.map((color, index) => (
@@ -138,6 +167,15 @@ export default async function ProductDetailPage({ params }: Props) {
               </div>
             </div>
           )}
+
+          {/* ✅ WhatsApp Button */}
+          <WhatsAppButton
+            phoneNumber="94752623523"
+            productUrl={`https://snspipes.com/products/${product.id}`}
+            productName={product.name}
+            description={product.description}
+            brandName={product.brand.name}
+          />
         </div>
       </div>
     </div>

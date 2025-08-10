@@ -61,10 +61,22 @@ export const useManageProducts = (
   };
 
   const toggleProductFeatured = async (productId: number, isFeatured: boolean) => {
+    // Store the original products state for potential rollback
+    const originalProducts = [...products];
+
+    // Optimistically update the product's featured status
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product.id === productId ? { ...product, isFeatured: isFeatured } : product,
+      ),
+    );
+
     try {
       await productService.updateProduct(productId, { isFeatured });
-      fetchProducts();
+      // If successful, no need to fetchProducts(), state is already updated
     } catch (err: unknown) {
+      // If API call fails, revert to original state
+      setProducts(originalProducts);
       let errorMessage = 'Failed to update featured status.';
       if (err instanceof Error) {
         errorMessage = err.message;

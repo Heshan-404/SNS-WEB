@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -16,8 +15,9 @@ import {
 import ManageableImagePreview from '@/components/ManageableImagePreview';
 import ImageUploadArea from '@/components/ImageUploadArea';
 import TagInput from '@/components/TagInput';
-import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useEditProductForm } from '@/hooks/useEditProductForm';
+import { Loader2 } from 'lucide-react';
 import { useParams } from 'next/navigation';
 
 export default function EditProductPage() {
@@ -30,10 +30,10 @@ export default function EditProductPage() {
     setShortName,
     description,
     setDescription,
-    brandId,
-    setBrandId,
     categoryId,
     setCategoryId,
+    brandId,
+    setBrandId,
     availableSizes,
     setAvailableSizes,
     voltages,
