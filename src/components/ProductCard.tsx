@@ -1,6 +1,9 @@
 // components/ProductCard.tsx
+'use client'; // Add this line
+
 import Image from 'next/image';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation'; // Import useRouter
+import React from 'react'; // Import React
 
 interface ProductCardProps {
   productId: number;
@@ -11,8 +14,16 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ productId, imageUrl, title, brand, category }: ProductCardProps) => {
+  const router = useRouter(); // Initialize useRouter
+
+  const handleClick = () => {
+    router.push(`/products/${productId}`); // Navigate without preserving query params
+  };
+
   return (
-    <Link href={`/products/${productId}`}>
+    <div onClick={handleClick} className="cursor-pointer">
+      {' '}
+      {/* Make the div clickable */}
       <div className=" rounded-lg overflow-hidden transform transition duration-300 hover:scale-105">
         <div className=" flex items-center justify-center aspect-w-1 aspect-h-1">
           <Image src={imageUrl} alt={title} width={200} height={200} layout="responsive" />
@@ -23,7 +34,7 @@ const ProductCard = ({ productId, imageUrl, title, brand, category }: ProductCar
           <p className="text-xs text-gray-600">Category: {category}</p>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 

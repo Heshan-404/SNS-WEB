@@ -1,44 +1,15 @@
-import type { Metadata } from 'next';
+'use client'; // Keep this
+
 import '../globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-
-export const metadata: Metadata = {
-  metadataBase: new URL('https://yourwebsite.com'), // Replace with your actual website URL
-  title: 'SNS Pipes & Fittings - Quality Pipes for Every Project',
-  description:
-    'Discover high-quality pipes and fittings for all your projects. We offer a wide range of products including PPR, brass fittings, and more. Contact us today!',
-  keywords:
-    'pipes, fittings, PPR, brass fittings, plumbing, hardware, construction, pipe supplier, pipe shop',
-  openGraph: {
-    title: 'SNS Pipes & Fittings - Quality Pipes for Every Project',
-    description:
-      'Discover high-quality pipes and fittings for all your projects. We offer a wide range of products including PPR, brass fittings and more. Contact us today!',
-    url: 'https://yourwebsite.com', // Replace with your actual website URL
-    siteName: 'SNS Pipes & Fittings',
-    images: [
-      {
-        url: 'https://yourwebsite.com/og-image.jpg', // Replace with your actual OG image URL
-        width: 1200,
-        height: 630,
-        alt: 'SNS Pipes & Fittings',
-      },
-    ],
-    locale: 'en_US',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'SNS Pipes & Fittings - Quality Pipes for Every Project',
-    description:
-      'Discover high-quality pipes and fittings for all your projects. We offer a wide range of products including PPR, brass fittings, and more. Contact us today!',
-    images: ['https://yourwebsite.com/twitter-image.jpg'], // Replace with your actual Twitter image URL
-  },
-};
-
 import { Toaster } from 'sonner';
 import ContactAssistanceSection from '@/components/ContactAssistanceSection';
 import FloatingContactButton from '@/components/FloatingContactButton';
+import PageLoader from '@/components/PageLoader';
+import { LoadingProvider } from '@/context/LoadingContext';
+import LoadingOverlay from '@/components/LoadingOverlay';
+import ScrollToTopButton from '@/components/ScrollToTopButton'; // Import ScrollToTopButton
 
 export default function RootLayout({
   children,
@@ -46,13 +17,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    <LoadingProvider>
       <Header />
-      <main className="pt-10">{children}</main>
+      <main className="pt-10">
+        <PageLoader>{children}</PageLoader>
+      </main>
       <ContactAssistanceSection />
       <Footer />
       <Toaster />
       <FloatingContactButton />
-    </>
+      <ScrollToTopButton /> {/* Add ScrollToTopButton here */}
+      <LoadingOverlay />
+    </LoadingProvider>
   );
 }

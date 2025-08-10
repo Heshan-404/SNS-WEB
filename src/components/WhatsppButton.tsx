@@ -1,4 +1,5 @@
 'use client';
+
 import React from 'react';
 
 interface WhatsAppButtonProps {
@@ -42,7 +43,7 @@ ${brandName}`,
         href={`https://wa.me/${phoneNumber}?text=${encodedMessage}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center justify-center px-4 py-2 bg-[#128c7e] text-white rounded-full hover:bg-[#075e54] w-full sm:w-fit"
+        className="inline-flex items-center justify-center px-4 py-2 bg-[#128c7e] text-white rounded-full hover:bg-[#075e54] w-full sm:w-fit transition duration-300 ease-in-out"
       >
         Order via WhatsApp
       </a>

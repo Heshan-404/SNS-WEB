@@ -71,7 +71,7 @@ export const useProductFilter = (options?: UseProductFilterOptions) => {
   }, []);
 
   const applyFilters = useCallback(() => {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(); // Start with empty params to avoid inheriting from current URL
 
     if (selectedCategoryIds.size > 0) {
       params.set('categoryIds', Array.from(selectedCategoryIds).join(','));
@@ -92,8 +92,9 @@ export const useProductFilter = (options?: UseProductFilterOptions) => {
     }
 
     params.set('page', '1'); // Reset to first page on filter change
-    router.push(`${pathname}?${params.toString()}`);
-  }, [selectedCategoryIds, selectedBrandIds, searchTerm, searchParams, router, pathname]);
+
+    router.push(`/products?${params.toString()}`); // Hardcode /products as the base path
+  }, [selectedCategoryIds, selectedBrandIds, searchTerm, router]);
 
   const clearFilters = useCallback(() => {
     const params = new URLSearchParams();

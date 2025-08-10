@@ -73,7 +73,7 @@ const ContactUsSection = () => {
             </div>
             <button
               type="submit"
-              className="bg-[#1285E8] hover:bg-[#0f6bbd] text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline h-10 md:h-12 flex items-center justify-center cursor-pointer"
+              className="bg-[#1285E8] hover:bg-[#0f6bbd] text-white font-bold py-3 px-6 rounded-full focus:outline-none focus:shadow-outline h-10 md:h-12 flex items-center justify-center cursor-pointer transition duration-300 ease-in-out"
             >
               Send Message
             </button>
