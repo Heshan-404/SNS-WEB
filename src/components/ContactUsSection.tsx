@@ -84,7 +84,7 @@ const ContactUsSection = () => {
         <div className="md:w-1/2">
           <div id="map" className="w-full h-full bg-gray-200 rounded-lg overflow-hidden shadow-md">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.2999999999996!2d144.9631!3d-37.8136!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzfCsDQ4JzQ5LjAiUyAxNDRCsDU3JzQ3LjIiRQ!5e0!3m2!1sen!2sus!4v1678901234567!5m2!1sen!2sus"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7925.604362751573!2d79.99336484034384!3d6.671416829520688!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2498d0f50e1e5%3A0xd0eeaff4dc960a0f!2sParagasthota!5e0!3m2!1sen!2slk!4v1755279947409!5m2!1sen!2slk"
               width="100%"
               height="100%"
               style={{ border: 0 }}

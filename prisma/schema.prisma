@@ -82,7 +82,7 @@ model ContactFormSubmission {
   id        Int      @id @default(autoincrement())
   name      String
   email     String? // Optional email
-  phoneNo   String
+  phone     String?
   message   String
   createdAt DateTime @default(now())
 }

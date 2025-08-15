@@ -76,12 +76,12 @@ const Header = () => {
 
         {/* Contact Info - Single Blue Container (Desktop) */}
         <div className="md:flex hidden items-center space-x-4 bg-[#1285E8] px-4 py-2 rounded-full">
-          <a href="tel:+0720400659" className="text-white text-sm leading-none font-bold">
-            0720400659 / 0760188505
+          <a href="tel:+0762040059" className="text-white text-sm leading-none font-bold">
+            0762040059
           </a>
           <span className="text-white text-sm leading-none font-bold">|</span>
-          <a href="mailto:sales@snspipes.com" className="text-white text-sm leading-none font-bold">
-            sales@snspipes.com
+          <a href="mailto:contact@snspipes.com" className="text-white text-sm leading-none font-bold">
+            contact@snspipes.com
           </a>
         </div>
 

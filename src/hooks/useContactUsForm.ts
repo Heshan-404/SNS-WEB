@@ -13,8 +13,8 @@ export const useContactUsForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!name.trim() || !phone.trim() || !message.trim()) {
-      toast.error('Please fill in all required fields (Name, Phone Number, Message).');
+    if (!name.trim() || !message.trim()) {
+      toast.error('Please fill in all required fields (Name, Message).');
       return;
     }
 
@@ -22,9 +22,10 @@ export const useContactUsForm = () => {
       await contactService.createSubmission({
         name,
         email: email.trim() === '' ? null : email,
-        phoneNo: phone,
+        phone: phone,
         message,
       });
+      console.log('Phone value before sending to service:', phone);
       toast.success('Your message has been sent successfully!');
       // Clear form
       setName('');

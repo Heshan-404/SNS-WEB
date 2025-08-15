@@ -4,8 +4,7 @@ import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faFacebookF,
-  faTwitter,
-  faInstagram,
+  faTiktok,
   faLinkedinIn,
 } from '@fortawesome/free-brands-svg-icons';
 import { faPhone, faEnvelope, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
@@ -18,18 +17,14 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 items-start md:items-center md:gap-x-8 md:w-full">
           <div className="flex items-center justify-center flex-grow px-4 md:w-1/3">
             <FontAwesomeIcon icon={faPhone} className="mr-1" />
-            <a href="tel:+07620400659" className="hover:underline md:font-bold">
-              07620400659
-            </a>
-            &nbsp;/&nbsp;
-            <a href="tel:+0760188505" className="hover:underline md:font-bold">
-              0760188505
+            <a href="tel:+0762040059" className="hover:underline md:font-bold">
+              0762040059
             </a>
           </div>
           <div className="flex items-center justify-center flex-grow px-4 md:w-1/3">
             <FontAwesomeIcon icon={faEnvelope} className="mr-1" />
-            <a href="mailto:sales@snspipes.com" className="hover:underline md:font-bold">
-              sales@snspipes.com
+            <a href="mailto:contact@snspipes.com" className="hover:underline md:font-bold">
+              contact@snspipes.com
             </a>
           </div>
           <div className="flex items-center justify-center flex-grow px-4 md:w-1/3">
@@ -79,14 +74,11 @@ const Footer = () => {
 
         {/* Social Media Icons */}
         <div className="flex justify-center space-x-4 mb-4">
-          <a href="#" className="text-white hover:text-blue-400">
+          <a href="https://www.facebook.com/share/1FX4CpR8E7/" className="text-white hover:text-blue-400">
             <FontAwesomeIcon icon={faFacebookF} size="lg" />
           </a>
           <a href="#" className="text-white hover:text-blue-400">
-            <FontAwesomeIcon icon={faTwitter} size="lg" />
-          </a>
-          <a href="#" className="text-white hover:text-blue-400">
-            <FontAwesomeIcon icon={faInstagram} size="lg" />
+            <FontAwesomeIcon icon={faTiktok} size="lg" />
           </a>
           <a href="#" className="text-white hover:text-blue-400">
             <FontAwesomeIcon icon={faLinkedinIn} size="lg" />
