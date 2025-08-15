@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const { createServer } = require('http');
 const next = require('next');
 const { parse } = require('url');
@@ -13,6 +15,7 @@ app.prepare().then(() => {
     handle(req, res, parsedUrl);
   }).listen(port);
 
+  console.log(process.env.NEXT_PUBLIC_BASE_URL);
   console.log(
     `> Server listening at http://localhost:${port} as ${
       dev ? 'development' : process.env.NODE_ENV

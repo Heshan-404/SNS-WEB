@@ -1,6 +1,6 @@
 import { CategoryDto, CreateCategoryDto, UpdateCategoryDto } from '@/types/category';
 
-const API_BASE_URL = (process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000') + '/api';
+const API_BASE_URL = (process.env.NEXT_PUBLIC_BASE_URL || 'https://snspipes.com/') + 'api';
 
 export const categoryService = {
   createCategory: async (data: CreateCategoryDto): Promise<CategoryDto> => {

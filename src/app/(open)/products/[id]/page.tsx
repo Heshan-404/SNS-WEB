@@ -15,7 +15,7 @@ import { productService } from '@/services/productService';
 import WhatsAppButton from '@/components/WhatsppButton';
 
 // ✅ For dynamic metadata
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const productId = parseInt(id, 10);
   const product = await productService.getProductById(productId);
@@ -46,11 +46,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   };
 }
 
-type Props = {
-  params: Promise<{ id: string }>;
-};
-
-export default async function ProductDetailPage({ params }: Props) {
+export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const productId = parseInt(id, 10);
 

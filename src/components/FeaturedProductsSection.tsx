@@ -29,7 +29,9 @@ const FeaturedProductsSection = async () => {
         </div>
       )}
       <div className="text-center mt-12">
-        <Link href="/products">
+        <Link href="/products" scroll={true}>
+          {' '}
+          {/* Explicitly set scroll to true */}
           <button className="bg-[#1285E8] hover:bg-[#0f6bbd] text-white font-bold py-3 px-8 w-full md:w-auto rounded-full text-lg transition duration-300 ease-in-out shadow-lg cursor-pointer">
             Explore Our Products
           </button>
