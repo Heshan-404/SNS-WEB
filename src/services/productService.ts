@@ -98,6 +98,18 @@ export const productService = {
     return response.json();
   },
 
+  getProductBySlug: async (slug: string): Promise<ProductDto | null> => {
+    const response = await fetch(`${API_BASE_URL}/products/slug/${slug}`);
+    if (!response.ok) {
+      if (response.status === 404) {
+        return null; // Return null if product not found
+      }
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to fetch product by slug');
+    }
+    return response.json();
+  },
+
   updateProduct: async (id: number, productData: UpdateProductDto): Promise<ProductDto> => {
     const response = await fetch(`${API_BASE_URL}/products/${id}`, {
       method: 'PUT',

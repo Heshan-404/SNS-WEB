@@ -1,6 +1,6 @@
 import React from 'react';
 import ProductImageViewer from '@/components/ProductImageViewer';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,10 +15,9 @@ import { productService } from '@/services/productService';
 import WhatsAppButton from '@/components/WhatsppButton';
 
 // ✅ For dynamic metadata
-export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const productId = parseInt(id, 10);
-  const product = await productService.getProductById(productId);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const product = await productService.getProductBySlug(slug);
 
   if (!product) {
     return {};
@@ -40,24 +39,19 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
           alt: product.name,
         },
       ],
-      url: `https://yourdomain.com/products/${product.id}`,
+      url: `https://yourdomain.com/products/${product.slug}`,
       type: 'website',
     },
   };
 }
 
-export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const productId = parseInt(id, 10);
+export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
 
-  if (isNaN(productId)) {
-    notFound();
-  }
-
-  const product = await productService.getProductById(productId);
+  const product = await productService.getProductBySlug(slug);
 
   if (!product) {
-    notFound();
+    redirect('/products');
   }
 
   const mappedImages: UploadedImageDto[] = product.images.map((img) => ({
@@ -166,8 +160,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
           {/* ✅ WhatsApp Button */}
           <WhatsAppButton
-            phoneNumber="94752623523"
-            productUrl={`https://snspipes.com/products/${product.id}`}
+            phoneNumber="94762040059"
+            productUrl={`https://snspipes.com/products/${product.slug}`}
             productName={product.name}
             description={product.description}
             brandName={product.brand.name}

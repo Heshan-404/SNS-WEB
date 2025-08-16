@@ -8,7 +8,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgres://merilyev_sns_pipes:GCPTPI!714b@localhost:5432/merilyev_sns_pipes_db"
+  url      = "postgres://postgres:postgres@localhost:5432/merilyev_sns_pipes_db"
 }
 
 // Admin User for authentication
@@ -44,6 +44,7 @@ model Brand {
 model Product {
   id          Int    @id @default(autoincrement())
   name        String
+  slug        String @unique
   shortName   String
   description String
 

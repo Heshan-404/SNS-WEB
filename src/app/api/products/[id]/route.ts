@@ -5,6 +5,7 @@ import { UpdateProductDto } from '@/types/product';
 import { authMiddleware } from '@/lib/authMiddleware';
 import { del } from '@vercel/blob';
 import { Product } from '@prisma/client'; // Import Product type from Prisma Client
+import { generateUniqueSlug } from '../../../../lib/slug';
 
 export async function GET(
   request: Request,
@@ -91,9 +92,14 @@ async function putHandler(
 
     const updateData: Partial<Product> & {
       images?: { deleteMany: Record<string, never>; create: { url: string; isMain: boolean }[] };
+      slug?: string; // Add slug to updateData type
     } = {
       ...productData,
     };
+
+    if (data.name && data.name !== existingProduct.name) {
+      updateData.slug = await generateUniqueSlug(data.name);
+    }
 
     if (categoryId !== undefined) {
       updateData.categoryId = categoryId;

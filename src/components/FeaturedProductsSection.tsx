@@ -19,7 +19,7 @@ const FeaturedProductsSection = async () => {
           {featuredProducts.map((product: ProductListDto) => (
             <ProductCard
               key={product.id}
-              productId={product.id}
+              slug={product.slug}
               imageUrl={product.mainImageUrl || '/placeholder.png'}
               title={product.name}
               brand={product.brand?.name || 'N/A'}

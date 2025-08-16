@@ -28,6 +28,7 @@ export interface UpdateProductDto {
 export interface ProductDto {
   id: number;
   name: string;
+  slug: string;
   shortName: string;
   description: string;
   categoryId: number;
@@ -52,6 +53,7 @@ export interface ProductDto {
 export interface ProductListDto {
   id: number;
   name: string;
+  slug: string;
   shortName: string;
   description?: string; // Added description property
   brand: { id: number; name: string };

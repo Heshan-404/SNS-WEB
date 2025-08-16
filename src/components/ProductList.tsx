@@ -35,7 +35,7 @@ const ProductList = ({ products, loading }: ProductListProps) => {
           title={product.name}
           brand={product.brand.name}
           category={product.category.name}
-          productId={product.id}
+          slug={product.slug}
         />
       ))}
     </div>

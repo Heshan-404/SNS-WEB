@@ -3,6 +3,8 @@ import prisma from '../../../lib/prisma';
 import { UploadedImageDto } from '@/types/image';
 import { CreateProductDto } from '@/types/product';
 import { authMiddleware } from '@/lib/authMiddleware';
+import { generateUniqueSlug } from '@/lib/slug';
+import { Prisma, Product, Image } from '@prisma/client';
 
 export async function GET(request: Request) {
   try {
@@ -29,40 +31,32 @@ export async function GET(request: Request) {
 
     const searchTerm = searchParams.get('searchTerm');
 
+    const productWhereClause = {
+      ...(categoryIds && categoryIds.length > 0 && { categoryId: { in: categoryIds } }),
+      ...(brandIds && brandIds.length > 0 && { brandId: { in: brandIds } }),
+      ...(isFeatured !== undefined && { isFeatured: isFeatured }),
+      ...(searchTerm && {
+        OR: [
+          { name: { contains: searchTerm, mode: Prisma.QueryMode.insensitive } },
+          { description: { contains: searchTerm, mode: Prisma.QueryMode.insensitive } },
+        ],
+      }),
+    };
+
     const products = await prisma.product.findMany({
       skip: (page - 1) * limit,
       take: limit,
-      where: {
-        ...(categoryIds && categoryIds.length > 0 && { categoryId: { in: categoryIds } }),
-        ...(brandIds && brandIds.length > 0 && { brandId: { in: brandIds } }),
-        ...(isFeatured !== undefined && { isFeatured: isFeatured }),
-        ...(searchTerm && {
-          OR: [
-            { name: { contains: searchTerm, mode: 'insensitive' } },
-            { description: { contains: searchTerm, mode: 'insensitive' } },
-          ],
-        }),
-      },
+      where: productWhereClause,
       include: { category: true, brand: true, images: true },
     });
 
     const total = await prisma.product.count({
-      where: {
-        ...(categoryIds && categoryIds.length > 0 && { categoryId: { in: categoryIds } }),
-        ...(brandIds && brandIds.length > 0 && { brandId: { in: brandIds } }),
-        ...(isFeatured !== undefined && { isFeatured: isFeatured }),
-        ...(searchTerm && {
-          OR: [
-            { name: { contains: searchTerm, mode: 'insensitive' } },
-            { description: { contains: searchTerm, mode: 'insensitive' } },
-          ],
-        }),
-      },
+      where: productWhereClause,
     });
 
-    const productsWithMainImage = products.map((product) => ({
+    const productsWithMainImage = products.map((product: Product & { images: Image[] }) => ({
       ...product,
-      mainImageUrl: product.images.find((image) => image.isMain)?.url || null,
+      mainImageUrl: product.images.find((image: Image) => image.isMain)?.url || null,
     }));
 
     return NextResponse.json({ products: productsWithMainImage, total, page, limit });
@@ -100,9 +94,12 @@ async function postHandler(request: Request) {
       return NextResponse.json({ error: 'At least one main image is required' }, { status: 400 });
     }
 
+    const slug = await generateUniqueSlug(data.name);
+
     const product = await prisma.product.create({
       data: {
         ...data,
+        slug, // Add the generated slug
         images: {
           create: data.images.map((img) => ({ url: img.url, isMain: img.isMain })),
         },

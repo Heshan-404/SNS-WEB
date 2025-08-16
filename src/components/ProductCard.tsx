@@ -6,18 +6,18 @@ import { useRouter } from 'next/navigation'; // Import useRouter
 import React from 'react'; // Import React
 
 interface ProductCardProps {
-  productId: number;
+  slug: string;
   imageUrl: string;
   title: string;
   brand: string;
   category: string;
 }
 
-const ProductCard = ({ productId, imageUrl, title, brand, category }: ProductCardProps) => {
+const ProductCard = ({ slug, imageUrl, title, brand, category }: ProductCardProps) => {
   const router = useRouter(); // Initialize useRouter
 
   const handleClick = () => {
-    router.push(`/products/${productId}`); // Navigate without preserving query params
+    router.push(`/products/${slug}`); // Navigate without preserving query params
   };
 
   return (
