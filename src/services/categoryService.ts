@@ -8,6 +8,7 @@ export const categoryService = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-Requested-From': 'frontend',
       },
       body: JSON.stringify(data),
     });
@@ -19,7 +20,11 @@ export const categoryService = {
   },
 
   getCategories: async (): Promise<CategoryDto[]> => {
-    const response = await fetch(`${API_BASE_URL}/categories`);
+    const response = await fetch(`${API_BASE_URL}/categories`, {
+      headers: {
+        'X-Requested-From': 'frontend',
+      },
+    });
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.error || 'Failed to fetch categories');
@@ -28,7 +33,11 @@ export const categoryService = {
   },
 
   getCategoryById: async (id: number): Promise<CategoryDto> => {
-    const response = await fetch(`${API_BASE_URL}/categories/${id}`);
+    const response = await fetch(`${API_BASE_URL}/categories/${id}`, {
+      headers: {
+        'X-Requested-From': 'frontend',
+      },
+    });
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.error || 'Failed to fetch category');
@@ -41,6 +50,7 @@ export const categoryService = {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        'X-Requested-From': 'frontend',
       },
       body: JSON.stringify(data),
     });
@@ -54,6 +64,9 @@ export const categoryService = {
   deleteCategory: async (id: number): Promise<void> => {
     const response = await fetch(`${API_BASE_URL}/categories/${id}`, {
       method: 'DELETE',
+      headers: {
+        'X-Requested-From': 'frontend',
+      },
     });
     if (!response.ok) {
       const errorData = await response.json();

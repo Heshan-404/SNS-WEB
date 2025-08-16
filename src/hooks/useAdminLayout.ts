@@ -11,6 +11,9 @@ export const useAdminLayout = () => {
       // Call the logout API endpoint (optional, for server-side session invalidation)
       await fetch('/api/auth/logout', {
         method: 'POST',
+        headers: {
+          'X-Requested-From': 'frontend',
+        },
       });
 
       toast.success('Logged out successfully!');

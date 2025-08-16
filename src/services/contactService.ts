@@ -6,6 +6,7 @@ export class ContactService {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-Requested-From': 'frontend',
       },
       body: JSON.stringify(data),
     });

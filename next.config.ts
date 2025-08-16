@@ -1,7 +1,6 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  output: 'standalone', // Add this for optimized deployment
   allowedDevOrigins: ['https://una-leasing-topic-platforms.trycloudflare.com'],
   images: {
     remotePatterns: [

@@ -18,7 +18,11 @@ export const brandService = {
   },
 
   getBrands: async (): Promise<BrandDto[]> => {
-    const response = await fetch(`${API_BASE_URL}/brands`);
+    const response = await fetch(`${API_BASE_URL}/brands`, {
+      headers: {
+        'X-Requested-From': 'frontend',
+      },
+    });
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.error || 'Failed to fetch brands');
@@ -27,7 +31,11 @@ export const brandService = {
   },
 
   getBrandById: async (id: number): Promise<BrandDto> => {
-    const response = await fetch(`${API_BASE_URL}/brands/${id}`);
+    const response = await fetch(`${API_BASE_URL}/brands/${id}`, {
+      headers: {
+        'X-Requested-From': 'frontend',
+      },
+    });
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.error || 'Failed to fetch brand');

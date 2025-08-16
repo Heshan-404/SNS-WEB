@@ -1,14 +1,16 @@
 import { MetadataRoute } from 'next';
-import { productService } from '@/services/productService';
+import prisma from '@/lib/prisma';
 
 const baseUrl = 'https://snspipes.com';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const products = await productService.getProductsAtBuildTime(); // Fetch all products for sitemap
+  const products = await prisma.product.findMany({
+    include: { category: true, brand: true, images: true },
+  });
 
   const productRoutes = products.map((product) => ({
     url: `${baseUrl}/products/${product.slug}`,
-    lastModified: product.updatedAt, // Use product.updatedAt for last modification date
+    lastModified: product.updatedAt,
     changeFrequency: 'weekly' as const,
     priority: 0.8,
   }));

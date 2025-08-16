@@ -76,7 +76,7 @@ const Footer = () => {
           >
             <FontAwesomeIcon icon={faFacebookF} size="lg" />
           </a>
-          <a href="#" className="text-white hover:text-blue-400">
+          <a href="https://www.tiktok.com/@sns_pipesfittings?lang=en" className="text-white hover:text-blue-400">
             <FontAwesomeIcon icon={faTiktok} size="lg" />
           </a>
           <a href="#" className="text-white hover:text-blue-400">
@@ -89,7 +89,7 @@ const Footer = () => {
           &copy; {new Date().getFullYear()} S N S PIPES & FITTINGS. All rights reserved.
         </p>
         <p className="text-white font-bold text-xs text-center mt-1">
-          Designed and Developed by Wishwa network & IT Solution
+          Designed and Developed by Wishwa Network & IT Solution
         </p>
       </div>
     </footer>

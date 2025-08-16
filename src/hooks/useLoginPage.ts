@@ -17,6 +17,7 @@ export const useLoginPage = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-Requested-From': 'frontend', // Add this header
         },
         body: JSON.stringify({ email, password }),
       });

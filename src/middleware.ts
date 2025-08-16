@@ -33,7 +33,6 @@ export function middleware(request: NextRequest) {
   }
   // --- End API Path Handling ---
 
-
   const isLoginPage = pathname === '/admin/login';
   const isAdminRoot = pathname === '/admin';
 

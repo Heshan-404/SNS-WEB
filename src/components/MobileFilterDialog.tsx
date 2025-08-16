@@ -35,7 +35,7 @@ const MobileFilterDialog: React.FC<MobileFilterDialogProps> = ({ categories, bra
         </DialogTrigger>
         <DialogContent
           showCloseButton={false}
-          className="h-[calc(100vh-1rem)] p-0 bg-white z-40 flex flex-col pointer-events-auto"
+          className="h-[calc(100vh-1rem)] p-0 pt-4 bg-white z-40 flex flex-col pointer-events-auto"
         >
           <DialogHeader>
             <VisuallyHidden>

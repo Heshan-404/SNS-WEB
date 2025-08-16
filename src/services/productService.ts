@@ -7,7 +7,6 @@ import {
 } from '@/types/product';
 import { UploadedImageDto } from '@/types/image';
 import { getAuthHeaders } from '@/lib/api';
-import prisma from '@/lib/prisma';
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_BASE_URL || 'https://snspipes.com/') + 'api';
 
@@ -20,6 +19,9 @@ export const productService = {
 
     const response = await fetch(`${API_BASE_URL}/upload`, {
       method: 'POST',
+      headers: {
+        'X-Requested-From': 'frontend',
+      },
       body: formData,
     });
 
@@ -82,7 +84,11 @@ export const productService = {
       params.append('isFeatured', isFeatured.toString());
     }
 
-    const response = await fetch(`${API_BASE_URL}/products?${params.toString()}`);
+    const response = await fetch(`${API_BASE_URL}/products?${params.toString()}`, {
+      headers: {
+        'X-Requested-From': 'frontend',
+      },
+    });
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.error || 'Failed to fetch products');
@@ -91,7 +97,11 @@ export const productService = {
   },
 
   getProductById: async (id: number): Promise<ProductDto> => {
-    const response = await fetch(`${API_BASE_URL}/products/${id}`);
+    const response = await fetch(`${API_BASE_URL}/products/${id}`, {
+      headers: {
+        'X-Requested-From': 'frontend',
+      },
+    });
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.error || 'Failed to fetch product');
@@ -100,7 +110,11 @@ export const productService = {
   },
 
   getProductBySlug: async (slug: string): Promise<ProductDto | null> => {
-    const response = await fetch(`${API_BASE_URL}/products/slug/${slug}`);
+    const response = await fetch(`${API_BASE_URL}/products/slug/${slug}`, {
+      headers: {
+        'X-Requested-From': 'frontend',
+      },
+    });
     if (!response.ok) {
       if (response.status === 404) {
         return null; // Return null if product not found
@@ -152,37 +166,16 @@ export const productService = {
 
   getFeaturedProducts: async (): Promise<ProductListDto[]> => {
     console.log(API_BASE_URL);
-    const response = await fetch(`${API_BASE_URL}/products?isFeatured=true`);
+    const response = await fetch(`${API_BASE_URL}/products?isFeatured=true`, {
+      headers: {
+        'X-Requested-From': 'frontend',
+      },
+    });
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.error || 'Failed to fetch featured products');
     }
     const data: PaginatedProductsDto = await response.json();
     return data.products;
-  },
-
-  // New method for build time product fetching
-  getProductsAtBuildTime: async (): Promise<ProductListDto[]> => {
-    try {
-      const products = await prisma.product.findMany({
-        include: { category: true, brand: true, images: true },
-      });
-
-      return products.map((product) => ({
-        id: product.id,
-        name: product.name,
-        slug: product.slug,
-        shortName: product.shortName,
-        description: product.description,
-        brand: product.brand,
-        category: product.category,
-        mainImageUrl: product.images.find((image) => image.isMain)?.url || null,
-        isFeatured: product.isFeatured,
-        updatedAt: product.updatedAt,
-      }));
-    } catch (error) {
-      console.error('Error fetching products at build time:', error);
-      throw new Error('Failed to fetch products at build time');
-    }
   },
 };

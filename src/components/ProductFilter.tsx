@@ -49,7 +49,7 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
 
   return (
     <section
-      className={`p-4 pt-12 bg-white ${isMobile ? 'w-full h-full flex flex-col' : 'w-[330px]'}`}
+      className={`p-4 pt-12 bg-white ${isMobile ? 'pt-18 w-full h-[90dvh] flex flex-col' : 'w-[330px]'}`}
     >
       {!isMobile && (
         <>
@@ -77,7 +77,6 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
       {isMobile && (
         <div className="flex space-x-2 mb-4">
           <Button
-            variant="ghost"
             className={cn(
               'flex-1 rounded-xl',
               activeTab === 'category' ? 'bg-black text-white' : 'bg-[#F0F2F5] text-black',
@@ -87,7 +86,6 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
             Category
           </Button>
           <Button
-            variant="ghost"
             className={cn(
               'flex-1 rounded-xl',
               activeTab === 'brand' ? 'bg-black text-white' : 'bg-[#F0F2F5] text-black',
