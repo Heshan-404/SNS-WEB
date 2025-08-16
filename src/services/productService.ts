@@ -7,6 +7,7 @@ import {
 } from '@/types/product';
 import { UploadedImageDto } from '@/types/image';
 import { getAuthHeaders } from '@/lib/api';
+import prisma from '@/lib/prisma';
 
 const API_BASE_URL = (process.env.NEXT_PUBLIC_BASE_URL || 'https://snspipes.com/') + 'api';
 
@@ -158,5 +159,30 @@ export const productService = {
     }
     const data: PaginatedProductsDto = await response.json();
     return data.products;
+  },
+
+  // New method for build time product fetching
+  getProductsAtBuildTime: async (): Promise<ProductListDto[]> => {
+    try {
+      const products = await prisma.product.findMany({
+        include: { category: true, brand: true, images: true },
+      });
+
+      return products.map((product) => ({
+        id: product.id,
+        name: product.name,
+        slug: product.slug,
+        shortName: product.shortName,
+        description: product.description,
+        brand: product.brand,
+        category: product.category,
+        mainImageUrl: product.images.find((image) => image.isMain)?.url || null,
+        isFeatured: product.isFeatured,
+        updatedAt: product.updatedAt,
+      }));
+    } catch (error) {
+      console.error('Error fetching products at build time:', error);
+      throw new Error('Failed to fetch products at build time');
+    }
   },
 };

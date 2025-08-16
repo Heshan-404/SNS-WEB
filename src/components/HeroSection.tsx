@@ -9,7 +9,7 @@ const HeroSection = () => {
       {/* Dark overlay for text readability */}
       <div className="relative z-10 text-white px-6 max-w-4xl mx-auto">
         <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
-          Quality Pipes & Fittings for Every Project
+          SNS Pipes & Fittings Quality Plumbing Solutions
         </h1>
         <p className="text-lg md:text-xl mb-8 leading-relaxed">
           S N S PIPES & FITTINGS is committed to providing high-quality plumbing solutions for a

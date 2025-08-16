@@ -80,7 +80,10 @@ const Header = () => {
             0762040059
           </a>
           <span className="text-white text-sm leading-none font-bold">|</span>
-          <a href="mailto:contact@snspipes.com" className="text-white text-sm leading-none font-bold">
+          <a
+            href="mailto:contact@snspipes.com"
+            className="text-white text-sm leading-none font-bold"
+          >
             contact@snspipes.com
           </a>
         </div>

@@ -14,7 +14,7 @@ export function generateSlug(name: string): string {
 }
 
 export async function generateUniqueSlug(name: string, initialSlug?: string): Promise<string> {
-  let slug = initialSlug || generateSlug(name);
+  const slug = initialSlug || generateSlug(name);
   let counter = 1;
   let uniqueSlug = slug;
 

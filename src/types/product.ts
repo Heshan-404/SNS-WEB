@@ -58,8 +58,9 @@ export interface ProductListDto {
   description?: string; // Added description property
   brand: { id: number; name: string };
   category: { id: number; name: string };
-  mainImageUrl?: string; // Only main image for list view
+  mainImageUrl?: string | null; // Only main image for list view
   isFeatured?: boolean;
+  updatedAt: Date;
 }
 
 export interface PaginatedProductsDto {

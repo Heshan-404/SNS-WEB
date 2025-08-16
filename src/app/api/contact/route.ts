@@ -55,6 +55,9 @@ export async function POST(request: Request) {
     return NextResponse.json(newSubmission, { status: 201 });
   } catch (error) {
     console.error('Error submitting contact form or sending email:', error);
-    return NextResponse.json({ error: 'Failed to submit contact form or send email' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to submit contact form or send email' },
+      { status: 500 },
+    );
   }
 }

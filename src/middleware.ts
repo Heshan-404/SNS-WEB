@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
   res.headers.append('Access-Control-Allow-Methods', 'GET,DELETE,PATCH,POST,PUT');
   res.headers.append(
     'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-Requested-From', // Add X-Requested-From
   );
 
   // Handle preflight OPTIONS requests
@@ -20,6 +20,19 @@ export function middleware(request: NextRequest) {
 
   const token = request.cookies.get('token');
   const { pathname } = request.nextUrl;
+
+  // --- API Path Handling ---
+  if (pathname.startsWith('/api/')) {
+    const isFrontendRequest = request.headers.get('X-Requested-From') === 'frontend';
+    if (!isFrontendRequest) {
+      // If it's a direct browser access to /api, redirect to 404
+      return NextResponse.rewrite(new URL('/not-found', request.url));
+    }
+    // Allow legitimate API requests to proceed
+    return NextResponse.next();
+  }
+  // --- End API Path Handling ---
+
 
   const isLoginPage = pathname === '/admin/login';
   const isAdminRoot = pathname === '/admin';
@@ -48,5 +61,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*'], // Apply middleware to all routes under /admin
+  matcher: ['/admin/:path*', '/api/:path*'], // Apply middleware to /admin and /api routes
 };
