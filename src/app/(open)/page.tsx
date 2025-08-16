@@ -4,7 +4,13 @@ import FeaturedProductsSection from '@/components/FeaturedProductsSection';
 import ContactUsSection from '@/components/ContactUsSection';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
 
+import { Metadata } from 'next'; // Import Metadata type
+
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: 'Home',
+};
 
 export default function Home() {
   return (

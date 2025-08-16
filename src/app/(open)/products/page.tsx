@@ -7,7 +7,13 @@ import ProductPaginationClient from '@/components/ProductPaginationClient';
 import MobileFilterSearchClient from '@/components/MobileFilterSearchClient';
 import MobileFilterDialog from '@/components/MobileFilterDialog';
 
+import { Metadata } from 'next'; // Import Metadata type
+
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: 'Products',
+};
 
 interface ProductShowcaseProps {
   searchParams: Promise<{

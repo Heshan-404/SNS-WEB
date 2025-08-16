@@ -1,35 +1,33 @@
-'use client';
-
 import './globals.css';
 
-import { Poppins } from 'next/font/google';
-import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import {Poppins} from 'next/font/google';
+import ScrollToTopOnNavigate from '@/components/ScrollToTopOnNavigate';
+import {Metadata} from "next";
 
-export const metadata = {
-  title: {
-    template: '%s | SNS Pipes & Fittings',
-    default: 'SNS Pipes & Fittings',
-  },
-  description: 'Your trusted source for high-quality plumbing pipes and fittings.',
+export const metadata: Metadata = {
+    title: {
+        template: '%s | SNS Pipes & Fittings',
+        default: 'SNS Pipes & Fittings',
+    },
+    description: 'Your trusted source for high-quality plumbing pipes and fittings.',
+    twitter: {
+        card: 'summary_large_image',
+    },
 };
 
 const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-poppins',
+    subsets: ['latin'],
+    weight: ['300', '400', '500', '600', '700'],
+    variable: '--font-poppins',
 });
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
-  return (
-    <html lang="en" className={`${poppins.variable}`} data-scroll-behavior="smooth">
-      <body>{children}</body>
-    </html>
-  );
+export default function RootLayout({children}: { children: React.ReactNode }) {
+    return (
+        <html lang="en" className={`${poppins.variable}`} data-scroll-behavior="smooth">
+        <body>
+        {children}
+        <ScrollToTopOnNavigate/>
+        </body>
+        </html>
+    );
 }

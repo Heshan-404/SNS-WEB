@@ -1,4 +1,4 @@
-'use client'; // Keep this
+
 
 import '../globals.css';
 import Header from '@/components/Header';
