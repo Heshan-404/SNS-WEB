@@ -12,7 +12,9 @@ import { Metadata } from 'next'; // Import Metadata type
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Products',
+  title: 'Our Products | Pipes, Fittings & Lighting Items in Sri Lanka',
+  description:
+    'Explore our wide range of high-quality plumbing pipes, fittings, and lighting items. Find PVC, CPVC, PPR pipes, LED lights, and more for all your residential, commercial, and industrial needs in Sri Lanka.',
 };
 
 interface ProductShowcaseProps {

@@ -93,15 +93,15 @@ const MobileMenu = () => {
 
           <div className="absolute bottom-4 left-4 right-4 px-4">
             <div className="bg-[#097DCA] text-white rounded-full px-4 py-2 text-center">
-              <a href="tel:+0720400659" className="font-bold">
-                0720400659 / 0760188505
+              <a href="tel:+0762040059" className="font-bold">
+                0762040059
               </a>
             </div>
             <a
-              href="mailto:sales@snspipes.com"
+              href="mailto:contact@snspipes.com"
               className="text-black/50 hover:text-blue-600 block mt-2 text-center font-bold"
             >
-              sales@snspipes.com
+              contact@snspipes.com
             </a>
           </div>
         </div>

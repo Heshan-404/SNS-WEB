@@ -3,6 +3,7 @@ import AboutUsSection from '@/components/AboutUsSection';
 import FeaturedProductsSection from '@/components/FeaturedProductsSection';
 import ContactUsSection from '@/components/ContactUsSection';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
+import OurBrandsSection from '@/components/OurBrandsSection';
 
 import { Metadata } from 'next'; // Import Metadata type
 
@@ -18,6 +19,9 @@ export default function Home() {
       <HeroSection />
       <AnimateOnScroll>
         <AboutUsSection />
+      </AnimateOnScroll>
+      <AnimateOnScroll>
+        <OurBrandsSection />
       </AnimateOnScroll>
       <AnimateOnScroll>
         <FeaturedProductsSection />

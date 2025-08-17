@@ -11,27 +11,28 @@ const AboutUsSection = () => {
           </h2>
           {/* Summarized Description for Mobile */}
           <p className="text-sm text-gray-600 leading-relaxed mb-4 md:hidden">
-            S N S PIPES & FITTINGS has been a leading provider of high-quality plumbing pipes and
-            fittings for over two decades. Our success is built on a strong commitment to
-            excellence, reliability, and customer satisfaction.
+            S N S PIPES & FITTINGS has been a leading retailer of high-quality PP-R, CPVC, uPVC, and
+            Polybutylene pipes and fittings, along with lighting items, since 2022. Our success is
+            built on a strong commitment to excellence, reliability, and customer satisfaction.
           </p>
           {/* Full Description for Desktop */}
           <div className="hidden md:block">
             <p className="text-sm md:text-base text-gray-600 leading-relaxed mb-4">
-              S N S PIPES & FITTINGS has been a leading provider of high-quality plumbing pipes and
-              fittings for over two decades. Founded in 2002, our company has grown from a local
-              supplier to a trusted national distributor, serving everyone from homeowners to
-              large-scale construction projects. Our success is built on a strong commitment to
-              excellence, reliability, and customer satisfaction. We pride ourselves on offering a
-              comprehensive selection of products, all sourced from reputable manufacturers, to meet
-              the diverse needs of our customers.
+              S N S PIPES & FITTINGS has been a leading retailer of high-quality plumbing pipes,
+              fittings, and lighting solutions since 2022. Founded in 2022, our company has grown
+              from a local supplier to a trusted national distributor, serving everyone from
+              homeowners to large-scale construction projects. We specialize in PP-R, CPVC, uPVC,
+              and Polybutylene pipes, offering leading brands like ERA, IFAN, PHOENIX, ANTON, PLUMB
+              FAST, SLON, and NATIONAL. Our success is built on a strong commitment to excellence,
+              reliability, and customer satisfaction. We pride ourselves on offering a comprehensive
+              selection of products, all sourced from reputable manufacturers, to meet the diverse
+              needs of our customers.
             </p>
             <p className="text-sm md:text-base text-gray-600 leading-relaxed">
-              Our experienced team of professionals is dedicated to providing expert advice and
-              support, ensuring that our clients receive the best possible solutions for their
-              plumbing requirements. At S N S PIPES & FITTINGS, we are driven by a mission to
-              deliver superior products and exceptional service, fostering long-term partnerships
-              built on trust and integrity. Our core values include quality, innovation, and
+              We are dedicated to helping you select the right products for your plumbing and
+              lighting needs. At S N S PIPES & FITTINGS, we are driven by a mission to deliver
+              superior products and exceptional service, fostering long-term partnerships built on
+              trust and integrity. Our core values include quality, innovation, and
               customer-centricity, guiding us in every aspect of our operations. We continuously
               strive to enhance our product offerings and services, adapting to the evolving demands
               of the industry while upholding our unwavering commitment to quality and reliability.

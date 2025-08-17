@@ -9,12 +9,14 @@ const HeroSection = () => {
       {/* Dark overlay for text readability */}
       <div className="relative z-10 text-white px-6 max-w-4xl mx-auto">
         <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
-          SNS Pipes & Fittings Quality Plumbing Solutions
+          SNS Pipes and Fittings Premier Supplier in
+          <br />
+          Sri Lanka
         </h1>
         <p className="text-lg md:text-xl mb-8 leading-relaxed">
-          S N S PIPES & FITTINGS is committed to providing high-quality plumbing solutions for a
-          wide range of projects. Our extensive product range ensures you'll find the perfect fit
-          for your needs.
+          S N S PIPES and FITTINGS offers a comprehensive range of high-quality plumbing pipes,
+          fittings, and lighting solutions. We stock leading brands for PP-R, CPVC, Polybutylene,
+          and PVC pipes, ensuring you'll find the perfect fit for your needs.
         </p>
         <a
           href="#products"

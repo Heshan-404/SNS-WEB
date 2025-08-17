@@ -165,7 +165,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
           {/* ✅ WhatsApp Button */}
           <WhatsAppButton
-            phoneNumber="94752623523"
+            phoneNumber="94762040059"
             productUrl={`https://snspipes.com/products/${product.slug}`}
             productName={product.name}
             description={product.description}

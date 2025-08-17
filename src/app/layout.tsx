@@ -8,11 +8,45 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://snspipes.com'),
   title: {
     template: '%s | SNS Pipes & Fittings',
-    default: 'SNS Pipes & Fittings | Quality Plumbing Solutions',
+    default: "SNS Pipes & Fittings | Sri Lanka's Top Pipes & Lighting Supplier",
   },
-  description: 'Your trusted source for high-quality plumbing pipes and fittings.',
+  description:
+    'Your trusted source for high-quality plumbing pipes, fittings, and lighting solutions in Sri Lanka. We offer a wide range of PVC, CPVC, PPR pipes, and LED lights for residential, commercial, and industrial needs.',
+  keywords: [
+    'pipes Sri Lanka',
+    'plumbing pipes Sri Lanka',
+    'pipe fittings Sri Lanka',
+    'lighting items Sri Lanka',
+    'LED lights Sri Lanka',
+    'top pipes selling shop Sri Lanka',
+    'best pipes supplier Sri Lanka',
+    'PVC pipes Sri Lanka',
+    'CPVC pipes Sri Lanka',
+    'PPR pipes Sri Lanka',
+    'electrical conduits Sri Lanka',
+    'water pipes Sri Lanka',
+    'construction materials Sri Lanka',
+  ],
   twitter: {
     card: 'summary_large_image',
+    description:
+      'Your trusted source for high-quality plumbing pipes, fittings, and lighting solutions in Sri Lanka. We offer a wide range of PVC, CPVC, PPR pipes, and LED lights for residential, commercial, and industrial needs.',
+  },
+  openGraph: {
+    title: "SNS Pipes & Fittings | Sri Lanka's Top Pipes & Lighting Supplier",
+    description:
+      'Your trusted source for high-quality plumbing pipes, fittings, and lighting solutions in Sri Lanka. We offer a wide range of PVC, CPVC, PPR pipes, and LED lights for residential, commercial, and industrial needs.',
+    url: process.env.NEXT_PUBLIC_BASE_URL || 'https://snspipes.com',
+    siteName: 'SNS Pipes & Fittings',
+    images: [
+      {
+        url: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://snspipes.com'}/opengraph-image.png`,
+        width: 1200,
+        height: 630,
+        alt: 'SNS Pipes & Fittings',
+      },
+    ],
+    type: 'website',
   },
 };
 

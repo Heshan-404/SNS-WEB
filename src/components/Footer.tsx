@@ -25,7 +25,7 @@ const Footer = () => {
           </div>
           <div className="flex items-center justify-center flex-grow px-4 md:w-1/3">
             <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-1" />
-            <span className="md:font-bold">No 380/03, Paragasthota, Bandaragama</span>
+            <span className="md:font-bold">No 154, Kesbewa road Boralesgamuwa</span>
           </div>
         </div>
       </div>
@@ -76,7 +76,10 @@ const Footer = () => {
           >
             <FontAwesomeIcon icon={faFacebookF} size="lg" />
           </a>
-          <a href="https://www.tiktok.com/@sns_pipesfittings?lang=en" className="text-white hover:text-blue-400">
+          <a
+            href="https://www.tiktok.com/@sns_pipesfittings?lang=en"
+            className="text-white hover:text-blue-400"
+          >
             <FontAwesomeIcon icon={faTiktok} size="lg" />
           </a>
           <a href="#" className="text-white hover:text-blue-400">
